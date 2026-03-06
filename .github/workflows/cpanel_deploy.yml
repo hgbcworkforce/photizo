@@ -1,0 +1,47 @@
+name: Deploy to cPanel
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    name: 🚀 Deploy via FTP to cPanel
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          # Remove or fix the cache-dependency-path
+          # Option 1: Remove cache entirely (simplest)
+          # Option 2: Fix the path (see below)
+      
+      - name: Install dependencies and build
+        working-directory: ./
+        run: |
+          npm ci
+          npm run build
+        env:
+          VITE_PAYSTACK_SECRET_KEY: ${{ secrets.VITE_PAYSTACK_SECRET_KEY }}
+          VITE_PAYSTACK_PUBLIC_KEY: ${{ secrets.VITE_PAYSTACK_PUBLIC_KEY }}
+      
+      - name: 📂 Upload files to cPanel via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftps
+          security: loose
+          server-dir: /
+          local-dir: ./dist/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github*/**
+            **/node_modules/**
+            **/README.md

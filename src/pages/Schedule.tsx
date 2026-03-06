@@ -3,22 +3,20 @@ import Footer from "../components/Footer";
 import SectionHero from "../components/SectionHero";
 import { sessions } from "../data/schedule";
 import {
-  Calendar,
   MapPin,
   Clock,
   AlertCircle,
-  ChevronRight,
 } from "lucide-react";
 
 const Schedule = () => {
-  const scrollToSection = (sectionId) => {
+  const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) element.scrollIntoView({ behavior: "smooth" });
   };
 
   // Grouping logic inside the component
-  const days = ["Day 1", "Day 2", "Day 3"];
-  const dateMap = {
+  const days = ["Day 1", "Day 2", "Day 3"] as const;
+  const dateMap: Record<string, string> = {
     "Day 1": "Thursday, Nov 13",
     "Day 2": "Friday, Nov 14",
     "Day 3": "Saturday, Nov 15",
@@ -78,7 +76,7 @@ const Schedule = () => {
                               {session.speaker && (
                                 <div className="flex items-center gap-2 pt-2 border-t border-gray-50">
                                   <img
-                                    src={session.speaker.image}
+                                    src={session.speaker.avatar}
                                     alt=""
                                     className="w-6 h-6 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all"
                                   />

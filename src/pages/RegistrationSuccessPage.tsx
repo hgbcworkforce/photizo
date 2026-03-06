@@ -1,17 +1,20 @@
-import { useEffect, useState } from "react";
-import { useSearchParams, Link } from "react-router-dom"; 
-import { CheckCircle, Calendar, Mail, ArrowLeft, Download } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router-dom"; 
+import { CheckCircle, Calendar, Mail, Download } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 export default function RegistrationSuccessPage() {
-  const [ref, setRef] = useState<string | null>(null);
+  const [ref] = useState<string | null>(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("ref");
+  });
   
   // Logic to grab the payment reference from the URL
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setRef(params.get("ref"));
-  }, []);
+  // useEffect(() => {
+  //   const params = new URLSearchParams(window.location.search);
+  //   setRef(params.get("ref"));
+  // }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">

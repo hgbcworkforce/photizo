@@ -7,15 +7,15 @@ import SectionHero from "../components/SectionHero";
 import { merchandiseItems } from "../data/merchandise";
 
 export default function Merchandise() {
-  const [selectedColors, setSelectedColors] = useState(
+  const [selectedColors, setSelectedColors] = useState<Record<string, string>>(
     merchandiseItems.reduce((acc, item) => {
       acc[item.id] = item.colors[0].name; // Default to the first color
       return acc;
-    }, {}),
+    }, {} as Record<string, string>),
   );
 
 
-  const handleColorChange = (productId: number, colorName: string) => {
+  const handleColorChange = (productId: string, colorName: string) => {
     setSelectedColors((prevColors) => ({
       ...prevColors,
       [productId]: colorName,

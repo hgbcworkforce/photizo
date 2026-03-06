@@ -5,12 +5,13 @@ import Footer from "../components/Footer";
 import SectionHero from "../components/SectionHero";  
 import SpeakerCard from "../components/SpearkerCard";
 import SpeakerModal from "../components/SpeakerModal";
+import type { Speaker } from "../data/speakers";
 import { filterAndSearchSpeakers, speakerCategories, speakersData} from "../data/speakers";
 
 
 export default function Speakers() {
 
-    const [selectedSpeaker, setSelectedSpeaker] = useState(null);
+    const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterCategory, setFilterCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,7 +23,7 @@ export default function Speakers() {
   // Filter and search speakers using helper function
   const filteredSpeakers = filterAndSearchSpeakers(filterCategory, searchTerm);
 
-  const handleSpeakerClick = (speaker) => {
+  const handleSpeakerClick = (speaker: Speaker) => {
     setSelectedSpeaker(speaker);
     setIsModalOpen(true);
   };

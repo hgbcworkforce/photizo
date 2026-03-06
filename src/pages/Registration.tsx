@@ -1,4 +1,5 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 import { ArrowRight } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -7,7 +8,23 @@ import { registrationAPI } from "../services/apiService"; // Adjusted to use you
 import type { RegistrationData } from "../types/registration";
 
 // Extend window for Paystack script
-declare const PaystackPop: any;
+interface PaystackResponse {
+  reference: string;
+  // Add other properties as needed
+}
+
+interface PaystackPopInstance {
+  setup(config: {
+    key: string;
+    email: string;
+    amount: number;
+    access_code: string;
+    onClose: () => void;
+    callback: (response: PaystackResponse) => void;
+  }): { openIframe: () => void };
+}
+
+declare const PaystackPop: PaystackPopInstance;
 
 export default function Registration() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,6 +62,10 @@ export default function Registration() {
       // 2. Initialize Payment to get access_code from Paystack via backend
       const payResult = await registrationAPI.initializePayment(regResult.attendee.id);
 
+      if (!payResult.accessCode) {
+        throw new Error("Payment initialization failed: no access code received");
+      }
+
       // 3. Trigger Paystack Popup
       if (typeof PaystackPop !== "undefined") {
         const handler = PaystackPop.setup({
@@ -56,7 +77,7 @@ export default function Registration() {
             alert("Payment window closed. Please complete payment to secure your spot.");
             setIsSubmitting(false);
           },
-          callback: (response: any) => {
+          callback: (response: PaystackResponse) => {
             // 4. Success - Redirect to Success Page
             window.location.href = `/registration-success?ref=${response.reference}`;
           },
@@ -65,9 +86,10 @@ export default function Registration() {
       } else {
         throw new Error("Paystack library not loaded");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Registration/Payment Error:", error);
-      alert(error.message || "An error occurred. Please try again.");
+      const message = error instanceof Error ? error.message : "An error occurred. Please try again.";
+      alert(message);
       setIsSubmitting(false);
     }
   };

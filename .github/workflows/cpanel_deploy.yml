@@ -38,7 +38,7 @@ jobs:
           protocol: ftps
           security: loose
           server-dir: /
-          local-dir: ./client/dist/
+          local-dir: ./dist/
           exclude: |
             **/.git*
             **/.git*/**

@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, ArrowRight, Tag, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ShoppingBag, Tag, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 
 // Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/navigation';
+// import 'swiper/css/bundle';
 
 const MerchandiseCard = ({ item }: { item: any }) => {
   const [activeImage, setActiveImage] = useState(item.colors[0].image);

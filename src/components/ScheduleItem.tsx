@@ -1,8 +1,14 @@
 import { Clock, MapPin, User, ChevronRight } from "lucide-react";
+import type { Sessions } from "../data/schedule";
 
-const ScheduleItem = ({ session, compact }) => {
+interface ScheduleItemProps {
+  session: Sessions;
+  compact?: boolean;
+}
+
+const ScheduleItem = ({ session, compact }: ScheduleItemProps) => {
   // Simple time formatter
-  const formatTime = (time) => {
+  const formatTime = (time: string) => {
     if (!time) return "";
     return new Date(`2025-01-01 ${time}`).toLocaleTimeString("en-US", {
       hour: "numeric",
@@ -12,7 +18,7 @@ const ScheduleItem = ({ session, compact }) => {
   };
 
   // Modern type-based color mapping
-  const typeStyles = {
+  const typeStyles: Record<string, string> = {
     keynote: "bg-blue-50 text-blue-700 border-blue-100",
     story: "bg-emerald-50 text-emerald-700 border-emerald-100",
     panel: "bg-amber-50 text-amber-700 border-amber-100",

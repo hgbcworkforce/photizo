@@ -1,9 +1,13 @@
 import { Clock, MapPin } from "lucide-react";
-import ScheduleItem from "./ScheduleItem";
+import type { Sessions } from "../data/schedule";
 
-const ScheduleList = ({ sessions }) => {
+interface ScheduleListProps {
+  sessions: Sessions[];
+}
+
+const ScheduleList = ({ sessions }: ScheduleListProps) => {
   // Group sessions by day
-  const groupedSessions = sessions.reduce((acc, session) => {
+  const groupedSessions = sessions.reduce((acc: Record<string, Sessions[]>, session: Sessions) => {
     const day = session.day || "Day 1";
     if (!acc[day]) acc[day] = [];
     acc[day].push(session);
@@ -11,7 +15,7 @@ const ScheduleList = ({ sessions }) => {
   }, {});
 
   const days = Object.keys(groupedSessions);
-  const dateMap = { 
+  const dateMap: Record<string, string> = { 
     "Day 1": "Thursday, Nov 13", 
     "Day 2": "Friday, Nov 14", 
     "Day 3": "Saturday, Nov 15" 

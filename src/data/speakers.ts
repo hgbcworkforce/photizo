@@ -1,4 +1,4 @@
-type Speaker = {
+export type Speaker = {
   id: number;
   name: string;
   title: string;
@@ -14,8 +14,15 @@ type Speaker = {
     linkedin?: string;
     facebook?: string;
     instagram?: string;
+    website?: string;
   };
-  quote: string;
+  quote?: string;
+  featured?: boolean;
+  session?: {
+    title: string;
+    time: string;
+    venue: string;
+  };
 };
 
 export const speakersData: Speaker[] = [
@@ -63,7 +70,7 @@ export const speakersData: Speaker[] = [
       "Public Speaking",
       "Community Development"
     ],
-    category: "keynote",
+    category: ["keynote"],
     experience: "15+ years in medicine, healthcare leadership, and entrepreneurship",
     achievements: [
       "First in his class to become Consultant Obstetrician & Gynaecologist",
@@ -79,7 +86,9 @@ export const speakersData: Speaker[] = [
       twitter: "https://x.com/thedradebayo",
       instagram: "https://instagram.com/thedradebayo",
       facebook: "https://facebook.com/thedradebayo"
-    }
+    },
+    quote: "Purpose drives innovation. When faith meets technology, impact becomes inevitable."
+
   },
   {
     id: 3,
@@ -95,7 +104,7 @@ export const speakersData: Speaker[] = [
       "Technology Strategy",
       "Business Growth"
     ],
-    category: "breakout",
+    category: ["breakout"],
     experience: "Over a decade of experience spanning technology, academia, and entrepreneurship; currently pursuing a PhD in Computer Science.",
     achievements: [
       "Led digital transformation projects at Bowen University.",

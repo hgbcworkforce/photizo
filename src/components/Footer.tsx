@@ -46,16 +46,6 @@ import { Facebook, Instagram, Youtube, MapPin, Mail, Phone } from 'lucide-react'
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
-
-  const scrollToSection = (href) => {
-    if (href.startsWith("#")) {
-      const element = document.getElementById(href.substring(1));
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  };
-
     return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

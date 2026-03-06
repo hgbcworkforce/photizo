@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 type NavItem = {
   id: string;
   label: string;
-  path?: string;
+  path: string;
   isCTA?: boolean;
   isRoute?: boolean;
 };
@@ -18,7 +18,7 @@ const navItems: NavItem[] = [
   { id: "register",label: "Register",path: "/register",isCTA: true,isRoute: true,},
 ];
 
-export default function Navbar({ onNavigate }) {
+export default function Navbar({ onNavigate }: { onNavigate?: (sectionId: string) => void }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 

@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, MapPin, ArrowRight, Calendar, Zap } from 'lucide-react';
+import { Clock, MapPin, ArrowRight, Zap } from 'lucide-react';
 
 const ScheduleSection = ({ sessions }: { sessions: any[] }) => {
   // Take only the first 4 sessions for the homepage teaser

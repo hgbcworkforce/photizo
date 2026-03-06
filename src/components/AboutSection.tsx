@@ -1,4 +1,4 @@
-import { ArrowRight, Target, Users, Zap } from 'lucide-react';
+import { ArrowRight, Target, Zap } from 'lucide-react';
 
 export default function AboutSection() {
   return (

@@ -1,12 +1,13 @@
 import { useEffect } from "react";
+import type { Speaker } from "../data/speakers";
 import { 
   X, Linkedin, Twitter, Globe, User, 
-  Lightbulb, Quote, Briefcase, Award, Calendar 
+  Lightbulb, Quote, Briefcase, Calendar 
 } from "lucide-react";
 
-const SpeakerModal = ({ speaker, isOpen, onClose }) => {
+const SpeakerModal = ({ speaker, isOpen, onClose }: { speaker: Speaker | null; isOpen: boolean; onClose: () => void }) => {
   useEffect(() => {
-    const handleEscape = (e) => { if (e.key === "Escape") onClose(); };
+    const handleEscape = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     if (isOpen) {
       document.addEventListener("keydown", handleEscape);
       document.body.style.overflow = "hidden";
@@ -90,7 +91,7 @@ const SpeakerModal = ({ speaker, isOpen, onClose }) => {
                   <h3 className="font-bold uppercase tracking-widest text-xs">Biography</h3>
                 </div>
                 <div className="text-gray-600 text-lg leading-relaxed space-y-4 font-light">
-                  {speaker.bio.split("\n").map((p, i) => <p key={i}>{p}</p>)}
+                  {speaker.bio.split("\n").map((p: string, i: number) => <p key={i}>{p}</p>)}
                 </div>
               </section>
 
@@ -126,7 +127,7 @@ const SpeakerModal = ({ speaker, isOpen, onClose }) => {
                     <h3 className="font-bold uppercase tracking-widest text-xs">Expertise</h3>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {speaker.expertise.map((tag, i) => (
+                    {speaker.expertise.map((tag: string, i: number) => (
                       <span key={i} className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-bold uppercase tracking-wide">
                         {tag}
                       </span>

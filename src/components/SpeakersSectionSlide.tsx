@@ -4,9 +4,10 @@ import { Navigation, Autoplay, Pagination } from "swiper/modules";
 import SpeakerCard from "./SpearkerCard";
 
 // Import Swiper styles
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+declare module 'swiper/css';
+declare module 'swiper/css/navigation';
+declare module 'swiper/css/pagination';
+declare module 'swiper/css/bundle';
 
 export default function SpeakerSectionSlide({ speakers }: { speakers: any[] }) {
   return (

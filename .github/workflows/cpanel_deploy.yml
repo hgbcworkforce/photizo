@@ -20,7 +20,7 @@ jobs:
           # Option 2: Fix the path (see below)
       
       - name: Install dependencies and build
-        working-directory: /
+        working-directory: ./
         run: |
           npm ci
           npm run build

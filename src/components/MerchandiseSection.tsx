@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 
 // Import Swiper styles
-// import 'swiper/css/bundle';
+import 'swiper/css/bundle';
 
 const MerchandiseCard = ({ item }: { item: any }) => {
   const [activeImage, setActiveImage] = useState(item.colors[0].image);

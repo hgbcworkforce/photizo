@@ -42,7 +42,7 @@ export default function Merchandise() {
 
       {/* Merchandise Section */}
       <main className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="overflow-hidden p-8">
             <div className="space-y-8">
               {merchandiseItems.map((product, index) => {
@@ -56,11 +56,11 @@ export default function Merchandise() {
                 return (
                   <div
                     key={product.id}
-                    className={`flex flex-col md:flex-row items-center gap-8 p-8 rounded-lg shadow-md ${
+                    className={`flex flex-col-reverse lg:flex-row items-center gap-8 py-0 lg:py-8 px-8 rounded-lg shadow-md overflow-hidden ${
                       index % 2 === 0 ? "bg-gray-100" : "bg-white"
                     }`}
                   >
-                    <div className="md:w-1/2 text-center md:text-left">
+                    <div className="md:w-1/2 text-center md:text-left mb-20 lg:mb-0">
                       <h3 className="text-2xl font-semibold text-gray-800 mb-3">
                         {product.name}
                       </h3>

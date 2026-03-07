@@ -5,7 +5,6 @@ import { sessions } from "../data/schedule";
 import {
   MapPin,
   Clock,
-  AlertCircle,
 } from "lucide-react";
 
 const Schedule = () => {

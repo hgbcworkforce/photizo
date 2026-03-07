@@ -6,11 +6,11 @@ export default function SpeakerCard({ speaker, onSpeakerClick }: { speaker: any,
 
   return (
     <div
-      className="group bg-white border border-gray-100 rounded-3xl transition-all duration-500 hover:border-blue-500/30 hover:shadow-[0_20px_50px_rgba(8,_112,_184,_0.1)] flex items-stretch overflow-hidden min-h-[220px]"
+      className="group bg-white border border-gray-100 rounded-3xl transition-all duration-500 hover:border-blue-500/30 hover:shadow-[0_20px_50px_rgba(8,_112,_184,_0.1)] flex  flex-col lg:flex-row items-stretch overflow-hidden min-h-[220px]"
     >
 
               {/* Left Side: Large Edge-to-Edge Image */}
-      <div className="flex-1 relative overflow-hidden hidden sm:block">
+      <div className="h-[500px] md:h-[450px] lg:flex-1 relative overflow-hidden block">
         {imageError ? (
           <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300">
             <User size={48} strokeWidth={1} />

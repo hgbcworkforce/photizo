@@ -17,9 +17,9 @@ const Schedule = () => {
   // Grouping logic inside the component
   const days = ["Day 1", "Day 2", "Day 3"] as const;
   const dateMap: Record<string, string> = {
-    "Day 1": "Thursday, Nov 13",
-    "Day 2": "Friday, Nov 14",
-    "Day 3": "Saturday, Nov 15",
+    "Day 1": "Thursday, MAY 21",
+    "Day 2": "Friday, MAY 22",
+    "Day 3": "Saturday, MAY 23",
   };
 
   return (
@@ -93,27 +93,6 @@ const Schedule = () => {
                 </div>
               </div>
             ))}
-          </div>
-
-          {/* Guidelines Footer */}
-          <div className="mt-20 bg-slate-900 rounded-[32px] p-8 text-white relative overflow-hidden">
-            <div className="relative z-10 grid md:grid-cols-4 items-center gap-8">
-              <h3 className="text-xl font-bold flex items-center gap-2">
-                <AlertCircle className="text-blue-400" /> Guidelines
-              </h3>
-              {[
-                "Arrive 15 mins early",
-                "Subject to change",
-                "Recordings available",
-              ].map((note, i) => (
-                <div
-                  key={i}
-                  className="text-sm text-gray-400 border-l border-white/10 pl-4"
-                >
-                  {note}
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>

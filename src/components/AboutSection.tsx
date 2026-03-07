@@ -21,7 +21,7 @@ export default function AboutSection() {
               
               {/* Floating Stat Card */}
               <div className="absolute -bottom-6 -right-6 md:right-10 bg-blue-600 p-8 rounded-2xl shadow-xl text-white max-w-[200px] hidden md:block">
-                <p className="text-4xl font-bold mb-1 underline decoration-blue-300 underline-offset-4">2025</p>
+                <p className="text-4xl font-bold mb-1 underline decoration-blue-300 underline-offset-4">2026</p>
                 <p className="text-sm font-medium opacity-90 uppercase tracking-wider leading-tight">The Future of Leadership & Investment</p>
               </div>
             </div>
@@ -35,7 +35,7 @@ export default function AboutSection() {
                   The Experience
                 </span>
                 <h2 className="text-4xl lg:text-6xl font-black text-gray-900 leading-tight">
-                  About <span className="text-blue-600">BISUM</span> <br />Conference
+                  About <span className="text-blue-600">Photizo</span> <br />
                 </h2>
               </div>
 
@@ -76,7 +76,7 @@ export default function AboutSection() {
 
               <div className="pt-6">
                 <a 
-                  href="#speakers" 
+                  href="/speakers" 
                   className="inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-600 transition-all group shadow-lg shadow-gray-200"
                 >
                   Meet Our Speakers

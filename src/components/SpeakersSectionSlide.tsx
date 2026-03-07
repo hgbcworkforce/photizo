@@ -18,7 +18,7 @@ export default function SpeakerSectionSlide({ speakers }: { speakers: any[] }) {
               World-Class <span className="text-blue-600">Speakers</span>
             </h2>
             <p className="text-lg text-gray-500 font-light leading-relaxed">
-              Join industry leaders and visionaries as they share insights on the future of innovation at BISUM 2025.
+              Join industry leaders and visionaries as they share insights on the future of innovation at Photizo 2026.
             </p>
           </div>
           

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Calendar, MapPin, ArrowRight } from "lucide-react";
 
 export default function Hero() {
-  const conferenceDate = new Date("May 22, 2026 17:00:00").getTime();
+  const conferenceDate = new Date("May 21, 2026 17:00:00").getTime();
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export default function Hero() {
               
               <div className="flex flex-col text-sm text-gray-400 space-y-1">
                 <div className="flex items-center gap-2"><MapPin size={14} className="text-blue-500" /> Ogbomoso, Nigeria</div>
-                <div className="flex items-center gap-2"><Calendar size={14} className="text-blue-500" /> May 22 - 24, 2026</div>
+                <div className="flex items-center gap-2"><Calendar size={14} className="text-blue-500" /> May 21st - 23rd, 2026</div>
               </div>
             </div>
           </div>

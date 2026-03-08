@@ -26,7 +26,7 @@ const ScheduleSection = ({ sessions }: { sessions: any[] }) => {
 
           <Link 
             to="/schedule" 
-            className="group flex items-center gap-3 text-sm font-bold text-gray-900 border-b-2 border-blue-600 pb-1 transition-all hover:text-blue-600"
+            className="group w-40 md:w-[160px] flex items-center gap-3 text-sm font-bold text-gray-900 border-b-2 border-blue-600 pb-1 transition-all hover:text-blue-600"
           >
             View Full Schedule
             <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />

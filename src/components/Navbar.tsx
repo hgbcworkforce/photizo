@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import Logo from "/logo-c.png";
 
 
 type NavItem = {
@@ -53,9 +54,9 @@ export default function Navbar({ onNavigate }: { onNavigate?: (sectionId: string
           {/* Logo */}
           <a href="/" className="flex-shrink-0">
             <img
-              src="https://media.hgbcinfluencers.org/bisum/BISUM logo.png"
+              src={Logo}
               alt="BISUM Conference"
-              className="w-18 h-18"
+              className="w-28 md:w-36"
             />
           </a>
 

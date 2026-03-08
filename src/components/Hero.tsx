@@ -38,8 +38,8 @@ export default function Hero() {
           
           {/* Main Brand Side */}
           <div className="lg:col-span-8">
-            <div className="space-y-4 mb-8">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-600/20 border border-blue-500/30 text-blue-400 text-sm font-bold tracking-[0.2em] uppercase backdrop-blur-md">
+            <div className="space-y-4 mt-20 md:mt-0 mb-8">
+              <span className="inline-flex items-center gap-2 px-4  py-1 md:py-1.5 rounded-full bg-blue-600/20 border border-blue-500/30 text-blue-400 text-sm font-bold tracking-[0.2em] uppercase backdrop-blur-md">
                 {/* <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>

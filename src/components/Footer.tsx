@@ -1,4 +1,5 @@
 import { Facebook, Instagram, Youtube, MapPin, Mail, Phone } from 'lucide-react';
+import Logo from "/logo-wc.png";
 
 
   const socialLinks = [
@@ -54,8 +55,14 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="lg:col-span-1">
             <div className="mb-6">
-              <h3 className="text-3xl font-bold text-blue-400 mb-2">BISUM</h3>
-              <p className="text-gray-300 text-sm">Conference 2025</p>
+               {/* Logo */}
+          <a href="/" className="flex-shrink-0">
+            <img
+              src={Logo}
+              alt="BISUM Conference"
+              className="w-1/2"
+            />
+          </a>
             </div>
             <p className="text-gray-400 mb-6 leading-relaxed">
               Join us to experience an atmosphere of learning, connection, and transformation.

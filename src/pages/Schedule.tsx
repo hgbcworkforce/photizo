@@ -41,7 +41,7 @@ const Schedule = () => {
               <div key={dayLabel} className="flex flex-col">
                 {/* Partition Header */}
                 <div className="mb-10">
-                  <h2 className="inline-block bg-white border border-gray-100 px-6 py-2 rounded-2xl shadow-sm text-sm font-bold text-blue-600 uppercase tracking-tighter">
+                  <h2 className="inline-block bg-white border border-gray-100 px-6 py-2 rounded-2xl shadow-sm text-sm font-bold text-brand-red uppercase tracking-tighter">
                     {dayLabel} — {dateMap[dayLabel]}
                   </h2>
                 </div>
@@ -53,17 +53,17 @@ const Schedule = () => {
                     .map((session, idx) => (
                       <div key={idx} className="relative pl-8 group">
                         {/* Timeline Dot */}
-                        <div className="absolute -left-[9px] top-6 w-4 h-4 rounded-full border-4 border-white bg-blue-500 shadow-sm group-hover:scale-125 transition-transform" />
+                        <div className="absolute -left-[9px] top-6 w-4 h-4 rounded-full border-4 border-white bg-brand-red/80 shadow-sm group-hover:scale-125 transition-transform" />
 
                         {/* Compact Session Card */}
-                        <div className="bg-white border border-gray-100 p-5 rounded-[24px] transition-all duration-300 hover:border-blue-500/20 hover:shadow-xl hover:shadow-blue-500/5">
+                        <div className="bg-white border border-gray-100 p-5 rounded-[24px] transition-all duration-300 hover:border-brand-red/20 hover:shadow-xl hover:shadow-brand-red/5">
                           <div className="flex flex-col gap-3">
                             {/* Time moved inside for comfort in narrow columns */}
-                            <div className="flex items-center gap-2 text-xs font-bold text-blue-500 uppercase">
+                            <div className="flex items-center gap-2 text-xs font-bold text-brand-red/80 uppercase">
                               <Clock size={14} /> {session.time}
                             </div>
 
-                            <h3 className="text-md font-bold text-gray-900 group-hover:text-blue-600 transition-colors leading-tight">
+                            <h3 className="text-md font-bold text-gray-900 group-hover:text-brand-red transition-colors leading-tight">
                               {session.title}
                             </h3>
 

@@ -6,7 +6,7 @@ export default function SpeakerCard({ speaker, onSpeakerClick }: { speaker: any,
 
   return (
     <div
-      className="group bg-white border border-gray-100 rounded-3xl transition-all duration-500 hover:border-blue-500/30 hover:shadow-[0_20px_50px_rgba(8,_112,_184,_0.1)] flex  flex-col lg:flex-row items-stretch overflow-hidden min-h-[220px]"
+      className="group bg-white border border-gray-100 rounded-3xl transition-all duration-500 hover:border-brand-red/80 hover:shadow-[0_20px_50px_rgba(8,_112,_184,_0.1)] flex  flex-col lg:flex-row items-stretch overflow-hidden min-h-[220px]"
     >
 
               {/* Left Side: Large Edge-to-Edge Image */}
@@ -30,11 +30,11 @@ export default function SpeakerCard({ speaker, onSpeakerClick }: { speaker: any,
       {/* Right Side: Speaker Details */}
       <div className="flex-[1.1] p-6 md:p-8 flex flex-col justify-center min-w-0">
         <div className="mb-4">
-          <div className="inline-block bg-blue-50 text-blue-600 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-widest mb-3">
+          <div className="inline-block bg-brand-red/10 text-brand-red text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-widest mb-3">
             {speaker.category || "Main Stage"}
           </div>
           <h3 
-            className="text-2xl font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors cursor-pointer leading-tight"
+            className="text-2xl font-bold text-gray-900 mb-1 group-hover:text-brand-red transition-colors cursor-pointer leading-tight"
             onClick={() => onSpeakerClick(speaker)}
           >
             {speaker.name}
@@ -71,7 +71,7 @@ export default function SpeakerCard({ speaker, onSpeakerClick }: { speaker: any,
 
         <button 
           onClick={() => onSpeakerClick(speaker)}
-          className="flex items-center text-sm font-bold text-blue-600 group-hover:gap-2 transition-all"
+          className="flex items-center text-sm font-bold text-brand-red group-hover:gap-2 pointer-cursor transition-all"
         >
           View Profile
           <ArrowRight size={16} className="ml-1 opacity-0 group-hover:opacity-100 transition-all" />

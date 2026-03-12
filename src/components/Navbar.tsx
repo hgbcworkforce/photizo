@@ -66,8 +66,8 @@ export default function Navbar({ onNavigate }: { onNavigate?: (sectionId: string
               {navItems.map((item) => {
                 const baseClasses = `px-3 py-2 text-lg font-medium transition-all duration-200`;
                 const ctaClasses =
-                  "bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-lg shadow-lg hover:shadow-xl";
-                const regularClasses = `text-gray-700 hover:text-orange-600 ${isActive(item) ? "text-orange-600 font-semibold" : ""}`;
+                  "bg-brand-red hover:bg-brand-red/80 text-white px-6 py-2 rounded-lg shadow-lg hover:shadow-xl";
+                const regularClasses = `text-gray-700 hover:text-brand-red ${isActive(item) ? "text-brand-red/90 font-semibold" : ""}`;
 
                 if (item.isRoute) {
                   return (
@@ -98,7 +98,7 @@ export default function Navbar({ onNavigate }: { onNavigate?: (sectionId: string
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-700 hover:text-orange-600 p-2 transition-colors duration-200"
+              className="text-gray-700 hover:text-brand-red p-2 transition-colors duration-200"
               aria-label="Toggle mobile menu"
             >
               <svg
@@ -135,8 +135,8 @@ export default function Navbar({ onNavigate }: { onNavigate?: (sectionId: string
                 const baseClasses =
                   "block px-3 py-2 text-base font-medium transition-colors duration-200 w-full text-left";
                 const ctaClasses =
-                  "bg-orange-600 hover:bg-orange-700 text-white rounded-lg shadow-lg";
-                const regularClasses = `text-gray-700 hover:text-orange-600 ${isActive(item) ? "text-orange-600 font-semibold" : ""}`;
+                  "bg-brand-red hover:bg-brand-red/90 text-white rounded-lg shadow-lg";
+                const regularClasses = `text-gray-700 hover:text-brand-red/90 ${isActive(item) ? "text-brand-redfont-semibold" : ""}`;
 
                 if (item.isRoute) {
                   return (

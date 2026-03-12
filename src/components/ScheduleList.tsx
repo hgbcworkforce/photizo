@@ -31,7 +31,7 @@ const ScheduleList = ({ sessions }: ScheduleListProps) => {
             
             {/* Day Header - Consistent with your snippet */}
             <div className="mb-10 text-center md:text-left">
-              <h2 className="inline-block bg-white border border-gray-100 px-6 py-2 rounded-2xl shadow-sm text-sm font-bold text-blue-600 uppercase tracking-tighter">
+              <h2 className="inline-block bg-white border border-gray-100 px-6 py-2 rounded-2xl shadow-sm text-sm font-bold text-brand-red/90 uppercase tracking-tighter">
                 {day} — {dateMap[day] || "2025"}
               </h2>
             </div>
@@ -42,11 +42,11 @@ const ScheduleList = ({ sessions }: ScheduleListProps) => {
                 <div key={session.id || idx} className="relative pl-8 group">
                   
                   {/* Timeline Dot */}
-                  <div className="absolute -left-[9px] top-6 w-4 h-4 rounded-full border-4 border-white bg-blue-500 shadow-sm group-hover:scale-125 transition-transform" />
+                  <div className="absolute -left-[9px] top-6 w-4 h-4 rounded-full border-4 border-white bg-brand-red shadow-sm group-hover:scale-125 transition-transform" />
                   
                   {/* Compact Schedule Item */}
-                  <div className="bg-white border border-gray-100 p-4 rounded-2xl hover:border-blue-200 hover:shadow-md transition-all">
-                    <div className="flex items-center gap-2 text-[10px] font-bold text-blue-500 uppercase mb-2">
+                  <div className="bg-white border border-gray-100 p-4 rounded-2xl hover:border-brand-red/10 hover:shadow-md transition-all">
+                    <div className="flex items-center gap-2 text-[10px] font-bold text-brand-red/40 uppercase mb-2">
                       <Clock size={12} />
                       {session.time} - {session.endTime}
                     </div>

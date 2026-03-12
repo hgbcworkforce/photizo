@@ -20,8 +20,8 @@ export default function AboutSection() {
               />
               
               {/* Floating Stat Card */}
-              <div className="absolute -bottom-6 -right-6 md:right-10 bg-blue-600 p-8 rounded-2xl shadow-xl text-white max-w-[200px] hidden md:block">
-                <p className="text-4xl font-bold mb-1 underline decoration-blue-300 underline-offset-4">2026</p>
+              <div className="absolute -bottom-6 -right-6 md:right-10 bg-brand-red p-8 rounded-2xl shadow-xl text-white max-w-[200px] hidden md:block">
+                <p className="text-4xl font-bold mb-1 underline decoration-white underline-offset-4">2026</p>
                 <p className="text-sm font-medium opacity-90 uppercase tracking-wider leading-tight">The Future of Leadership & Investment</p>
               </div>
             </div>
@@ -31,11 +31,11 @@ export default function AboutSection() {
           <div className="lg:col-span-6">
             <div className="space-y-8">
               <div>
-                <span className="inline-block py-1 px-4 rounded-full bg-blue-50 text-blue-600 text-sm font-bold uppercase tracking-widest mb-4">
+                <span className="inline-block py-1 px-4 rounded-full bg-brand-red/10 border border-brand-red/20 text-brand-red text-sm font-bold uppercase tracking-widest mb-4">
                   The Experience
                 </span>
                 <h2 className="text-4xl lg:text-6xl font-black text-gray-900 leading-tight">
-                  About <span className="text-blue-600">Photizo</span> <br />
+                  About <span className="text-brand-red">Photizo</span> <br />
                 </h2>
               </div>
 
@@ -55,7 +55,7 @@ export default function AboutSection() {
               {/* Icon Features Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                 <div className="flex items-start gap-4">
-                  <div className="p-3 bg-blue-50 rounded-xl text-blue-600">
+                  <div className="p-3 bg-brand-red/10 rounded-xl text-brand-red">
                     <Target size={24} />
                   </div>
                   <div>
@@ -64,7 +64,7 @@ export default function AboutSection() {
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="p-3 bg-blue-50 rounded-xl text-blue-600">
+                  <div className="p-3 bg-brand-red/10 rounded-xl text-brand-red">
                     <Zap size={24} />
                   </div>
                   <div>
@@ -77,7 +77,7 @@ export default function AboutSection() {
               <div className="pt-6">
                 <a 
                   href="/speakers" 
-                  className="inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-600 transition-all group shadow-lg shadow-gray-200"
+                  className="inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-brand-red transition-all group shadow-lg shadow-gray-200"
                 >
                   Meet Our Speakers
                   <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />

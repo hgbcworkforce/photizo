@@ -32,7 +32,7 @@ const ScheduleItem = ({ session, compact }: ScheduleItemProps) => {
       <div>
         {/* Header: Time & Type */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-1.5 text-blue-600 font-bold text-[11px] uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 text-brand-red font-bold text-[11px] uppercase tracking-wider">
             <Clock size={14} strokeWidth={2.5} />
             <span>{formatTime(session.time)} — {formatTime(session.endTime)}</span>
           </div>
@@ -77,7 +77,7 @@ const ScheduleItem = ({ session, compact }: ScheduleItemProps) => {
           <span className="text-xs font-medium truncate max-w-[120px]">{session.venue || "Main Hall"}</span>
         </div>
         
-        <button className="flex items-center gap-1 text-[11px] font-bold text-blue-600 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
+        <button className="flex items-center gap-1 text-[11px] font-bold text-brand-red opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
           DETAILS <ChevronRight size={14} />
         </button>
       </div>

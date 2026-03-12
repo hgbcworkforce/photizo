@@ -66,8 +66,8 @@ export default function Speakers() {
                     onClick={() => setFilterCategory(category)}
                     className={`px-4 py-2 rounded-full font-medium transition-all duration-200 ${
                       filterCategory === category
-                        ? "bg-blue-600 text-white shadow-lg"
-                        : "bg-white text-gray-700 hover:bg-blue-50 shadow-md hover:shadow-lg"
+                        ? "bg-brand-red text-white shadow-lg"
+                        : "bg-white text-gray-700 hover:bg-brand-red/5 shadow-md hover:shadow-lg"
                     }`}
                   >
                     {category === "all"
@@ -87,7 +87,7 @@ export default function Speakers() {
                   placeholder="Search speakers, topics, or companies..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-brand-red focus:brand-red"
                 />
               </div>
             </div>
@@ -126,7 +126,7 @@ export default function Speakers() {
                     setSearchTerm("");
                     setFilterCategory("all");
                   }}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                  className="bg-brand-red text-white px-6 py-3 rounded-lg hover:bg-brand-red/80 transition-colors duration-200"
                 >
                   Clear Filters
                 </button>
@@ -134,7 +134,7 @@ export default function Speakers() {
             )}
 
             {/* Call to Action */}
-            <div className="mt-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 md:p-12 text-center">
+            <div className="mt-20 bg-gradient-to-r from-brand-red to-brand-orange rounded-2xl p-8 md:p-12 text-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                 Don't Miss These Amazing Speakers
               </h2>
@@ -145,7 +145,7 @@ export default function Speakers() {
 
               <a
                 href="/register"
-                className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg">
+                className="bg-white text-brand-red hover:bg-gray-100 px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg">
                 Register for BISUM 2025
               </a>
             </div>

@@ -47,7 +47,7 @@ const SpeakerModal = ({ speaker, isOpen, onClose }: { speaker: Speaker | null; i
                 <img src={speaker.image} alt={speaker.name} className="w-full h-full object-cover" />
               </div>
               {speaker.featured && (
-                <div className="absolute -bottom-2 -right-2 bg-blue-600 text-white px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-lg">
+                <div className="absolute -bottom-2 -right-2 bg-brand-red text-white px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-lg">
                   Featured
                 </div>
               )}
@@ -86,7 +86,7 @@ const SpeakerModal = ({ speaker, isOpen, onClose }: { speaker: Speaker | null; i
             {/* Left: Bio & Quote (Main Content) */}
             <div className="lg:col-span-2 space-y-10">
               <section>
-                <div className="flex items-center gap-2 text-blue-600 mb-4">
+                <div className="flex items-center gap-2 text-brand-red mb-4">
                   <User size={20} />
                   <h3 className="font-bold uppercase tracking-widest text-xs">Biography</h3>
                 </div>
@@ -109,7 +109,7 @@ const SpeakerModal = ({ speaker, isOpen, onClose }: { speaker: Speaker | null; i
             <div className="space-y-8">
               {/* Session Highlight */}
               {speaker.session && (
-                <div className="bg-blue-600 text-white p-6 rounded-[32px] shadow-xl shadow-blue-200">
+                <div className="bg-brand-red text-white p-6 rounded-[32px] shadow-xl shadow-blue-200">
                   <div className="flex items-center gap-2 mb-4 opacity-80 uppercase tracking-widest text-[10px] font-bold">
                     <Calendar size={14} />
                     <span>On Stage</span>
@@ -153,7 +153,7 @@ const SpeakerModal = ({ speaker, isOpen, onClose }: { speaker: Speaker | null; i
           {/* Footer */}
           <div className="px-8 lg:px-12 py-8 bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
              <p className="text-gray-400 text-xs font-medium uppercase tracking-widest">EMERGE - Photizo'26</p>
-             <button onClick={onClose} className="text-sm font-bold text-blue-600 hover:underline">Return to Speakers</button>
+             <button onClick={onClose} className="text-sm font-bold text-brand-red hover:underline">Return to Speakers</button>
           </div>
         </div>
       </div>

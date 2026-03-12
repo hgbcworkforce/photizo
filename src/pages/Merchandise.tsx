@@ -67,7 +67,7 @@ export default function Merchandise() {
                       <p className="text-gray-600 mb-4">
                         {product.description}
                       </p>
-                      <p className="text-lg font-bold text-blue-700 mb-2">
+                      <p className="text-lg font-bold text-brand-red mb-2">
                         {product.price}
                       </p>
                       <p className="text-sm text-gray-500 mb-4">

@@ -235,7 +235,7 @@ export default function Registration() {
               </div>
 
               {/* Summary Box with 2.5% Charges */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 space-y-3">
+              <div className="bg-brand-red/5 border border-brand-red/20 rounded-lg p-6 space-y-3">
                 <div className="flex justify-between text-gray-700">
                   <span>Registration Fee</span>
                   <span>₦{BASE_FEE.toLocaleString()}</span>
@@ -244,9 +244,9 @@ export default function Registration() {
                   <span>Processing Fee (2.5%)</span>
                   <span>₦{processingFee.toLocaleString()}</span>
                 </div>
-                <div className="border-t border-blue-200 pt-3 flex justify-between items-center">
+                <div className="border-t border-brand-red/20 pt-3 flex justify-between items-center">
                   <span className="font-bold text-gray-900">Total Amount</span>
-                  <span className="text-2xl font-bold text-blue-600">₦{totalAmount.toLocaleString()}</span>
+                  <span className="text-2xl font-bold text-brand-red">₦{totalAmount.toLocaleString()}</span>
                 </div>
               </div>
 
@@ -254,7 +254,7 @@ export default function Registration() {
                 type="submit"
                 disabled={isSubmitting}
                 className={`w-full py-4 rounded-lg text-white font-bold flex items-center justify-center transition-all ${
-                  isSubmitting ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700 shadow-lg"
+                  isSubmitting ? "bg-gray-400" : "bg-brand-red/90 hover:bg-brand-red shadow-lg"
                 }`}
               >
                 {isSubmitting ? "Processing..." : "Register & Pay Now"}

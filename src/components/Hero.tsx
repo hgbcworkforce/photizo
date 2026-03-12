@@ -39,11 +39,7 @@ export default function Hero() {
           {/* Main Brand Side */}
           <div className="lg:col-span-8">
             <div className="space-y-4 mt-20 md:mt-0 mb-8">
-              <span className="inline-flex items-center gap-2 px-4  py-1 md:py-1.5 rounded-full bg-blue-600/20 border border-blue-500/30 text-blue-400 text-sm font-bold tracking-[0.2em] uppercase backdrop-blur-md">
-                {/* <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                </span> */}
+              <span className="inline-flex items-center gap-2 px-4  py-1 md:py-1.5 rounded-full bg-brand-red/20 border border-brand-bg-brand-red/30 text-brand-red text-sm font-bold tracking-[0.2em] uppercase backdrop-blur-md">
                 Photizo 2026
               </span>
               
@@ -58,15 +54,15 @@ export default function Hero() {
             </div>
 
             <div className="flex flex-wrap gap-6 items-center">
-              <a href="/register" className="group relative px-10 py-5 bg-blue-600 text-white font-bold rounded-2xl overflow-hidden transition-all hover:bg-blue-700 hover:shadow-[0_0_40px_rgba(37,99,235,0.4)]">
+              <a href="/register" className="group relative px-10 py-5 bg-brand-red text-white font-bold rounded-2xl overflow-hidden transition-all hover:bg-brand-red/90 hover:shadow-bg-brand-orange/80">
                 <span className="relative z-10 flex items-center gap-2">
                   SECURE YOUR SEAT <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                 </span>
               </a>
               
               <div className="flex flex-col text-sm text-gray-400 space-y-1">
-                <div className="flex items-center gap-2"><MapPin size={14} className="text-blue-500" /> Ogbomoso, Nigeria</div>
-                <div className="flex items-center gap-2"><Calendar size={14} className="text-blue-500" /> May 21st - 23rd, 2026</div>
+                <div className="flex items-center gap-2"><MapPin size={14} className="text-brand-orange" /> Ogbomoso, Nigeria</div>
+                <div className="flex items-center gap-2"><Calendar size={14} className="text-brand-orange" /> May 21st - 23rd, 2026</div>
               </div>
             </div>
           </div>
@@ -74,7 +70,7 @@ export default function Hero() {
           {/* Countdown Side (Glassmorphism) */}
           <div className="lg:col-span-4">
             <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 lg:p-10 shadow-2xl">
-              <p className="text-center text-xs font-bold tracking-widest text-blue-400 uppercase mb-8">Conference Starts In</p>
+              <p className="text-center text-xs font-bold tracking-widest text-brand-red uppercase mb-8">Conference Starts In</p>
               
               <div className="grid grid-cols-2 gap-4">
                 {[

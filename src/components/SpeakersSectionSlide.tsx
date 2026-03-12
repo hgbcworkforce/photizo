@@ -15,7 +15,7 @@ export default function SpeakerSectionSlide({ speakers }: { speakers: any[] }) {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div className="max-w-2xl">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight mb-4">
-              World-Class <span className="text-blue-600">Speakers</span>
+              World-Class <span className="text-brand-red">Speakers</span>
             </h2>
             <p className="text-lg text-gray-500 font-light leading-relaxed">
               Join industry leaders and visionaries as they share insights on the future of innovation at Photizo 2026.
@@ -24,7 +24,7 @@ export default function SpeakerSectionSlide({ speakers }: { speakers: any[] }) {
           
           <a 
             href="/speakers" 
-            className="group flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-600 transition-all shadow-xl shadow-slate-200"
+            className="group flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-brand-red transition-all shadow-xl shadow-slate-200"
           >
             See All Speakers
             <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" />

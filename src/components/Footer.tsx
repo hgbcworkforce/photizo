@@ -48,7 +48,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
     return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-slate-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -81,7 +81,7 @@ export default function Footer() {
                   <a
                     href ={link.href}
                     // onClick={() => scrollToSection(link.href)}
-                    className="text-gray-400 hover:text-blue-400 transition-colors duration-200 text-left"
+                    className="text-gray-400 hover:text-brand-red transition-colors duration-200 text-left"
                   >
                     {link.name}
                   </a>
@@ -98,7 +98,7 @@ export default function Footer() {
             <ul className="space-y-4">
               {contactInfo.map((info, index) => (
                 <li key={index} className="flex items-start space-x-3">
-                  <span className="text-blue-400 mt-1 flex-shrink-0">
+                  <span className="text-brand-red mt-1 flex-shrink-0">
                     {info.icon}
                   </span>
                   <span className="text-gray-400">{info.text}</span>
@@ -120,7 +120,7 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-blue-400 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-800"
+                  className="text-gray-400 hover:text-brand-red/70 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-800"
                   aria-label={`Follow us on ${social.name}`}
                 >
                   {social.icon}

@@ -13,3 +13,19 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+
+@theme {
+  /* Core Brand Colors */
+  --color-brand-orange: #f58320;
+  --color-brand-red: #ef4023;
+  --color-brand-yellow: #f7b21a;
+  --color-brand-black: #000000;
+
+  /* UI Component Colors (Semantic Naming) */
+  --color-ui-primary: var(--color-brand-orange);
+  --color-ui-secondary: var(--color-brand-red);
+  --color-ui-accent: var(--color-brand-yellow);
+}
+
+

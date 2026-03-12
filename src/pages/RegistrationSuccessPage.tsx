@@ -33,7 +33,7 @@ export default function RegistrationSuccessPage() {
             Registration Successful!
           </h1>
           <p className="text-lg text-gray-600 mb-8">
-            Thank you for registering for <span className="font-semibold text-blue-600">Photizo'25</span>. 
+            Thank you for registering for <span className="font-semibold text-brand-red">Photizo'25</span>. 
             We've received your payment and your spot is now secured.
           </p>
 
@@ -45,8 +45,8 @@ export default function RegistrationSuccessPage() {
             
             <ul className="space-y-6">
               <li className="flex items-start">
-                <div className="bg-blue-100 p-2 rounded-lg mr-4">
-                  <Mail className="h-5 w-5 text-blue-600" />
+                <div className="bg-brand-red/10 p-2 rounded-lg mr-4">
+                  <Mail className="h-5 w-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="font-medium text-gray-900">Check your Email</p>
@@ -55,8 +55,8 @@ export default function RegistrationSuccessPage() {
               </li>
 
               <li className="flex items-start">
-                <div className="bg-blue-100 p-2 rounded-lg mr-4">
-                  <Calendar className="h-5 w-5 text-blue-600" />
+                <div className="bg-brand-red/10 p-2 rounded-lg mr-4">
+                  <Calendar className="h-5 w-5 text-brand-red" />
                 </div>
                 <div>
                   <p className="font-medium text-gray-900">Mark your Calendar</p>
@@ -82,7 +82,7 @@ export default function RegistrationSuccessPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/"
-              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-md"
+              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-brand-red/90 hover:bg-brand-red transition-colors shadow-md"
             >
               Return to Homepage
             </Link>

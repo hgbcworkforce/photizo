@@ -8,25 +8,25 @@ const ScheduleSection = ({ sessions }: { sessions: any[] }) => {
   return (
     <section className="py-24 bg-white relative overflow-hidden">
       {/* Background Decoration */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-50" />
+      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-brand-red/10 rounded-full blur-3xl opacity-50" />
       
       <div className="container mx-auto px-6 relative z-10">
         
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-red/10 border border-brand-red/20 text-brand-red text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
               <Zap size={12} className="fill-current" />
               <span>Happening Soon</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-tight">
-              Don’t Miss the <span className="text-blue-600">Highlights</span>
+              Don’t Miss the <span className="text-brand-red">Highlights</span>
             </h2>
           </div>
 
           <Link 
             to="/schedule" 
-            className="group w-40 md:w-[160px] flex items-center gap-3 text-sm font-bold text-gray-900 border-b-2 border-blue-600 pb-1 transition-all hover:text-blue-600"
+            className="group w-40 md:w-[160px] flex items-center gap-3 text-sm font-bold text-gray-900 border-b-2 border-brand-red pb-1 transition-all hover:text-brand-red/90"
           >
             View Full Schedule
             <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
@@ -38,11 +38,11 @@ const ScheduleSection = ({ sessions }: { sessions: any[] }) => {
           {featuredSessions.map((session, idx) => (
             <div 
               key={session.id || idx}
-              className="group bg-slate-50 rounded-[32px] p-6 border border-transparent hover:border-blue-500/20 hover:bg-white hover:shadow-[0_20px_50px_rgba(0,0,0,0.06)] transition-all duration-500 flex flex-col justify-between h-[280px]"
+              className="group bg-slate-50 rounded-[32px] p-6 border border-transparent hover:border-brand-red/20 hover:bg-white hover:shadow-[0_20px_50px_rgba(0,0,0,0.06)] transition-all duration-500 flex flex-col justify-between h-[280px]"
             >
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-2 text-blue-600 font-bold text-[11px] uppercase tracking-wider">
+                  <div className="flex items-center gap-2 text-brand-red font-bold text-[11px] uppercase tracking-wider">
                     <Clock size={14} strokeWidth={2.5} />
                     <span>{session.time}</span>
                   </div>
@@ -55,7 +55,7 @@ const ScheduleSection = ({ sessions }: { sessions: any[] }) => {
                   )}
                 </div>
 
-                <h3 className="text-lg font-bold text-gray-900 leading-tight mb-4 group-hover:text-blue-600 transition-colors line-clamp-3">
+                <h3 className="text-lg font-bold text-gray-900 leading-tight mb-4 group-hover:text-brand-red transition-colors line-clamp-3">
                   {session.title}
                 </h3>
               </div>

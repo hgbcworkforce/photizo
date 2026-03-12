@@ -22,7 +22,7 @@ const MerchandiseCard = ({ item }: { item: any }) => {
         
         {/* Price Tag Overlay */}
         <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm">
-          <span className="text-blue-600 font-bold text-sm">{item.price}</span>
+          <span className="text-brand-red font-bold text-sm">{item.price}</span>
         </div>
 
         {/* Color Swatches on Hover */}
@@ -42,7 +42,7 @@ const MerchandiseCard = ({ item }: { item: any }) => {
       {/* Product Details */}
       <div className="px-2 flex-1 flex flex-col">
         <div className="mb-4">
-          <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+          <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-brand-red transition-colors">
             {item.name}
           </h3>
           <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">
@@ -58,7 +58,7 @@ const MerchandiseCard = ({ item }: { item: any }) => {
           
           <Link
             to={`/merchandisedetails/${item.id}`}
-            className="flex items-center justify-center bg-slate-900 text-white p-3 rounded-2xl hover:bg-blue-600 transition-all group/btn"
+            className="flex items-center justify-center bg-slate-900 text-white p-3 rounded-2xl hover:bg-brand-red transition-all group/btn"
           >
             <ShoppingBag size={18} className="group-hover/btn:rotate-12 transition-transform" />
           </Link>
@@ -78,12 +78,12 @@ const MerchandiseSection = ({ items }: { items: any[] }) => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 text-blue-600 mb-4">
-              <Tag size={18} />
-              <span className="text-xs font-bold uppercase tracking-[0.2em]">The Shop</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-red/10 border border-brand-red/20 text-brand-red text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
+              <Tag size={12} className="fill-current" />
+               <span>THE SHOP</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
-              Exclusive <span className="text-blue-600">Swag</span>
+              Exclusive <span className="text-brand-red">Swag</span>
             </h2>
           </div>
         </div>

@@ -21,9 +21,9 @@ export const merchandiseItems: MerchandiseItem[] = [
     timeFrame: 'May 17, 2026',
     fullDescription: 'Show your support for the BISUM Conference with this exclusive t-shirt. Made from premium, soft cotton, it offers superior comfort and durability. Features the official BISUM logo prominently. Available in a range of sizes from S to XXL.',
     colors: [
-      { name: 'Blue', image: 'https://media.hgbcinfluencers.org/bisum/shirt-nb.jpg' },
+      { name: 'Black', image: 'https://media.hgbcinfluencers.org/bisum/shirt-nb.jpg' },
       { name: 'White', image: 'https://media.hgbcinfluencers.org/bisum/shirt-w.jpg' },
-      { name: 'Purple', image: 'https://media.hgbcinfluencers.org/bisum/shirt-p.jpg' },
+      { name: 'Orange', image: 'https://media.hgbcinfluencers.org/bisum/shirt-p.jpg' },
     ],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
   },
@@ -35,9 +35,9 @@ export const merchandiseItems: MerchandiseItem[] = [
     timeFrame: 'May 17, 2026',
     fullDescription: 'Complete your conference look with the official BISUM face cap. Designed for comfort and style, it features an adjustable strap for a perfect fit and embroidered BISUM logo. Great for outdoor events or just as a casual accessory.',
     colors: [
-      { name: 'Blue', image: 'https://media.hgbcinfluencers.org/bisum/cap-nb.jpg' },
+      { name: 'Black', image: 'https://media.hgbcinfluencers.org/bisum/cap-nb.jpg' },
       { name: 'White', image: 'https://media.hgbcinfluencers.org/bisum/cap-w.jpg' },
-      { name: 'Purple', image: 'https://media.hgbcinfluencers.org/bisum/cap-p.jpg' },
+      { name: 'Orange', image: 'https://media.hgbcinfluencers.org/bisum/cap-p.jpg' },
     ],
     sizes: ['One Size'], 
   }

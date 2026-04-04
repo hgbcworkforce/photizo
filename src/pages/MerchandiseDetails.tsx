@@ -94,7 +94,7 @@ export default function MerchandiseDetails() {
           amount: Math.round(totalAmount * 100), // Kobo
           access_code: result.accessCode,
           callback: (response: any) => {
-            navigate(`/registration-success?ref=${response.reference}&type=merch`);
+            navigate(`/merchandise-success?ref=${response.reference}`);
           },
           onClose: () => setIsProcessing(false),
         });

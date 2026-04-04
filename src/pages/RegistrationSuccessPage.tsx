@@ -86,12 +86,6 @@ export default function RegistrationSuccessPage() {
             >
               Return to Homepage
             </Link>
-            <button
-              onClick={() => window.print()}
-              className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors"
-            >
-              Print Receipt
-            </button>
           </div>
         </div>
       </main>

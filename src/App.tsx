@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 
 // Payment Pages
 import RegistrationSuccessPage from "./pages/RegistrationSuccessPage";
+import MerchandiseSuccessPage from "./pages/MerchandiseSuccessPage";
 
 // import PaymentCallback from "./pages/PaymentCallback";
 // import PaymentSuccess from './pages/PaymentSuccess';
@@ -38,6 +39,7 @@ function App() {
           <Route path="/merchandise" element={<Merchandise />} />
           <Route path="/merchandisedetails/:id" element={<MerchandiseDetails />} />
           <Route path="/registration-success" element={<RegistrationSuccessPage />} />
+          <Route path="/merchandise-success" element={<MerchandiseSuccessPage />} />
           {/* <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment/callback" element={<PaymentCallback />} />
           <Route path="/admin" element={<AdminDashboard />} />

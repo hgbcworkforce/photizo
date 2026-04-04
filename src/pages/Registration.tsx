@@ -56,8 +56,19 @@ export default function Registration() {
     setIsSubmitting(true);
 
     try {
+      // Trim whitespace and transform values to match backend expectations
+      const payload = {
+        ...formData,
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        attendanceMode: formData.attendanceMode === "on-site" ? "Physical" : "Virtual",
+        breakoutSessionChoice: formData.breakoutSessionChoice.charAt(0).toUpperCase() + formData.breakoutSessionChoice.slice(1),
+        referralSource: formData.referralSource.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+        expectations: formData.expectations || "No specific expectations",
+      };
+
       // 1. Save data to Node.js backend (Status: Pending)
-      const regResult = await registrationAPI.register(formData);
+      const regResult = await registrationAPI.register(payload);
 
       // 2. Initialize Payment to get access_code from Paystack via backend
       const payResult = await registrationAPI.initializePayment(regResult.attendee.id);
@@ -185,8 +196,8 @@ export default function Registration() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Select Attendance Mode *</label>
                   <select required name="attendanceMode" value={formData.attendanceMode} onChange={handleInputChange} className="block w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700">
                     <option value="">Select Attendance Mode</option>
-                    <option value="on-site">On Site</option>
-                    <option value="online">Online</option>
+                    <option value="on-site">Physical (On Site)</option>
+                    <option value="online">Virtual (Online)</option>
                   </select>   
                 </div>
 
@@ -198,6 +209,7 @@ export default function Registration() {
                   <option value="tech">Tech</option>
                   <option value="investment">Investment</option>
                   <option value="fashion">Fashion</option>
+                  <option value="leadership">Leadership</option>
                 </select>
                 </div>
               </div>

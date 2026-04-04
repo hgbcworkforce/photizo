@@ -8,7 +8,33 @@ import { merchandiseAPI } from "../services/apiService";
 // Define the charge percentage for transparency
 const CHARGE_PERCENTAGE = 0.025; // 2.5%
 
-declare const PaystackPop: any;
+// Paystack v2 Type Definitions
+interface PaystackResponse {
+  reference: string;
+  status: string;
+}
+
+interface PaystackConfig {
+  key: string;
+  email: string;
+  amount: number;
+  access_code: string;
+  callback: (response: PaystackResponse) => void;
+  onClose: () => void;
+}
+
+interface PaystackPopInstance {
+  openIframe: () => void;
+}
+
+declare global {
+  interface Window {
+    PaystackPop: {
+      setup: (config: PaystackConfig) => PaystackPopInstance;
+      buildCheckoutUrl: (options: any) => string;
+    };
+  }
+}
 
 export default function MerchandiseDetails() {
   const { id } = useParams();
@@ -77,6 +103,11 @@ export default function MerchandiseDetails() {
     setIsProcessing(true);
 
     try {
+      // Validate required fields
+      if (!formData.fullName || !formData.email || !formData.phoneNumber) {
+        throw new Error("Please fill in all required fields");
+      }
+
       const payload = {
         ...formData,
         merchandiseId: merchandiseItem.id,
@@ -86,25 +117,38 @@ export default function MerchandiseDetails() {
       // 1. Persist Order to Node.js backend
       const result = await merchandiseAPI.createOrder(payload);
 
-      // 2. Open Paystack Popup
-      if (typeof PaystackPop !== "undefined") {
-        const handler = PaystackPop.setup({
-          key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
-          email: formData.email,
-          amount: Math.round(totalAmount * 100), // Kobo
-          access_code: result.accessCode,
-          callback: (response: any) => {
-            navigate(`/merchandise-success?ref=${response.reference}`);
-          },
-          onClose: () => setIsProcessing(false),
-        });
-        handler.openIframe();
+      // 2. Open Paystack Popup using v2 API
+      if (typeof window !== "undefined" && window.PaystackPop) {
+        try {
+          const handler = window.PaystackPop.setup({
+            key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
+            email: formData.email,
+            amount: Math.round(totalAmount * 100), // Convert to kobo
+            access_code: result.accessCode,
+            callback: (response: PaystackResponse) => {
+              if (response.reference) {
+                navigate(`/merchandise-success?ref=${response.reference}`);
+              }
+            },
+            onClose: () => {
+              console.warn("Payment popup closed");
+              setIsProcessing(false);
+            },
+          });
+          
+          // Note: Paystack library uses .openIframe() (deprecation warning is expected)
+          handler.openIframe();
+        } catch (paystackError) {
+          console.error("Paystack initialization error:", paystackError);
+          throw new Error("Failed to initialize payment. Please try again.");
+        }
       } else {
-        throw new Error("Paystack not loaded");
+        throw new Error("Payment service (Paystack) is not loaded. Please refresh the page and try again.");
       }
     } catch (error) {
       console.error("Order failed:", error);
-      alert("Could not process order. Please try again.");
+      const errorMessage = error instanceof Error ? error.message : "Could not process order. Please try again.";
+      alert(errorMessage);
       setIsProcessing(false);
     }
   };

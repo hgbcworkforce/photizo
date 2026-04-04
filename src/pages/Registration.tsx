@@ -7,24 +7,33 @@ import SectionHero from "../components/SectionHero";
 import { registrationAPI } from "../services/apiService"; // Adjusted to use your vetted service
 import type { RegistrationData } from "../types/registration";
 
-// Extend window for Paystack script
+// Paystack v2 Type Definitions
 interface PaystackResponse {
   reference: string;
-  // Add other properties as needed
+  status?: string;
+}
+
+interface PaystackConfig {
+  key: string;
+  email: string;
+  amount: number;
+  access_code: string;
+  callback: (response: PaystackResponse) => void;
+  onClose: () => void;
 }
 
 interface PaystackPopInstance {
-  setup(config: {
-    key: string;
-    email: string;
-    amount: number;
-    access_code: string;
-    onClose: () => void;
-    callback: (response: PaystackResponse) => void;
-  }): { openIframe: () => void };
+  openIframe: () => void;
 }
 
-declare const PaystackPop: PaystackPopInstance;
+declare global {
+  interface Window {
+    PaystackPop: {
+      setup: (config: PaystackConfig) => PaystackPopInstance;
+      buildCheckoutUrl: (options: any) => string;
+    };
+  }
+}
 
 export default function Registration() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -77,25 +86,34 @@ export default function Registration() {
         throw new Error("Payment initialization failed: no access code received");
       }
 
-      // 3. Trigger Paystack Popup
-      if (typeof PaystackPop !== "undefined") {
-        const handler = PaystackPop.setup({
-          key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY, // Use your env variable
-          email: formData.email,
-          amount: Math.round(totalAmount * 100), // Kobo (205000)
-          access_code: payResult.accessCode,
-          onClose: () => {
-            alert("Payment window closed. Please complete payment to secure your spot.");
-            setIsSubmitting(false);
-          },
-          callback: (response: PaystackResponse) => {
-            // 4. Success - Redirect to Success Page
-            window.location.href = `/registration-success?ref=${response.reference}`;
-          },
-        });
-        handler.openIframe();
+      // 3. Trigger Paystack Popup using v2 API
+      if (typeof window !== "undefined" && window.PaystackPop) {
+        try {
+          const handler = window.PaystackPop.setup({
+            key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY, // Use your env variable
+            email: formData.email,
+            amount: Math.round(totalAmount * 100), // Convert to kobo (205000)
+            access_code: payResult.accessCode,
+            onClose: () => {
+              alert("Payment window closed. Please complete payment to secure your spot.");
+              setIsSubmitting(false);
+            },
+            callback: (response: PaystackResponse) => {
+              // 4. Success - Redirect to Success Page
+              if (response.reference) {
+                window.location.href = `/registration-success?ref=${response.reference}`;
+              }
+            },
+          });
+          
+          // Note: Paystack library uses .openIframe() (deprecation warning is expected)
+          handler.openIframe();
+        } catch (paystackError) {
+          console.error("Paystack initialization error:", paystackError);
+          throw new Error("Failed to initialize payment. Please try again.");
+        }
       } else {
-        throw new Error("Paystack library not loaded");
+        throw new Error("Payment service (Paystack) is not loaded. Please refresh the page and try again.");
       }
     } catch (error: unknown) {
       console.error("Registration/Payment Error:", error);

@@ -35,6 +35,14 @@ export const registrationAPI = {
   verifyPayment: async (reference: string): Promise<{ status: string }> => {
     const response = await apiClient.get(`/payments/verify/${reference}`);
     return response.data;
+  },
+
+
+  getRecentRegistrations: async (token: string) => {
+    const response = await apiClient.get('/registrations', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
   }
 };
 
@@ -55,7 +63,16 @@ export const merchandiseAPI = {
   verifyMerchPayment: async (reference: string) => {
     const response = await apiClient.get(`/orders/verify/${reference}`);
     return response.data;
-  }
+  },
+
+  getMerchandiseOrders: async (params = {}, token: string) => {
+    const response = await apiClient.get('/orders/merchandise', {
+      params,
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  },
+
 };
 
 /**
@@ -68,3 +85,29 @@ export const calculatePaystackFees = (amount: number): number => {
   const total = (amount + flatFee) / (1 - percentage);
   return Math.ceil(total - amount);
 };
+
+
+// Dashboard API for admin functionalities
+
+export const dashboardAPI = {
+    login: async (credentials: { email: string; password: any }) => {
+    const response = await apiClient.post('/auth/login', credentials);
+    return response.data;
+  },
+
+  getStats: async (token: string) => {
+    const response = await apiClient.get('/dashboard/stats', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  },
+  
+  getRecentRegistrations: async (token: string) => {
+    const response = await apiClient.get('/registrations', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  }
+};
+
+

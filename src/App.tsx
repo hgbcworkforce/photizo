@@ -18,12 +18,7 @@ import MerchandiseSuccessPage from "./pages/MerchandiseSuccessPage";
 
 
 // Dashboard Pages
-// import AdminDashboard from "./pages/admin/AdminDashboard";
-// import AdminAttendees from "./pages/admin/AdminAttendees";
-// import AdminPaymentSummary from "./pages/admin/AdminPaymentSummary";
-// import AdminAuth from "./pages/admin/AdminAuth";
-// import AdminRegister from "./pages/admin/AdminRegister";
-// import AdminSignIn from "./pages/admin/AdminSignIn";
+import Dashboard from "./pages/dashboard/Dashboard";
 
 import "./index.css";
 
@@ -40,14 +35,9 @@ function App() {
           <Route path="/merchandisedetails/:id" element={<MerchandiseDetails />} />
           <Route path="/registration-success" element={<RegistrationSuccessPage />} />
           <Route path="/merchandise-success" element={<MerchandiseSuccessPage />} />
-          {/* <Route path="/payment-success" element={<PaymentSuccess />} />
-          <Route path="/payment/callback" element={<PaymentCallback />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/auth" element={<AdminAuth />} />
-          <Route path="/admin/register" element={<AdminRegister />} />
-          <Route path="/admin/signin" element={<AdminSignIn />} />
-          <Route path="/admin/attendees" element={<AdminAttendees />} />
-          <Route path="/admin/payments" element={<AdminPaymentSummary />} /> */}
+      {/* <Route path="/payment-success" element={<PaymentSuccess />} /> */}
+          {/* <Route path="/payment/callback" element={<PaymentCallback />} /> */}
+          <Route path="/dashboard/*" element={<Dashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

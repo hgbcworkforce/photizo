@@ -7,33 +7,6 @@ import SectionHero from "../components/SectionHero";
 import { registrationAPI } from "../services/apiService"; // Adjusted to use your vetted service
 import type { RegistrationData } from "../types/registration";
 
-// Paystack v2 Type Definitions
-interface PaystackResponse {
-  reference: string;
-  status?: string;
-}
-
-interface PaystackConfig {
-  key: string;
-  email: string;
-  amount: number;
-  access_code: string;
-  callback: (response: PaystackResponse) => void;
-  onClose: () => void;
-}
-
-interface PaystackPopInstance {
-  openIframe: () => void;
-}
-
-declare global {
-  interface Window {
-    PaystackPop: {
-      setup: (config: PaystackConfig) => PaystackPopInstance;
-      buildCheckoutUrl: (options: any) => string;
-    };
-  }
-}
 
 export default function Registration() {
   const [isSubmitting, setIsSubmitting] = useState(false);

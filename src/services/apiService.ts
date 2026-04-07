@@ -12,59 +12,98 @@ const apiClient = axios.create({
 });
 
 export const registrationAPI = {
-  /**
-   * Step 1: Send user data to Node.js backend to create a pending registration
-   */
   register: async (data: RegistrationData): Promise<{ success: boolean; attendee: Attendee }> => {
     const response = await apiClient.post('/registrations', data);
     return response.data;
   },
 
-  /**
-   * Step 2: Initialize Paystack Payment
-   * Your Node.js backend should call Paystack Initialize and return the access_code or authorization_url
-   */
   initializePayment: async (attendeeId: string): Promise<PaymentResponse> => {
     const response = await apiClient.post(`/payments/initialize`, { attendeeId });
     return response.data;
   },
 
-  /**
-   * Verify payment status after the popup closes
-   */
   verifyPayment: async (reference: string): Promise<{ status: string }> => {
     const response = await apiClient.get(`/payments/verify/${reference}`);
     return response.data;
-  }
+  },
 };
 
-
-  
 export const merchandiseAPI = {
-  /**
-   * Step 1: Create a pending order in the Node.js backend
-   */
   createOrder: async (orderData: OrderPayload) => {
     const response = await apiClient.post('/orders/merchandise', orderData);
-    return response.data; // Should return { success: true, orderId: "...", accessCode: "..." }
+    return response.data;
   },
 
-  /**
-   * Verify a specific merchandise transaction
-   */
   verifyMerchPayment: async (reference: string) => {
     const response = await apiClient.get(`/orders/verify/${reference}`);
     return response.data;
-  }
+  },
+
+  getMerchandiseOrders: async (params = {}, token: string) => {
+    const response = await apiClient.get('/orders/merchandise', {
+      params,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  },
 };
 
-/**
- * Utility to calculate Paystack charges if you want to show them on the UI
- * (Though it's safer to let the backend handle the final math)
- */
 export const calculatePaystackFees = (amount: number): number => {
-  const percentage = 0.025; // 2.5%
+  const percentage = 0.025;
   const flatFee = amount > 2500 ? 100 : 0;
   const total = (amount + flatFee) / (1 - percentage);
   return Math.ceil(total - amount);
+};
+
+// ── Dashboard API ────────────────────────────────────────────────────────────
+
+export interface RegistrationFilters {
+  page?: number;
+  limit?: number;
+  search?: string;
+  attendanceMode?: string;         // 'Physical' | 'Virtual'
+  paymentStatus?: string;          // 'complete' | 'pending'
+  breakoutSessionChoice?: string;
+}
+
+export const dashboardAPI = {
+  login: async (credentials: { email: string; password: string }) => {
+    const response = await apiClient.post('/auth/login', credentials);
+    return response.data;
+  },
+
+  getStats: async (token: string) => {
+    const response = await apiClient.get('/dashboard/stats', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  },
+
+  /**
+   * Fetch registrations with full filter + pagination support.
+   * Only non-empty values are forwarded so the backend isn't
+   * confused by empty strings.
+   */
+  getRecentRegistrations: async (token: string, filters: RegistrationFilters = {}) => {
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      attendanceMode,
+      paymentStatus,
+      breakoutSessionChoice,
+    } = filters;
+
+    const params: Record<string, string | number> = { page, limit };
+    if (search)                params.search                = search;
+    if (attendanceMode)        params.attendanceMode        = attendanceMode;
+    if (paymentStatus)         params.paymentStatus         = paymentStatus;
+    if (breakoutSessionChoice) params.breakoutSessionChoice = breakoutSessionChoice;
+
+    const response = await apiClient.get('/registrations', {
+      params,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  },
 };

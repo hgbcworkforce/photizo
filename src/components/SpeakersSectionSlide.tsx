@@ -31,9 +31,13 @@ export default function SpeakerSectionSlide({ speakers }: { speakers: any[] }) {
           </a>
         </div>
 
+        <div className="flex items-center justify-center h-96 rounded-lg">
+          <h1 className="text-2xl md:text-[150px]  text-gray-500">Coming Soon ...</h1>
+        </div>
+
         {/* Slider Container */}
-        <div className="relative group/slider">
-          <Swiper
+        {/* <div className="relative group/slider"> */}
+          {/* <Swiper
             modules={[Navigation, Autoplay, Pagination]}
             spaceBetween={30}
             slidesPerView={1}
@@ -51,11 +55,6 @@ export default function SpeakerSectionSlide({ speakers }: { speakers: any[] }) {
           >
             {speakers.map((speaker) => (
               <SwiperSlide key={speaker.id}>
-                {/* 
-                   Note: We pass a dummy function to onSpeakerClick 
-                   since you mentioned the modal shouldn't open on the homepage.
-                   Or we can wrap it in a Link to the speakers page.
-                */}
                 <div className="h-full py-4">
                   <SpeakerCard 
                     speaker={speaker} 
@@ -64,10 +63,10 @@ export default function SpeakerSectionSlide({ speakers }: { speakers: any[] }) {
                 </div>
               </SwiperSlide>
             ))}
-          </Swiper>
+          </Swiper> */}
 
           {/* Custom Navigation Buttons */}
-          <div className="absolute top-1/2 -translate-y-1/2 -left-4 z-10 opacity-0 group-hover/slider:opacity-100 transition-opacity hidden lg:block">
+          {/* <div className="absolute top-1/2 -translate-y-1/2 -left-4 z-10 opacity-0 group-hover/slider:opacity-100 transition-opacity hidden lg:block">
             <button className="prev-btn p-4 bg-white border border-gray-100 shadow-xl rounded-full text-gray-900 hover:text-blue-600 transition-all">
               <ChevronLeft size={24} />
             </button>
@@ -76,8 +75,8 @@ export default function SpeakerSectionSlide({ speakers }: { speakers: any[] }) {
             <button className="next-btn p-4 bg-white border border-gray-100 shadow-xl rounded-full text-gray-900 hover:text-blue-600 transition-all">
               <ChevronRight size={24} />
             </button>
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
       </div>
     </section>
   );

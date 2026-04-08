@@ -1,4 +1,5 @@
 import { ArrowRight, Target, Zap } from 'lucide-react';
+import aboutImage from '../assets/about-img.jpeg';
 
 export default function AboutSection() {
   return (
@@ -14,8 +15,8 @@ export default function AboutSection() {
             {/* Main Image with custom frame */}
             <div className="relative z-10">
               <img
-                src="https://media.hgbcinfluencers.org/bisum/about_image-p.png"
-                alt="Bisum'25 banner"
+                src={aboutImage}
+                alt="Photizo'26 banner"
                 className="rounded-[2rem] shadow-2xl w-full object-cover aspect-[4/5] lg:h-[650px] border-8 border-white"
               />
               
@@ -41,14 +42,14 @@ export default function AboutSection() {
 
               <div className="space-y-6 text-gray-600 text-lg leading-relaxed">
                 <p>
-                  The BISUM Conference is a transformative event designed to empower 
-                  <span className="text-gray-900 font-semibold"> students and young professionals</span> with the knowledge, 
-                  skills, and mindset needed to excel in business and leadership.
+                  Photizo is a purpose-driven platform dedicated to
+                  <span className="text-gray-900 font-semibold"> raising and empowering individuals to become influential leaders in their spheres of impact.</span> 
+                  The vision of Photizo is centered on building men and women who are equipped to create meaningful change in society through both personal growth and strategic engagement.
                 </p>
                 
                 <p>
-                  Through engaging sessions and expert insights, we inspire participants 
-                  to think beyond academics and embrace actionable innovation.
+                  Photizo challenges individuals to move beyond limitations, grow intentionally, and expand their influence. It promotes a balanced approach to impact, combining personal and 
+                  spiritual development with active social and professional engagement, so individuals are transformed within and empowered to make meaningful contributions in their communities.
                 </p>
               </div>
 

@@ -35,7 +35,8 @@ export default function Home() {
             <ScheduleSection sessions={sessions} />
 
             {/* Speakers Section */}
-            <SpeakersSectionSlide speakers={speakersData} />
+            {/* <SpeakersSectionSlide speakers={speakersData} /> */}
+            <SpeakersSectionSlide />
 
             {/* Merchandise Section */}
 

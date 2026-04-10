@@ -127,7 +127,8 @@ export default function MerchandiseDetails() {
             access_code: result.accessCode,
             callback: (response: PaystackResponse) => {
               if (response.reference) {
-                navigate(`/merchandise-success?ref=${response.reference}`);
+                // Redirect to your backend verification route instead of the frontend navigate()
+                window.location.href = `https://onrender.com{response.reference}&type=merchandise`;
               }
             },
             onClose: () => {

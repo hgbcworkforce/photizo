@@ -71,13 +71,13 @@ export default function Registration() {
               alert("Payment window closed. Please complete payment to secure your spot.");
               setIsSubmitting(false);
             },
-            callback: (response: PaystackResponse) => {
-              // 4. Success - Redirect to Success Page
-              if (response.reference) {
-                window.location.href = `/registration-success?ref=${response.reference}`;
-              }
+              // 4. Handle successful payment - redirect to backend for verification
+            callback: (response: any) => {
+              // This sends the user to backend to verify the transaction
+              // Backend should then redirect them back to frontend success page
+              window.location.href = `https://photizo-backend.onrender.com/api/payments/verify?reference=${response.reference}`;
             },
-          });
+        });
           
           // Note: Paystack library uses .openIframe() (deprecation warning is expected)
           handler.openIframe();
@@ -197,10 +197,13 @@ export default function Registration() {
 
                 <select required name="breakoutSessionChoice" value={formData.breakoutSessionChoice} onChange={handleInputChange} className="block w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700">
                   <option value="">Select Breakout Session</option>
-                  <option value="tech">Tech</option>
-                  <option value="investment">Investment</option>
-                  <option value="fashion">Fashion</option>
-                  <option value="leadership">Leadership</option>
+                  <option value="art">Art</option>
+                  <option value="business">Business</option>
+                  <option value="education">Education</option>
+                  <option value="family">Family</option>
+                  <option value="media">Media</option>
+                  <option value="politics">Politics</option>
+                  <option value="religion">Religion</option>
                 </select>
                 </div>
               </div>

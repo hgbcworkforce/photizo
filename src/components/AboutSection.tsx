@@ -43,7 +43,7 @@ export default function AboutSection() {
               <div className="space-y-6 text-gray-600 text-lg leading-relaxed">
                 <p>
                   Photizo is a purpose-driven platform dedicated to
-                  <span className="text-gray-900 font-semibold"> raising and empowering individuals to become influential leaders in their spheres of impact.</span> 
+                  <span className="text-brand-red/70 font-semibold"> raising and empowering individuals to become influential leaders in their spheres of impact.</span> 
                   The vision of Photizo is centered on building men and women who are equipped to create meaningful change in society through both personal growth and strategic engagement.
                 </p>
                 

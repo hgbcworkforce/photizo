@@ -47,7 +47,7 @@ export const speakersData: Speaker[] = [
       "Entrepreneurship",
       "Technology & Innovation"
     ],
-    category: ["keynote"],
+    category: ["keynote", "breakout"],
     experience: "Former FCMB staff, now full-time missionary and entrepreneur with strong leadership and ministry experience.",
     achievements: [
       "Served in leadership roles across BSF, NCCF, and Youth Fellowship.",

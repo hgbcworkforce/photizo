@@ -30,8 +30,12 @@ export default function SpeakerCard({ speaker, onSpeakerClick }: { speaker: any,
       {/* Right Side: Speaker Details */}
       <div className="flex-[1.1] p-6 md:p-8 flex flex-col justify-center min-w-0">
         <div className="mb-4">
-          <div className="inline-block bg-brand-red/10 text-brand-red text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-widest mb-3">
-            {speaker.category || "Main Stage"}
+          <div className="flex flex-wrap gap-2 mb-3">
+            {(speaker.category && Array.isArray(speaker.category) ? speaker.category : [speaker.category || "Main Stage"]).map((cat: string, index: number) => (
+              <div key={index} className="inline-block bg-brand-red/10 text-brand-red text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-widest">
+                {cat}
+              </div>
+            ))}
           </div>
           <h3 
             className="text-2xl font-bold text-gray-900 mb-1 group-hover:text-brand-red transition-colors cursor-pointer leading-tight"

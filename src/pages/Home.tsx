@@ -3,7 +3,7 @@ import Hero from "../components/Hero";
 import MerchandiseSection from "../components/MerchandiseSection";
 import Navbar from "../components/Navbar";
 import SpeakersSectionSlide from "../components/SpeakersSectionSlide";
-// import { speakersData } from "../data/speakers";
+import { speakersData } from "../data/speakers";
 import {merchandiseItems} from "../data/merchandise";
 import { sessions } from "../data/schedule";
 import ScheduleSection from "../components/ScheduleSction";
@@ -35,8 +35,8 @@ export default function Home() {
             <ScheduleSection sessions={sessions} />
 
             {/* Speakers Section */}
-            {/* <SpeakersSectionSlide speakers={speakersData} /> */}
-            <SpeakersSectionSlide />
+            <SpeakersSectionSlide speakers={speakersData} />
+           
 
             {/* Merchandise Section */}
 

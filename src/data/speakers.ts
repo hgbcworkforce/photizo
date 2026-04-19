@@ -1,3 +1,10 @@
+import pvo from '/speakers/pov.jpeg';
+import pts from '/speakers/sobowale.jpeg';
+import vta from '/speakers/victory.jpeg';
+import ok from '/speakers/oladipo.jpeg';
+
+
+
 export type Speaker = {
   id: number;
   name: string;
@@ -55,70 +62,142 @@ export const speakersData: Speaker[] = [
     },
     quote: "I believe in raising a generation that will march with power for the Lord in every sphere of influence and will not break rank."
   },
-//   {
-//     id: 2,
-//     name: "Dr Adebayo Adekunle",
-//     title: "Consultant Obstetrician & Gynaecologist, Entrepreneur, Educator",
-//     company: "Adebayo Healthcare Limited",
-//     bio: "Dr. Adebayo Adekunle is an exemplary leader in medicine, business, and education. He became the first consultant in his class, rising to the position of Consultant Obstetrician and Gynaecologist within just four and a half years of commencing residency. Currently, he serves as Head of Clinical Services at the Nigerian Police Hospital, Falomo, Ikoyi, Lagos, and Chairman of the Medical Advisory Council. He is the CEO of Adebayo Healthcare Limited, owning multiple hospitals and diagnostic centers across Lagos and Oyo State, and is also the founder of Abisola Foods, reflecting his passion for food security and sustainable entrepreneurship. As a lecturer at LAUTECH’s College of Health Sciences, he mentors the next generation of doctors. Dr. Adebayo is also a global speaker, certified in Leadership and Management in Health from the University of Washington, and has earned over 40 professional and community awards. In 2022, he established the Adebayo Dream Humanitarian Foundation (ADHF), which has provided free healthcare to over 5,000 people. Beyond his professional pursuits, he is a devoted husband to Mrs. Abisola Adekunle and father of two children.",
-//     image: "https://media.hgbcinfluencers.org/bisum/Dr Adebayo.jpg",
-//     expertise: [
-//       "Healthcare Leadership",
-//       "Entrepreneurship",
-//       "Obstetrics & Gynaecology",
-//       "Medical Education",
-//       "Public Speaking",
-//       "Community Development"
-//     ],
-//     category: ["keynote"],
-//     experience: "15+ years in medicine, healthcare leadership, and entrepreneurship",
-//     achievements: [
-//       "First in his class to become Consultant Obstetrician & Gynaecologist",
-//       "Head of Clinical Services, Nigerian Police Hospital Falomo",
-//       "CEO of Adebayo Healthcare Limited and multiple specialist hospitals",
-//       "Founder of Abisola Foods, promoting food security",
-//       "Lecturer at LAUTECH’s College of Health Sciences",
-//       "Over 40 professional and community awards, including Leadership Award by the Office of the Wife of the Vice President of Nigeria",
-//       "Founder of Adebayo Dream Humanitarian Foundation (ADHF), impacting 5,000+ people"
-//     ],
-//     social: {
-//       linkedin: "https://www.linkedin.com/in/thedradebayo1/",
-//       twitter: "https://x.com/thedradebayo",
-//       instagram: "https://instagram.com/thedradebayo",
-//       facebook: "https://facebook.com/thedradebayo"
-//     },
-//     quote: "Purpose drives innovation. When faith meets technology, impact becomes inevitable."
+  {
+  "id": 2,
+  name: "Pastor Victor Olukoju",
+  title: "Ministry Leader, Gospel Filmmaker, Author, Sexual Purity Advocate",
+  company: "Sexual Purity Academy (SPA) & Parables Film Productions",
+  bio: "Pastor Victor Olukoju (PVO) is a multi-talented ministry leader, gospel filmmaker, author, and renowned advocate for sexual purity, dedicated to empowering believers and young people worldwide to live purpose-driven lives for Christ. He is the Founder and President of the Sexual Purity Academy (SPA), an international commission raising Sexual Purity Ambassadors for Christ across Nigeria, the USA, Canada, the UK, Ghana, and Ireland, with impactful programs such as SONDA DAY, Walk for Sexual Purity, and SPA Experience. As the Founding President of Parables Film Productions, he has used storytelling to proclaim the gospel, acting, writing, directing, and producing numerous films including Games, Akobi Laaroye, Oosa, The One I Love, Fourthman, The Peep, Marriage Committee, and Mohuru, a unique full-length gospel film set in a single location and filmed in Ibadan in 2023. He has also featured in Mount Zion Films such as Abattoir and Under Siege. A graduate of the Mount Zion Institute, he holds Ordinary, Advanced, Diploma, and Post-Graduate Diploma certificates in Christian Drama Arts (affiliated with Redeemer’s University and Ajayi Crowther University). He is also a prolific author of over 20 books including Letter to My Son, Letter to My Daughter, Letter to Courting Couples, Maintaining Sexual Purity as a Student, 33 Reasons You Must Say No to Sex Before Marriage, and Zip Up. PVO hosts the Beyond Entertainment Show, blending gospel truth with creative media. He is married to Pastor Mrs. Franca Olukoju, and they are blessed with children and grandchildren. His visionary leadership and creative ministry continue to inspire and transform lives across generations and nations.",
+  image: pvo,
+  expertise: [
+    "Christian Leadership",
+    "Gospel Filmmaking",
+    "Sexual Purity Advocacy",
+    "Public Speaking",
+    "Youth Mentorship",
+    "Content Creation"
+  ],
+  category: ["keynote","breakout"],
+  experience: "Over a decade of impact in ministry, filmmaking, and youth development",
+  achievements: [
+    "Founder and President of Sexual Purity Academy (SPA) with global reach",
+    "Founder of Parables Film Productions",
+    "Produced and featured in multiple gospel films across Nigeria",
+    "Featured in Mount Zion Films productions",
+    "Author of over 20 books on sexual purity and relationships",
+    "Creator of impactful programs like SONDA DAY and Walk for Sexual Purity",
+    "Host of Beyond Entertainment Show"
+  ],
+  social: {
+    linkedin: "",
+    twitter: "",
+    instagram: "",
+    facebook: ""
+  },
+  quote: "A life of purpose is a life committed to truth, purity, and impact for Christ."
+},
+{
+  id: 3,
+  name: "Tayo Sobowale",
+  title: "Business Leader, Pastor, Community Builder, Youth Mentor",
+  company: "The Pitch Business Community & STHRIM Initiative",
+  bio: "Tayo Sobowale, fondly known as PTS, is a leader passionate about building people, businesses, and communities that last. He is the Founder and CEO of The Pitch Business Community, a platform dedicated to business training, branding, marketing, and consulting, helping individuals turn ideas into structured and sustainable ventures. He also leads STHRIM (Survive, Thrive, Multiply Initiative), through which he has impacted over 5,000 young people and supported the growth of more than 60 businesses across industries such as food, fashion, media, and tech. His influence extends into sectors like real estate, telecommunications, music, branding, and interior design, where he provides strategic direction and support. Beyond business, he serves as a leader at Hilltop Kingdom Ministries and as Pastor in Charge of Area at RCCG Watchtower, with a strong focus on raising people with the right values, mindset, and direction. He is also the Director of Hill City Football Academy, where he has trained over 170 young athletes, with about 85 still actively developing, and one currently playing professionally in Italy. He is a certified member of the Nigerian Football Coaches Association. He studied Pure and Applied Physics at Ladoke Akintola University of Technology and holds certifications in Leadership, Theology, and Executive Project Management. Across every space he operates in, whether consulting entrepreneurs, mentoring young footballers, or leading his congregation, his focus remains consistent: grooming young people and positioning them for the futures they deserve. At his core, he believes strongly in execution, emphasizing that beyond ideas, structure, discipline, and consistent action are what truly make the difference.",
+  image: pts,
+  expertise: [
+    "Business Strategy",
+    "Entrepreneurship",
+    "Leadership Development",
+    "Branding & Marketing",
+    "Youth Mentorship",
+    "Community Building"
+  ],
+  category: ["keynote", "breakout"],
+  experience: "Over a decade of experience in business development, ministry leadership, and youth empowerment",
+  achievements: [
+    "Founder and CEO of The Pitch Business Community",
+    "Led STHRIM initiative impacting 5,000+ young people",
+    "Supported growth of 60+ businesses across multiple industries",
+    "Pastor in Charge of Area at RCCG Watchtower",
+    "Director of Hill City Football Academy, training 170+ athletes",
+    "Certified member of the Nigerian Football Coaches Association",
+    "Mentored individuals across business, ministry, and sports sectors"
+  ],
+  social: {
+    linkedin: "",
+    twitter: "",
+    instagram: "",
+    facebook: ""
+  },
+  quote: "Execution is the bridge between ideas and results. Structure, discipline, and action make the difference."
+},
+{
+  id: 4,
+  name: "Pastor Mrs. Victory Tolulope Ayangoke",
+  title: "Growth Strategist, Business Development Manager, Mentor",
+  company: "GlobalX",
+  bio: "Pastor Mrs. Victory Tolulope Ayangoke is a Growth Strategist, Business Development Manager, and Mentor passionate about driving growth across businesses, creators, and women. She currently serves as Business Development Manager at GlobalX, where she focuses on building strategic partnerships and unlocking market opportunities that drive business expansion. With a strong background in business development and strategy, she has supported the growth of brands such as Petrong Software Solutions, Niyisuk, and Doxaroyale, helping them translate ideas into structured, sustainable growth through product development, marketing, and execution. As a creative strategist and video editor, she also helps content creators build visibility and grow impactful platforms through intentional content. Beyond the corporate and creative space, she is deeply committed to purpose and personal development. She mentors young women through her Total Woman Mentorship Program, emphasizing that true growth is not just about doing more, but becoming more. She is married to Samson Oluwaseun Ayangoke, the Lead Pastor at Higher Ground Baptist Church, Ogbomosho, Oyo State, and they are blessed with their children, Judah Ireti-Ogo and Anna Ireti-Ayo Ayangoke.",
+  image: vta,
+  expertise: [
+    "Business Development",
+    "Growth Strategy",
+    "Brand Strategy",
+    "Content Creation",
+    "Mentorship",
+    "Women Development"
+  ],
+  category: ["breakout"],
+  experience: "Extensive experience in business development, strategic growth, and mentorship across corporate and creative sectors",
+  achievements: [
+    "Business Development Manager at GlobalX",
+    "Contributed to the growth of brands like Petrong Software Solutions, Niyisuk, and Doxaroyale",
+    "Founder of Total Woman Mentorship Program",
+    "Mentor to young women in personal and professional development",
+    "Creative strategist supporting content creators and digital platforms"
+  ],
+  social: {
+    linkedin: "",
+    twitter: "",
+    instagram: "",
+    facebook: ""
+  },
+  quote: "True growth is not just about doing more, but becoming more."
+},
+{
+  id: 5,
+  name: "Dr. Oladipo Kolawole",
+  title: "Associate Professor, Infectious Diseases Expert, Molecular Virologist, Scienpreneur",
+  company: "Adeleke University & Helix Biogen Institute",
+  bio: "Dr. Oladipo Kolawole is a distinguished infectious diseases expert, molecular virologist, and innovator from Ogbomoso, Oyo State, Nigeria. He holds a B.Tech in Microbiology, an M.Sc. in Medical Microbiology and Parasitology (Virology Option), and a Ph.D. in Microbiology (Medical Virology/Immunology Option) from Ladoke Akintola University of Technology (LAUTECH). He currently serves as an Associate Professor of Infectious Diseases, Molecular Virology, and Genomics at Adeleke University, Ede, Osun State, and was appointed Honorary Associate Professor at the University of Birmingham, UK, in 2023. Dr. Kolawole is an International Fellow of the Indian Council of Medical Research/African Union-STRC and a seasoned science entrepreneur. His research focuses on infectious diseases caused by RNA viruses, exploring molecular epidemiology, pathogenesis, diagnosis, antiviral resistance, and interspecies transmission using molecular biology, bioinformatics, and immunoinformatics. He has published over 120 research articles, authored books and book chapters, and contributed extensively to global scientific conferences. As Co-founder and Director of Helix Biogen Institute, a leading genomic hub in Ogbomoso, he leads groundbreaking initiatives including a COVID-19 candidate vaccine recognized by WHO, making it one of the few in Africa. Helix Biogen Institute has collaborated with top scientists across Africa and is part of the Africa CDC Diagnostics Advisory Committee, representing West Africa in advancing diagnostic solutions. He also holds a patent for a unique microorganism and has received numerous international grants and recognitions from prestigious organizations including the African Union, Bill and Melinda Gates Foundation, UNESCO, Wellcome Trust, NIH, and others. Beyond research, he is a passionate mentor who has supervised numerous students and is committed to advancing biomedical education and innovation in Africa. Dr. Kolawole is also actively involved in his faith community and is a devoted family man.",
+  image: ok,
+  expertise: [
+    "Infectious Diseases",
+    "Molecular Virology",
+    "Genomics & Bioinformatics",
+    "Biomedical Research",
+    "Vaccine Development",
+    "Scientific Innovation"
+  ],
+  category: ["keynote"],
+  experience: "Over 15 years of experience in infectious disease research, academia, and scientific innovation",
+  achievements: [
+    "Associate Professor at Adeleke University and Honorary Associate Professor at University of Birmingham, UK",
+    "Published 120+ peer-reviewed research articles",
+    "Co-founder and Director of Helix Biogen Institute",
+    "Led COVID-19 candidate vaccine project recognized by WHO",
+    "Member of Africa CDC Diagnostics Advisory Committee (DAC)",
+    "Recipient of multiple international grants from organizations including AU, Gates Foundation, UNESCO, NIH, and Wellcome Trust",
+    "Patent holder for a novel microorganism",
+    "Mentored numerous undergraduate and postgraduate students"
+  ],
+  social: {
+    linkedin: "",
+    twitter: "",
+    instagram: "",
+    facebook: ""
+  },
+  quote: "Innovation, research, and mentorship are powerful tools for transforming lives and advancing global health."
+}
 
-//   },
-//   {
-//     id: 3,
-//     name: "Temilola Okedigba",
-//     title: "Product Manager & CEO of Mannara Foods",
-//     company: "Mannara Foods",
-//     bio: "Temilola Okedigba is a dynamic Product Manager with a strong background in technology, strategy, and innovation.\n\nHer journey into tech began while lecturing at Bowen University, where she led the transition from manual processes to automated systems — an experience that sparked her passion for building impactful digital products.\n\nShe has managed and contributed to products across academia, fintech, AI, healthtech, and lifestyle — driving user-centered solutions that deliver real value.\n\nShe is also the CEO of Mannara Foods, a brand committed to making groceries affordable and accessible to everyone.\n\nBeyond tech and business, she is a drama minister who loves the stage more than the screen.\n\nShe holds degrees in Computer Science from Bowen University (B.Sc) and Coventry University (M.Sc), and is currently pursuing her PhD at LAUTECH.\n\nShe is happily married with two children, and continues to blend innovation, leadership, and purpose — inspiring others as a woman thriving at the intersection of faith, technology, and impact.",
-//     image: "https://media.hgbcinfluencers.org/bisum/Temilola Okedigba.jpg",
-//     expertise: [
-//       "Product Management",
-//       "Digital Innovation",
-//       "Leadership",
-//       "Technology Strategy",
-//       "Business Growth"
-//     ],
-//     category: ["breakout"],
-//     experience: "Over a decade of experience spanning technology, academia, and entrepreneurship; currently pursuing a PhD in Computer Science.",
-//     achievements: [
-//       "Led digital transformation projects at Bowen University.",
-//       "Built and managed tech products across multiple industries including fintech and healthtech.",
-//       "Founded Mannara Foods, making groceries affordable and accessible.",
-//       "Mentored aspiring women in tech and entrepreneurship.",
-//       "Speaker at leadership and business events."
-//     ],
-//     social: {
-//       linkedin: "https://www.linkedin.com/in/temilola-okedigba-a869b573/",
-//       facebook: "https://web.facebook.com/temilolao"
-//     },
-//     quote: "Purpose drives innovation. When faith meets technology, impact becomes inevitable."
-//   }
  ];
 
 // Available speaker categories for filtering

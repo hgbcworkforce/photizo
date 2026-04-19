@@ -1,3 +1,13 @@
+// Face Cap
+import ocap from '/merch/orange-cap.png';
+import Wcap from '/merch/white-cap.png';
+import bcap from '/merch/black-cap.png';
+
+// T-Shirt
+// import oshirt from '/merch/orange-shirt.png';
+// import wshirt from '/merch/white-shirt.png';
+// import bshirt from '/merch/black-shirt.png';
+
 
 type MerchandiseItem = {
     id: string;
@@ -35,9 +45,9 @@ export const merchandiseItems: MerchandiseItem[] = [
     timeFrame: 'May 17, 2026',
     fullDescription: 'Complete your conference look with the official BISUM face cap. Designed for comfort and style, it features an adjustable strap for a perfect fit and embroidered BISUM logo. Great for outdoor events or just as a casual accessory.',
     colors: [
-      { name: 'Black', image: 'https://media.hgbcinfluencers.org/bisum/cap-nb.jpg' },
-      { name: 'White', image: 'https://media.hgbcinfluencers.org/bisum/cap-w.jpg' },
-      { name: 'Orange', image: 'https://media.hgbcinfluencers.org/bisum/cap-p.jpg' },
+      { name: 'Black', image: bcap },
+      { name: 'White', image: Wcap },
+      { name: 'Orange', image: ocap },
     ],
     sizes: ['One Size'], 
   }

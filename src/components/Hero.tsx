@@ -22,7 +22,7 @@ export default function Hero() {
     return () => clearInterval(timer);
   }, [conferenceDate]);
 
-  const pad = (n) => String(n).padStart(2, "0");
+  const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
     <section

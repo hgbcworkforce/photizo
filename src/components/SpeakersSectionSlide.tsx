@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, Pagination } from "swiper/modules";
@@ -8,7 +9,7 @@ import 'swiper/css/bundle';
 
 export default function SpeakerSectionSlide({ speakers }: { speakers: any[] }) {
 
-
+  const navigate = useNavigate();
   return (
     <section className="py-24 bg-white overflow-hidden">
       <div className="container mx-auto px-6">
@@ -56,7 +57,7 @@ export default function SpeakerSectionSlide({ speakers }: { speakers: any[] }) {
                 <div className="h-full py-4">
                   <SpeakerCard 
                     speaker={speaker} 
-                    onSpeakerClick={() => window.location.href = '/speakers'} 
+                    onSpeakerClick={() => navigate(`/speakers`)} 
                   />
                 </div>
               </SwiperSlide>

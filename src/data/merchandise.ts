@@ -1,12 +1,12 @@
 // Face Cap
-import ocap from '/merch/orange-cap.png';
-import Wcap from '/merch/white-cap.png';
-import bcap from '/merch/black-cap.png';
+import ocap from '/merch/orange-cap.jpeg';
+import Wcap from '/merch/white-cap.jpeg';
+import bcap from '/merch/black-cap.jpeg';
 
 // T-Shirt
-// import oshirt from '/merch/orange-shirt.png';
-// import wshirt from '/merch/white-shirt.png';
-// import bshirt from '/merch/black-shirt.png';
+import oshirt from '/merch/orange-shirt.jpeg';
+import wshirt from '/merch/white-shirt.jpeg';
+import bshirt from '/merch/black-shirt.jpeg';
 
 
 type MerchandiseItem = {
@@ -31,9 +31,9 @@ export const merchandiseItems: MerchandiseItem[] = [
     timeFrame: 'May 17, 2026',
     fullDescription: 'Show your support for the BISUM Conference with this exclusive t-shirt. Made from premium, soft cotton, it offers superior comfort and durability. Features the official BISUM logo prominently. Available in a range of sizes from S to XXL.',
     colors: [
-      { name: 'Black', image: 'https://media.hgbcinfluencers.org/bisum/shirt-nb.jpg' },
-      { name: 'White', image: 'https://media.hgbcinfluencers.org/bisum/shirt-w.jpg' },
-      { name: 'Orange', image: 'https://media.hgbcinfluencers.org/bisum/shirt-p.jpg' },
+      { name: 'Black', image: bshirt },
+      { name: 'White', image: wshirt },
+      { name: 'Orange', image: oshirt },
     ],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
   },

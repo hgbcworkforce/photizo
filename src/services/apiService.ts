@@ -66,9 +66,70 @@ export interface RegistrationFilters {
   breakoutSessionChoice?: string;
 }
 
+export interface DashboardResponse<T> {
+  success: boolean;
+  data: T[];
+  total?: number;
+  page?: number;
+  orders?: T[]; // For merchandise orders, if backend uses a different key
+}
+
+export interface MerchandiseOrder {
+  merchandiseId: string;
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  color: string;
+  size: string;
+  quantity: number;
+  totalAmount: number;
+}
+
+export interface Volunteer {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone?: string;
+  created_at: string;
+}
+
+export interface Sponsor {
+  id: string;
+  company_name: string;
+  email: string;
+  phone?: string;
+  sponsorship_level?: string;
+  created_at: string;
+}
+
+export interface Exhibitor {
+  id: string;
+  company_name: string;
+  email: string;
+  phone?: string;
+  booth_size?: string;
+  created_at: string;
+}
+
+export interface NewsletterSubscriber {
+  id: string;
+  email: string;
+  subscribed_at: string;
+}
+
 export const dashboardAPI = {
   login: async (credentials: { email: string; password: string }) => {
     const response = await apiClient.post('/auth/login', credentials);
+    return response.data;
+  },
+
+  logout: async (token: string): Promise<{ success: boolean }> => {
+    const response = await apiClient.post(
+      '/auth/logout',
+      {},
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
     return response.data;
   },
 
@@ -102,6 +163,61 @@ export const dashboardAPI = {
 
     const response = await apiClient.get('/registrations', {
       params,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  },
+
+  getMerchandiseOrders: async (
+    token: string,
+    filters: Record<string, string | number> = {}
+  ): Promise<DashboardResponse<MerchandiseOrder>> => {
+    const response = await apiClient.get('/orders/merchandise', {
+      params: filters,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  },
+
+  getVolunteers: async (
+    token: string,
+    filters: Record<string, string | number> = {}
+  ): Promise<DashboardResponse<Volunteer>> => {
+    const response = await apiClient.get('/volunteers', {
+      params: filters,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  },
+
+  getSponsors: async (
+    token: string,
+    filters: Record<string, string | number> = {}
+  ): Promise<DashboardResponse<Sponsor>> => {
+    const response = await apiClient.get('/sponsors', {
+      params: filters,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  },
+
+  getExhibitors: async (
+    token: string,
+    filters: Record<string, string | number> = {}
+  ): Promise<DashboardResponse<Exhibitor>> => {
+    const response = await apiClient.get('/exhibitors', {
+      params: filters,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  },
+
+  getNewsletterSubscribers: async (
+    token: string,
+    filters: Record<string, string | number> = {}
+  ): Promise<DashboardResponse<NewsletterSubscriber>> => {
+    const response = await apiClient.get('/newsletter-subscribers', {
+      params: filters,
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;

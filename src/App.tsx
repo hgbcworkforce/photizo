@@ -13,14 +13,12 @@ import NotFound from "./pages/NotFound";
 import RegistrationSuccessPage from "./pages/RegistrationSuccessPage";
 import MerchandiseSuccessPage from "./pages/MerchandiseSuccessPage";
 
-// import PaymentCallback from "./pages/PaymentCallback";
-// import PaymentSuccess from './pages/PaymentSuccess';
-
 
 // Dashboard Pages
-import Dashboard from "./pages/dashboard/Dashboard";
+import Admin from "./pages/Admin";
 
 import "./index.css";
+import AdminGuard from "./components/AdminGuard";
 
 function App() {
   return (
@@ -35,10 +33,14 @@ function App() {
           <Route path="/merchandisedetails/:id" element={<MerchandiseDetails />} />
           <Route path="/registration-success" element={<RegistrationSuccessPage />} />
           <Route path="/merchandise-success" element={<MerchandiseSuccessPage />} />
-      {/* <Route path="/payment-success" element={<PaymentSuccess />} /> */}
-          {/* <Route path="/payment/callback" element={<PaymentCallback />} /> */}
-          <Route path="/dashboard/*" element={<Dashboard />} />
           <Route path="*" element={<NotFound />} />
+
+          {/* Admin route — no Navbar/Footer */}
+        <Route path="/dashboard" element={
+          <AdminGuard>
+            <Admin />
+          </AdminGuard>
+        } />
         </Routes>
       </div>
     </Router>

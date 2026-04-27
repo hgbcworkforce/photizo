@@ -1,5 +1,5 @@
 import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
-import { dashboardAPI } from "../../services/apiService";
+import { dashboardAPI } from "../services/apiService";
 
 interface LoginPageProps {
   onLogin: (token: string) => void;

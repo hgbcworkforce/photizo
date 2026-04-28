@@ -11,13 +11,15 @@ const CHARGE_PERCENTAGE = 0.025; // 2.5%
 
 // Paystack v2 Type Definitions
 interface PaystackResponse {
-  status: string;
-  message: string;
-  transaction: {
-    reference: string;
-    status: string;
+  reference: string;
+  status?: string;
+  message?: string;
+  transaction?: {
+    reference?: string;
+    status?: string;
     [key: string]: any;
   };
+  [key: string]: any;
 }
 
 interface PaystackConfig {

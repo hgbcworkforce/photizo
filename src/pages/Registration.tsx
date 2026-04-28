@@ -10,13 +10,15 @@ import type { RegistrationData } from "../types/registration";
 
 // Paystack v2 Type Definitions
 interface PaystackResponse {
-  status: string;
-  message: string;
-  transaction: {
-    reference: string;
-    status: string;
+  reference: string;
+  status?: string;
+  message?: string;
+  transaction?: {
+    reference?: string;
+    status?: string;
     [key: string]: any;
   };
+  [key: string]: any;
 }
 
 export default function Registration() {

@@ -3,12 +3,27 @@ import { Link } from "react-router-dom";
 import { CheckCircle, ShoppingBag, Download } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { downloadMerchandiseReceiptPdf } from "../utils/pdfReceipts";
 
 export default function MerchandiseSuccessPage() {
+  const [params] = useState<URLSearchParams>(() => new URLSearchParams(window.location.search));
   const [ref] = useState<string | null>(() => {
     const params = new URLSearchParams(window.location.search);
-    return params.get("ref");
+    return params.get("ref") || params.get("reference");
   });
+
+  const handleDownloadReceipt = () => {
+    downloadMerchandiseReceiptPdf({
+      name: params.get("name") || undefined,
+      email: params.get("email") || undefined,
+      item: params.get("item") || undefined,
+      quantity: params.get("quantity") || undefined,
+      size: params.get("size") || undefined,
+      color: params.get("color") || undefined,
+      totalPrice: params.get("totalPrice") || undefined,
+      reference: ref || undefined,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -58,6 +73,13 @@ export default function MerchandiseSuccessPage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={handleDownloadReceipt}
+              className="inline-flex items-center justify-center px-6 py-3 border border-brand-red text-brand-red rounded-lg bg-white hover:bg-gray-100 transition-colors shadow-sm"
+            >
+              <Download className="h-5 w-5 mr-2" />
+              Download PDF Receipt
+            </button>
             <Link
               to="/merchandise"
               className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-brand-red/90 hover:bg-brand-red transition-colors shadow-md"

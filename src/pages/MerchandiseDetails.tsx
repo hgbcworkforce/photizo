@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { merchandiseItems } from "../data/merchandise";
 import { merchandiseAPI } from "../services/apiService";
+import { getBackendVerifyUrl } from "../services/apiService";
 
 // Define the charge percentage for transparency
 const CHARGE_PERCENTAGE = 0.025; // 2.5%
@@ -131,8 +132,10 @@ export default function MerchandiseDetails() {
             amount: Math.round(totalAmount * 100), // Convert to kobo
             access_code: result.accessCode,
             callback: (response: PaystackResponse) => {
-              // Redirect to backend verification route
-              window.location.href = `https://photizo-backend.onrender.com/api/payments/verify?reference=${response.transaction.reference}&type=merchandise`;
+              if (response.reference) {
+                // Redirect to your backend verification route instead of the frontend navigate()
+                window.location.href = getBackendVerifyUrl(response.reference);
+              }
             },
             onClose: () => {
               console.warn("Payment popup closed");

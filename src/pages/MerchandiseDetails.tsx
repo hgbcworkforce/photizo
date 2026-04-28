@@ -10,8 +10,13 @@ const CHARGE_PERCENTAGE = 0.025; // 2.5%
 
 // Paystack v2 Type Definitions
 interface PaystackResponse {
-  reference: string;
   status: string;
+  message: string;
+  transaction: {
+    reference: string;
+    status: string;
+    [key: string]: any;
+  };
 }
 
 interface PaystackConfig {
@@ -126,10 +131,8 @@ export default function MerchandiseDetails() {
             amount: Math.round(totalAmount * 100), // Convert to kobo
             access_code: result.accessCode,
             callback: (response: PaystackResponse) => {
-              if (response.reference) {
-                // Redirect to your backend verification route instead of the frontend navigate()
-                window.location.href = `https://onrender.com{response.reference}&type=merchandise`;
-              }
+              // Redirect to backend verification route
+              window.location.href = `https://photizo-backend.onrender.com/api/payments/verify?reference=${response.transaction.reference}&type=merchandise`;
             },
             onClose: () => {
               console.warn("Payment popup closed");

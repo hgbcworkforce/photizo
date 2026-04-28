@@ -7,6 +7,16 @@ import SectionHero from "../components/SectionHero";
 import { registrationAPI } from "../services/apiService"; // Adjusted to use your vetted service
 import type { RegistrationData } from "../types/registration";
 
+// Paystack v2 Type Definitions
+interface PaystackResponse {
+  status: string;
+  message: string;
+  transaction: {
+    reference: string;
+    status: string;
+    [key: string]: any;
+  };
+}
 
 export default function Registration() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,7 +53,7 @@ export default function Registration() {
         ...formData,
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
-        attendanceMode: formData.attendanceMode === "on-site" ? "Physical" : "Virtual",
+        attendanceMode: formData.attendanceMode === "Physical" ? "Physical" : "Virtual",
         breakoutSessionChoice: formData.breakoutSessionChoice.charAt(0).toUpperCase() + formData.breakoutSessionChoice.slice(1),
         referralSource: formData.referralSource.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
         expectations: formData.expectations || "No specific expectations",
@@ -71,11 +81,11 @@ export default function Registration() {
               alert("Payment window closed. Please complete payment to secure your spot.");
               setIsSubmitting(false);
             },
-              // 4. Handle successful payment - redirect to backend for verification
-            callback: (response: any) => {
+            // 4. Handle successful payment - redirect to backend for verification
+            callback: (response: PaystackResponse) => {
               // This sends the user to backend to verify the transaction
-              // Backend should then redirect them back to frontend success page
-              window.location.href = `https://photizo-backend.onrender.com/api/payments/verify?reference=${response.reference}`;
+              // Backend should verify with Paystack and redirect back to success page
+              window.location.href = `https://photizo-backend.onrender.com/api/payments/verify?reference=${response.transaction.reference}`;
             },
         });
           
@@ -122,7 +132,7 @@ export default function Registration() {
               <p className="text-gray-600">
                   Please fill out all required information to secure your spot.
                 </p>
-            </div>
+            </div>  
 
             <form onSubmit={handleRegistration} className="space-y-8">
               {/* Personal Info */}
@@ -187,8 +197,8 @@ export default function Registration() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Select Attendance Mode *</label>
                   <select required name="attendanceMode" value={formData.attendanceMode} onChange={handleInputChange} className="block w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700">
                     <option value="">Select Attendance Mode</option>
-                    <option value="on-site">Physical (On Site)</option>
-                    <option value="online">Virtual (Online)</option>
+                    <option value="physical">Physical (On Site)</option>
+                    <option value="virtual">Virtual (Online)</option>
                   </select>   
                 </div>
 

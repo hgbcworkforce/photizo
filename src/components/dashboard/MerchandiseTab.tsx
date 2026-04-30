@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { Download, Search, RefreshCw } from 'lucide-react';
+import { Download, Search, RefreshCw, Trash } from 'lucide-react';
 import type { ChangeEvent } from 'react';
-import { merchandiseAPI } from '../../services/apiService';
+import { dashboardAPI, merchandiseAPI } from '../../services/apiService';
 import { authUtils } from '../../utils/authUtils';
 import { downloadCSV, ORANGE } from '../../utils/adminHelpers';
 
@@ -38,6 +38,14 @@ export default function MerchandiseTab() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+
+  // Delete modal states
+  const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; id: string | null; name: string }>({
+    isOpen: false,
+    id: null,
+    name: "",
+  });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Debounce for search
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -114,6 +122,48 @@ export default function MerchandiseTab() {
 
   const handleRefresh = () => {
     load(page, search, filterCategory);
+  };
+
+  const handleDeleteRecord = (id: string | undefined, name: string) => {
+    if (!id) {
+      alert("Error: Record ID not found");
+      return;
+    }
+    setDeleteModal({ isOpen: true, id, name });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteModal.id) return;
+
+    setIsDeleting(true);
+    try {
+      const token = authUtils.getToken();
+      if (!token) {
+        throw new Error("Not authenticated");
+      }
+
+      // Call API to delete merchandise order
+      await dashboardAPI.deleteMerchandiseOrder(deleteModal.id, token);
+
+      // Remove from local state
+      setData((prev) =>
+        prev.filter((r) => r.email !== deleteModal.id)
+      );
+      setAllDataForStats((prev) =>
+        prev.filter((r) => r.email !== deleteModal.id)
+      );
+
+      // Close modal and refresh
+      setDeleteModal({ isOpen: false, id: null, name: "" });
+      setTotalItems((prev) => Math.max(0, prev - 1));
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert(
+        err instanceof Error ? err.message : "Failed to delete merchandise order"
+      );
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   // ── Chart Data ──────────────────────────────────────────────────────────
@@ -257,7 +307,7 @@ export default function MerchandiseTab() {
         <table className="w-full text-xs border-collapse">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-200">
-              {['Name', 'Email', 'Phone', 'Product', 'Color', 'Size', 'Qty', 'Total'].map((h) => (
+              {['Name', 'Email', 'Phone', 'Product', 'Color', 'Size', 'Qty', 'Total', 'Actions'].map((h) => (
                 <th
                   key={h}
                   className="text-left px-3 py-2.5 font-semibold text-gray-500 uppercase tracking-wide text-[10px] whitespace-nowrap"
@@ -315,6 +365,17 @@ export default function MerchandiseTab() {
                   <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">
                     ₦{r.totalAmount?.toLocaleString() || 0}
                   </td>
+
+                  {/* Actions */}
+                  <td className="px-3 py-2.5 text-gray-400 text-center whitespace-nowrap">
+                    <button
+                      onClick={() => handleDeleteRecord(r.email, r.fullName)}
+                      className="cursor-pointer text-gray-400 hover:text-red-700 transition-colors"
+                      title="Delete merchandise order"
+                    >
+                      <Trash className="w-4 h-4" />
+                    </button>
+                  </td>
                 </tr>
               ))
             )}
@@ -342,6 +403,41 @@ export default function MerchandiseTab() {
           >
             Next
           </button>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteModal.isOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
+            <h3 className="text-lg font-bold text-gray-900 mb-2">
+              Delete Merchandise Order?
+            </h3>
+            <p className="text-gray-600 text-sm mb-6">
+              Are you sure you want to delete the order for{" "}
+              <span className="font-semibold text-gray-800">{deleteModal.name}</span>?
+              This action cannot be undone.
+            </p>
+
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() =>
+                  setDeleteModal({ isOpen: false, id: null, name: "" })
+                }
+                disabled={isDeleting}
+                className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                disabled={isDeleting}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:bg-red-400"
+              >
+                {isDeleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

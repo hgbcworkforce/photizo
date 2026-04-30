@@ -166,7 +166,7 @@ export default function Hero() {
           {/* Secondary button */}
           <a
             href="/merchandise"
-            className="rounded-2xl border border-white/12 bg-white/5 px-8 py-4 text-[13px] font-medium text-white/80 transition-all duration-200 hover:border-white/25 hover:bg-white/10"
+            className="rounded-2xl  border border-white/12 bg-white    px-8 py-4 text-[13px] font-medium text-brand-orange transition-all duration-200 hover:border-white/25 hover:text-white hover:bg-white/20"
           >
             Purchase Merchnadise
           </a>

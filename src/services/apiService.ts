@@ -145,4 +145,18 @@ export const dashboardAPI = {
     });
     return response.data;
   },
+
+  deleteRegistration: async (id: string, token: string): Promise<{ success: boolean; message?: string }> => {
+    const response = await apiClient.delete(`/registrations/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  },
+
+  deleteMerchandiseOrder: async (email: string, token: string): Promise<{ success: boolean; message?: string }> => {
+    const response = await apiClient.delete(`/orders/merchandise/${email}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  },
 };

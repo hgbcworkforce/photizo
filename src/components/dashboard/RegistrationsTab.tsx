@@ -7,7 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Download, Search, RefreshCw } from "lucide-react";
+import { Download, Search, RefreshCw, Trash } from "lucide-react";
 import type { ChangeEvent } from "react";
 import { dashboardAPI } from "../../services/apiService";
 import { authUtils } from "../../utils/authUtils";
@@ -50,6 +50,14 @@ export default function RegistrationsTab() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+
+  // Delete modal states
+  const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; id: string | null; name: string }>({
+    isOpen: false,
+    id: null,
+    name: "",
+  });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Debounce for search
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -159,6 +167,48 @@ export default function RegistrationsTab() {
 
   const handleRefresh = () => {
     load(page, search, filterMode, filterStatus, filterSession);
+  };
+
+  const handleDeleteRecord = (id: string | undefined, name: string) => {
+    if (!id) {
+      alert("Error: Record ID not found");
+      return;
+    }
+    setDeleteModal({ isOpen: true, id, name });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteModal.id) return;
+
+    setIsDeleting(true);
+    try {
+      const token = authUtils.getToken();
+      if (!token) {
+        throw new Error("Not authenticated");
+      }
+
+      // Call API to delete registration
+      await dashboardAPI.deleteRegistration(deleteModal.id, token);
+
+      // Remove from local state
+      setRegistrations((prev) =>
+        prev.filter((r) => r.id !== deleteModal.id)
+      );
+      setAllFilteredRegistrations((prev) =>
+        prev.filter((r) => r.id !== deleteModal.id)
+      );
+
+      // Close modal and refresh
+      setDeleteModal({ isOpen: false, id: null, name: "" });
+      setTotalItems((prev) => prev - 1);
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert(
+        err instanceof Error ? err.message : "Failed to delete registration"
+      );
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   // ── Chart Data ──────────────────────────────────────────────────────────
@@ -352,6 +402,7 @@ export default function RegistrationsTab() {
                 "Session",
                 "Status",
                 "Date",
+                "Actions",
               ].map((h) => (
                 <th
                   key={h}
@@ -430,6 +481,15 @@ export default function RegistrationsTab() {
                   <td className="px-3 py-2.5 text-gray-400 whitespace-nowrap">
                     {fmt(r.createdAt)}
                   </td>
+                  <td className="px-3 py-2.5 text-gray-400 text-center whitespace-nowrap">
+                    <button
+                      onClick={() => handleDeleteRecord(r.id, `${r.firstName} ${r.lastName}`)}
+                      className="cursor-pointer text-gray-400 hover:text-red-700 transition-colors"
+                      title="Delete registration"
+                    >
+                      <Trash className="w-4 h-4" />
+                    </button>
+                  </td>
                 </tr>
               ))
             )}
@@ -457,6 +517,41 @@ export default function RegistrationsTab() {
           >
             Next
           </button>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteModal.isOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
+            <h3 className="text-lg font-bold text-gray-900 mb-2">
+              Delete Registration?
+            </h3>
+            <p className="text-gray-600 text-sm mb-6">
+              Are you sure you want to delete the registration for{" "}
+              <span className="font-semibold text-gray-800">{deleteModal.name}</span>?
+              This action cannot be undone.
+            </p>
+
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() =>
+                  setDeleteModal({ isOpen: false, id: null, name: "" })
+                }
+                disabled={isDeleting}
+                className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                disabled={isDeleting}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:bg-red-400"
+              >
+                {isDeleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

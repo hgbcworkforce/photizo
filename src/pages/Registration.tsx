@@ -5,17 +5,20 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import SectionHero from "../components/SectionHero";
 import { registrationAPI } from "../services/apiService"; // Adjusted to use your vetted service
+import { getBackendVerifyUrl } from "../services/apiService";
 import type { RegistrationData } from "../types/registration";
 
 // Paystack v2 Type Definitions
 interface PaystackResponse {
-  status: string;
-  message: string;
-  transaction: {
-    reference: string;
-    status: string;
+  reference: string;
+  status?: string;
+  message?: string;
+  transaction?: {
+    reference?: string;
+    status?: string;
     [key: string]: any;
   };
+  [key: string]: any;
 }
 
 export default function Registration() {
@@ -84,8 +87,8 @@ export default function Registration() {
             // 4. Handle successful payment - redirect to backend for verification
             callback: (response: PaystackResponse) => {
               // This sends the user to backend to verify the transaction
-              // Backend should verify with Paystack and redirect back to success page
-              window.location.href = `https://photizo-backend.onrender.com/api/payments/verify?reference=${response.transaction.reference}`;
+              // Backend should then redirect them back to frontend success page
+              window.location.href = getBackendVerifyUrl(response.reference);
             },
         });
           

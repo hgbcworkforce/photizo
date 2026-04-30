@@ -3,6 +3,11 @@ import type { RegistrationData, Attendee, PaymentResponse } from '../types/regis
 import type { OrderPayload } from '../types/merchandise';
 
 const API_BASE_URL = import.meta.env.VITE_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_ROOT = API_BASE_URL.replace(/\/$/, '').replace(/\/api$/, '');
+
+export const getBackendVerifyUrl = (reference: string): string => {
+  return `${API_ROOT}/api/payments/verify?reference=${encodeURIComponent(reference)}`;
+};
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -23,7 +28,9 @@ export const registrationAPI = {
   },
 
   verifyPayment: async (reference: string): Promise<{ status: string }> => {
-    const response = await apiClient.get(`/payments/verify/${reference}`);
+    const response = await apiClient.get(`/payments/verify`, {
+      params: { reference },
+    });
     return response.data;
   },
 };
@@ -35,7 +42,9 @@ export const merchandiseAPI = {
   },
 
   verifyMerchPayment: async (reference: string) => {
-    const response = await apiClient.get(`/orders/verify/${reference}`);
+    const response = await apiClient.get(`/payments/verify`, {
+      params: { reference },
+    });
     return response.data;
   },
 

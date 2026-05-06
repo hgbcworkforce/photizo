@@ -25,7 +25,7 @@ type MerchandiseItem = {
 export const merchandiseItems: MerchandiseItem[] = [
   {
     id: 't-shirt',
-    name: 'BISUM T-Shirt',
+    name: 'T-Shirt',
     description: 'High-quality cotton t-shirt with BISUM logo. Available in multiple colors and sizes. Comfortable and stylish for any occasion.',
     price: '₦ 6, 000',
     timeFrame: 'May 17, 2026',
@@ -39,7 +39,7 @@ export const merchandiseItems: MerchandiseItem[] = [
   },
   {
     id: 'face-cap',
-    name: 'BISUM Face Cap',
+    name: 'Face Cap',
     description: 'Stylish face cap, perfect for sunny conference days. Adjustable strap.',
     price: '₦ 2, 500',
     timeFrame: 'May 17, 2026',

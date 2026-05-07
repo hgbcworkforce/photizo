@@ -56,7 +56,7 @@ export default function Registration() {
         ...formData,
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
-        attendanceMode: formData.attendanceMode === "Physical" ? "Physical" : "Virtual",
+        attendanceMode: formData.attendanceMode === "physical" ? "physical" : "virtual",
         breakoutSessionChoice: formData.breakoutSessionChoice.charAt(0).toUpperCase() + formData.breakoutSessionChoice.slice(1),
         referralSource: formData.referralSource.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
         expectations: formData.expectations || "No specific expectations",

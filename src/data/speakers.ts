@@ -1,5 +1,4 @@
 import pvo from '/speakers/pov.jpeg';
-import pts from '/speakers/sobowale.jpeg';
 import vta from '/speakers/victory.jpeg';
 import ok from '/speakers/oladipo.jpeg';
 
@@ -98,40 +97,6 @@ export const speakersData: Speaker[] = [
 },
 {
   id: 3,
-  name: "Tayo Sobowale",
-  title: "Business Leader, Pastor, Community Builder, Youth Mentor",
-  company: "The Pitch Business Community & STHRIM Initiative",
-  bio: "Tayo Sobowale, fondly known as PTS, is a leader passionate about building people, businesses, and communities that last. He is the Founder and CEO of The Pitch Business Community, a platform dedicated to business training, branding, marketing, and consulting, helping individuals turn ideas into structured and sustainable ventures. He also leads STHRIM (Survive, Thrive, Multiply Initiative), through which he has impacted over 5,000 young people and supported the growth of more than 60 businesses across industries such as food, fashion, media, and tech. His influence extends into sectors like real estate, telecommunications, music, branding, and interior design, where he provides strategic direction and support. Beyond business, he serves as a leader at Hilltop Kingdom Ministries and as Pastor in Charge of Area at RCCG Watchtower, with a strong focus on raising people with the right values, mindset, and direction. He is also the Director of Hill City Football Academy, where he has trained over 170 young athletes, with about 85 still actively developing, and one currently playing professionally in Italy. He is a certified member of the Nigerian Football Coaches Association. He studied Pure and Applied Physics at Ladoke Akintola University of Technology and holds certifications in Leadership, Theology, and Executive Project Management. Across every space he operates in, whether consulting entrepreneurs, mentoring young footballers, or leading his congregation, his focus remains consistent: grooming young people and positioning them for the futures they deserve. At his core, he believes strongly in execution, emphasizing that beyond ideas, structure, discipline, and consistent action are what truly make the difference.",
-  image: pts,
-  expertise: [
-    "Business Strategy",
-    "Entrepreneurship",
-    "Leadership Development",
-    "Branding & Marketing",
-    "Youth Mentorship",
-    "Community Building"
-  ],
-  category: ["keynote", "breakout"],
-  experience: "Over a decade of experience in business development, ministry leadership, and youth empowerment",
-  achievements: [
-    "Founder and CEO of The Pitch Business Community",
-    "Led STHRIM initiative impacting 5,000+ young people",
-    "Supported growth of 60+ businesses across multiple industries",
-    "Pastor in Charge of Area at RCCG Watchtower",
-    "Director of Hill City Football Academy, training 170+ athletes",
-    "Certified member of the Nigerian Football Coaches Association",
-    "Mentored individuals across business, ministry, and sports sectors"
-  ],
-  social: {
-    linkedin: "",
-    twitter: "",
-    instagram: "",
-    facebook: ""
-  },
-  quote: "Execution is the bridge between ideas and results. Structure, discipline, and action make the difference."
-},
-{
-  id: 4,
   name: "Pastor Mrs. Victory Tolulope Ayangoke",
   title: "Growth Strategist, Business Development Manager, Mentor",
   company: "GlobalX",
@@ -163,7 +128,7 @@ export const speakersData: Speaker[] = [
   quote: "True growth is not just about doing more, but becoming more."
 },
 {
-  id: 5,
+  id: 4,
   name: "Dr. Oladipo Kolawole",
   title: "Associate Professor, Infectious Diseases Expert, Molecular Virologist, Scienpreneur",
   company: "Adeleke University & Helix Biogen Institute",

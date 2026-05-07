@@ -7,7 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Download, Search, RefreshCw, Trash } from "lucide-react";
+import { Download, Search, RefreshCw, Trash2 } from "lucide-react";
 import type { ChangeEvent } from "react";
 import { dashboardAPI } from "../../services/apiService";
 import { authUtils } from "../../utils/authUtils";
@@ -45,19 +45,12 @@ export default function RegistrationsTab() {
   const [filterStatus, setFilterStatus] = useState("");
   const [filterSession, setFilterSession] = useState("");
   const [allFilteredRegistrations, setAllFilteredRegistrations] = useState<Registration[]>([]);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // Pagination states
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-
-  // Delete modal states
-  const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; id: string | null; name: string }>({
-    isOpen: false,
-    id: null,
-    name: "",
-  });
-  const [isDeleting, setIsDeleting] = useState(false);
 
   // Debounce for search
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -169,52 +162,35 @@ export default function RegistrationsTab() {
     load(page, search, filterMode, filterStatus, filterSession);
   };
 
-  const handleDeleteRecord = (id: string | undefined, name: string) => {
-    if (!id) {
-      alert("Error: Record ID not found");
+  const handleDelete = async (registrationId?: string) => {
+    if (!registrationId) return;
+
+    const token = authUtils.getToken();
+    if (!token) {
+      setError("Not authenticated");
       return;
     }
-    setDeleteModal({ isOpen: true, id, name });
-  };
 
-  const confirmDelete = async () => {
-    if (!deleteModal.id) return;
+    if (!window.confirm("Delete this registration? This action cannot be undone.")) {
+      return;
+    }
 
-    setIsDeleting(true);
+    setDeletingId(registrationId);
     try {
-      const token = authUtils.getToken();
-      if (!token) {
-        throw new Error("Not authenticated");
-      }
-
-      // Call API to delete registration
-      await dashboardAPI.deleteRegistration(deleteModal.id, token);
-
-      // Remove from local state
-      setRegistrations((prev) =>
-        prev.filter((r) => r.id !== deleteModal.id)
-      );
-      setAllFilteredRegistrations((prev) =>
-        prev.filter((r) => r.id !== deleteModal.id)
-      );
-
-      // Close modal and refresh
-      setDeleteModal({ isOpen: false, id: null, name: "" });
-      setTotalItems((prev) => prev - 1);
+      await dashboardAPI.deleteRegistration(token, registrationId);
+      await load(page, search, filterMode, filterStatus, filterSession);
     } catch (err) {
-      console.error("Delete error:", err);
-      alert(
-        err instanceof Error ? err.message : "Failed to delete registration"
-      );
+      console.error("Delete registration error:", err);
+      setError(err instanceof Error ? err.message : "Failed to delete registration");
     } finally {
-      setIsDeleting(false);
+      setDeletingId(null);
     }
   };
 
   // ── Chart Data ──────────────────────────────────────────────────────────
 
   const catCount: Record<string, number> = {};
- allFilteredRegistrations.forEach((r) => {
+  allFilteredRegistrations.forEach((r) => {
     // ✅ Check if it exists as a string, then tally it directly
     if (r.attendanceMode) {
       catCount[r.attendanceMode] = (catCount[r.attendanceMode] || 0) + 1;
@@ -382,10 +358,10 @@ export default function RegistrationsTab() {
           >
             <Download size={14} /> Export CSV
           </button>
-<span className="text-xs text-gray-400 self-center">
-  {totalItems === 0 ? 0 : (page - 1) * LIMIT + 1} - {Math.min(page * LIMIT, totalItems)} of {totalItems} records 
-  {activeFilters > 0 && ` · ${activeFilters} filter${activeFilters > 1 ? 's' : ''}`}
-</span>
+          <span className="text-xs text-gray-400 self-center">
+            {totalItems === 0 ? 0 : (page - 1) * LIMIT + 1} - {Math.min(page * LIMIT, totalItems)} of {totalItems} records
+            {activeFilters > 0 && ` · ${activeFilters} filter${activeFilters > 1 ? 's' : ''}`}
+          </span>
         </div>
       </div>
 
@@ -417,7 +393,7 @@ export default function RegistrationsTab() {
             {loading ? (
               <tr>
                 <td
-                  colSpan={8}
+                  colSpan={9}
                   className="text-center py-10 text-gray-400 text-sm"
                 >
                   Loading...
@@ -426,7 +402,7 @@ export default function RegistrationsTab() {
             ) : registrations.length === 0 ? (
               <tr>
                 <td
-                  colSpan={8}
+                  colSpan={9}
                   className="text-center py-10 text-gray-400 text-sm"
                 >
                   No records found.
@@ -449,11 +425,10 @@ export default function RegistrationsTab() {
                   </td>
                   <td className="px-3 py-2.5">
                     <span
-                      className={`px-2 py-1 text-[9px] font-medium rounded-sm ${
-                        r.attendanceMode === "Physical"
-                          ? "bg-blue-50 text-blue-700"
-                          : "bg-purple-50 text-purple-700"
-                      }`}
+                      className={`px-2 py-1 text-[9px] font-medium rounded-sm ${r.attendanceMode === "Physical"
+                        ? "bg-blue-50 text-blue-700"
+                        : "bg-purple-50 text-purple-700"
+                        }`}
                     >
                       {r.attendanceMode || "—"}
                     </span>
@@ -463,17 +438,16 @@ export default function RegistrationsTab() {
                   </td>
                   <td className="px-3 py-2.5">
                     <span
-                      className={`px-1.5 py-0.5 text-[9px] font-medium rounded-sm ${
-                        r.paymentStatus === "complete" ||
+                      className={`px-1.5 py-0.5 text-[9px] font-medium rounded-sm ${r.paymentStatus === "complete" ||
                         r.paymentStatus === "paid"
-                          ? "bg-green-50 text-green-700"
-                          : r.paymentStatus === "pending"
-                            ? "bg-yellow-50 text-yellow-700"
-                            : "bg-gray-50 text-gray-600"
-                      }`}
+                        ? "bg-green-50 text-green-700"
+                        : r.paymentStatus === "pending"
+                          ? "bg-yellow-50 text-yellow-700"
+                          : "bg-gray-50 text-gray-600"
+                        }`}
                     >
                       {r.paymentStatus === "complete" ||
-                      r.paymentStatus === "paid"
+                        r.paymentStatus === "paid"
                         ? "Paid"
                         : r.paymentStatus || "—"}
                     </span>
@@ -481,13 +455,14 @@ export default function RegistrationsTab() {
                   <td className="px-3 py-2.5 text-gray-400 whitespace-nowrap">
                     {fmt(r.createdAt)}
                   </td>
-                  <td className="px-3 py-2.5 text-gray-400 text-center whitespace-nowrap">
+                  <td className="px-3 py-2.5 whitespace-nowrap">
                     <button
-                      onClick={() => handleDeleteRecord(r.id, `${r.firstName} ${r.lastName}`)}
-                      className="cursor-pointer text-gray-400 hover:text-red-700 transition-colors"
-                      title="Delete registration"
+                      onClick={() => handleDelete(r.id)}
+                      disabled={deletingId === r.id}
+                      className="inline-flex items-center gap-1 rounded-sm border border-red-200 px-2.5 py-1 text-[10px] font-semibold text-red-600 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <Trash className="w-4 h-4" />
+                      <Trash2 size={12} />
+                      {deletingId === r.id ? "Deleting" : "Delete"}
                     </button>
                   </td>
                 </tr>
@@ -517,41 +492,6 @@ export default function RegistrationsTab() {
           >
             Next
           </button>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {deleteModal.isOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
-            <h3 className="text-lg font-bold text-gray-900 mb-2">
-              Delete Registration?
-            </h3>
-            <p className="text-gray-600 text-sm mb-6">
-              Are you sure you want to delete the registration for{" "}
-              <span className="font-semibold text-gray-800">{deleteModal.name}</span>?
-              This action cannot be undone.
-            </p>
-
-            <div className="flex gap-3 justify-end">
-              <button
-                onClick={() =>
-                  setDeleteModal({ isOpen: false, id: null, name: "" })
-                }
-                disabled={isDeleting}
-                className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmDelete}
-                disabled={isDeleting}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:bg-red-400"
-              >
-                {isDeleting ? "Deleting..." : "Delete"}
-              </button>
-            </div>
-          </div>
         </div>
       )}
     </div>

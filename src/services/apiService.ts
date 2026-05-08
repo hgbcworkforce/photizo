@@ -55,6 +55,13 @@ export const merchandiseAPI = {
     });
     return response.data;
   },
+
+  deleteMerchandiseOrder: async (token: string, orderId: string) => {
+    const response = await apiClient.delete(`/orders/merchandise/${orderId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  },
 };
 
 export const calculatePaystackFees = (amount: number): number => {
@@ -132,13 +139,20 @@ export const dashboardAPI = {
     } = filters;
 
     const params: Record<string, string | number> = { page, limit };
-    if (search)                params.search                = search;
-    if (attendanceMode)        params.attendanceMode        = attendanceMode;
-    if (paymentStatus)         params.paymentStatus         = paymentStatus;
+    if (search) params.search = search;
+    if (attendanceMode) params.attendanceMode = attendanceMode;
+    if (paymentStatus) params.paymentStatus = paymentStatus;
     if (breakoutSessionChoice) params.breakoutSessionChoice = breakoutSessionChoice;
 
     const response = await apiClient.get('/registrations', {
       params,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  },
+
+  deleteRegistration: async (token: string, registrationId: string) => {
+    const response = await apiClient.delete(`/registrations/${registrationId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -155,15 +169,8 @@ export const dashboardAPI = {
     return response.data;
   },
 
-  deleteRegistration: async (id: string, token: string): Promise<{ success: boolean; message?: string }> => {
-    const response = await apiClient.delete(`/registrations/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  },
-
-  deleteMerchandiseOrder: async (email: string, token: string): Promise<{ success: boolean; message?: string }> => {
-    const response = await apiClient.delete(`/orders/merchandise/${email}`, {
+  deleteMerchandiseOrder: async (token: string, orderId: string) => {
+    const response = await apiClient.delete(`/orders/merchandise/${orderId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;

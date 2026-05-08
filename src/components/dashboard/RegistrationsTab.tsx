@@ -217,12 +217,13 @@ export default function RegistrationsTab() {
  allFilteredRegistrations.forEach((r) => {
     // ✅ Check if it exists as a string, then tally it directly
     if (r.attendanceMode) {
-      catCount[r.attendanceMode] = (catCount[r.attendanceMode] || 0) + 1;
+      const normalizedMode = r.attendanceMode.toLowerCase();
+      catCount[normalizedMode] = (catCount[normalizedMode] || 0) + 1;
     }
   });
   const catData: ChartData[] = Object.entries(catCount).map(
     ([name, count]) => ({
-      name: name.split(" ")[0],
+      name: name.split(" ")[0].charAt(0).toUpperCase() + name.split(" ")[0].slice(1),
       count,
     }),
   );
@@ -334,8 +335,8 @@ export default function RegistrationsTab() {
           }
         >
           <option value="">All Modes</option>
-          <option value="Physical">Physical</option>
-          <option value="Virtual">Virtual</option>
+          <option value="physical">Physical</option>
+          <option value="virtual">Virtual</option>
         </select>
 
         {/* Payment Status Filter */}
@@ -450,7 +451,7 @@ export default function RegistrationsTab() {
                   <td className="px-3 py-2.5">
                     <span
                       className={`px-2 py-1 text-[9px] font-medium rounded-sm ${
-                        r.attendanceMode === "Physical"
+                        r.attendanceMode === "physical" || r.attendanceMode === "Physical"
                           ? "bg-blue-50 text-blue-700"
                           : "bg-purple-50 text-purple-700"
                       }`}

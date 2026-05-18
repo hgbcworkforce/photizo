@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { ShoppingBag, Tag, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
@@ -55,13 +54,24 @@ const MerchandiseCard = ({ item }: { item: any }) => {
             <span className="text-[10px] uppercase font-bold text-gray-400 tracking-widest">Availability</span>
             <span className="text-xs font-bold text-red-500">{item.timeFrame}</span>
           </div>
-          
-          <Link
+
+          {/* <Link
             to={`/merchandisedetails/${item.id}`}
             className="flex items-center justify-center bg-slate-900 text-white p-3 rounded-2xl hover:bg-brand-red transition-all group/btn"
           >
             <ShoppingBag size={18} className="group-hover/btn:rotate-12 transition-transform" />
           </Link>
+           */}
+
+          <button
+            type="button"
+            disabled
+            className="flex items-center justify-center gap-3 w-full bg-gray-400 text-white p-3 rounded-2xl cursor-not-allowed opacity-80 font-bold uppercase tracking-[0.08em]"
+            title="Order Closed"
+          >
+            ORDER CLOSED
+            <ShoppingBag size={18} className="group-hover/btn:rotate-12 transition-transform" />
+          </button>
         </div>
       </div>
     </div>

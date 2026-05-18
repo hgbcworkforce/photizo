@@ -62,6 +62,7 @@ export default function MerchandiseDetails() {
   const [merchandiseItem, setMerchandiseItem] = useState<any>(null);
   const [selectedColor, setSelectedColor] = useState<any>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  void isProcessing; // Suppress unused variable warning since the order button is currently disabled
 
   // --- Load Item Data ---
   useEffect(() => {
@@ -279,13 +280,21 @@ export default function MerchandiseDetails() {
                 </div>
               </div>
 
-              <button
+              {/* <button
                 disabled={isProcessing}
                 className={`w-full py-4 rounded-lg font-bold text-white transition-all ${
                   isProcessing ? "bg-gray-400" : "bg-brand-red/90 hover:bg-brand-red shadow-lg"
                 }`}
               >
                 {isProcessing ? "Initializing Payment..." : "Pay with Paystack"}
+              </button> */}
+
+              <button
+                type="button"
+                disabled
+                className="w-full py-4 rounded-lg font-bold text-white bg-gray-400 cursor-not-allowed uppercase tracking-[0.08em]"
+              >
+                ORDER CLOSED
               </button>
             </form>
           </div>

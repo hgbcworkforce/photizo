@@ -16,9 +16,9 @@ const ScheduleList = ({ sessions }: ScheduleListProps) => {
 
   const days = Object.keys(groupedSessions);
   const dateMap: Record<string, string> = { 
-    "Day 1": "Thursday, Nov 13", 
-    "Day 2": "Friday, Nov 14", 
-    "Day 3": "Saturday, Nov 15" 
+   "Day 1": "Thursday, MAY 21",
+    "Day 2": "Friday, MAY 22",
+    "Day 3": "Saturday, MAY 23",
   };
 
   return (

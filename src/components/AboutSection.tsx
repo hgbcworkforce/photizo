@@ -21,10 +21,10 @@ export default function AboutSection() {
               />
               
               {/* Floating Stat Card */}
-              <div className="absolute -bottom-6 -right-6 md:right-10 bg-brand-red p-8 rounded-2xl shadow-xl text-white max-w-[200px] hidden md:block">
+              {/* <div className="absolute -bottom-6 -right-6 md:right-10 bg-brand-red p-8 rounded-2xl shadow-xl text-white max-w-[200px] hidden md:block">
                 <p className="text-4xl font-bold mb-1 underline decoration-white underline-offset-4">2026</p>
                 <p className="text-sm font-medium opacity-90 uppercase tracking-wider leading-tight">The Future of Leadership & Investment</p>
-              </div>
+              </div> */}
             </div>
           </div>
 

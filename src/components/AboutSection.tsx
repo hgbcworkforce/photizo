@@ -3,28 +3,27 @@ import aboutImage from '../assets/about-img.jpeg';
 
 export default function AboutSection() {
   return (
-    <section id="about" className="py-24 bg-white overflow-hidden">
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+    <section id="about" className="py-28 bg-white relative overflow-hidden">
+      {/* Background Decorative ambient light */}
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-brand-orange/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-red/5 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
-          {/* Visual Side (Left on desktop to break the pattern) */}
+          {/* Visual Side */}
           <div className="lg:col-span-6 relative">
-            {/* Background Decorative Element */}
-            <div className="absolute -top-10 -left-10 w-64 h-64 bg-blue-50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
-            
-            {/* Main Image with custom frame */}
-            <div className="relative z-10">
-              <img
-                src={aboutImage}
-                alt="Photizo'26 banner"
-                className="rounded-[2rem] shadow-2xl w-full object-cover aspect-[4/5] lg:h-[650px] border-8 border-white"
-              />
+            <div className="relative">
+              {/* Subtle back decorative glow border */}
+              <div className="absolute -inset-2 rounded-[2.5rem] bg-gradient-to-tr from-brand-red/20 to-brand-orange/20 blur-xl opacity-60" />
               
-              {/* Floating Stat Card */}
-              {/* <div className="absolute -bottom-6 -right-6 md:right-10 bg-brand-red p-8 rounded-2xl shadow-xl text-white max-w-[200px] hidden md:block">
-                <p className="text-4xl font-bold mb-1 underline decoration-white underline-offset-4">2026</p>
-                <p className="text-sm font-medium opacity-90 uppercase tracking-wider leading-tight">The Future of Leadership & Investment</p>
-              </div> */}
+              <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white bg-gray-100">
+                <img
+                  src={aboutImage}
+                  alt="Photizo'26 banner"
+                  className="w-full object-cover aspect-[4/5] lg:h-[620px] transition-transform duration-700 hover:scale-105"
+                />
+              </div>
             </div>
           </div>
 
@@ -32,18 +31,20 @@ export default function AboutSection() {
           <div className="lg:col-span-6">
             <div className="space-y-8">
               <div>
-                <span className="inline-block py-1 px-4 rounded-full bg-brand-red/10 border border-brand-red/20 text-brand-red text-sm font-bold uppercase tracking-widest mb-4">
+                <span className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-brand-red/10 border border-brand-red/20 text-brand-red text-xs font-bold uppercase tracking-widest mb-4">
                   The Experience
                 </span>
-                <h2 className="text-4xl lg:text-6xl font-black text-gray-900 leading-tight">
-                  About <span className="text-brand-red">Photizo</span> <br />
+                <h2 className="text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
+                  About <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-orange">Photizo</span>
                 </h2>
               </div>
 
-              <div className="space-y-6 text-gray-600 text-lg leading-relaxed">
+              <div className="space-y-5 text-gray-600 text-lg leading-relaxed font-normal">
                 <p>
-                  Photizo is a purpose-driven platform dedicated to
-                  <span className="text-brand-red/70 font-semibold"> raising and empowering individuals to become influential leaders in their spheres of impact.</span> 
+                  Photizo is a purpose-driven platform dedicated to{" "}
+                  <span className="text-gray-900 font-semibold underline decoration-brand-red/40 decoration-2 underline-offset-4">
+                    raising and empowering individuals to become influential leaders in their spheres of impact.
+                  </span>{" "}
                   The vision of Photizo is centered on building men and women who are equipped to create meaningful change in society through both personal growth and strategic engagement.
                 </p>
                 
@@ -54,34 +55,35 @@ export default function AboutSection() {
               </div>
 
               {/* Icon Features Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                <div className="flex items-start gap-4">
-                  <div className="p-3 bg-brand-red/10 rounded-xl text-brand-red">
-                    <Target size={24} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
+                <div className="flex items-start gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100 hover:border-brand-red/20 hover:bg-brand-red/5 transition-all duration-300">
+                  <div className="p-3 bg-brand-red/10 rounded-xl text-brand-red shrink-0">
+                    <Target size={22} />
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900">Purpose Driven</h4>
-                    <p className="text-sm text-gray-500">Building impact-focused futures.</p>
+                    <h4 className="font-bold text-gray-900 text-base">Purpose Driven</h4>
+                    <p className="text-sm text-gray-500 mt-0.5">Building impact-focused futures.</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-4">
-                  <div className="p-3 bg-brand-red/10 rounded-xl text-brand-red">
-                    <Zap size={24} />
+
+                <div className="flex items-start gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100 hover:border-brand-orange/20 hover:bg-brand-orange/5 transition-all duration-300">
+                  <div className="p-3 bg-brand-orange/10 rounded-xl text-brand-orange shrink-0">
+                    <Zap size={22} />
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900">Expert Insights</h4>
-                    <p className="text-sm text-gray-500">Learn from industry veterans.</p>
+                    <h4 className="font-bold text-gray-900 text-base">Expert Insights</h4>
+                    <p className="text-sm text-gray-500 mt-0.5">Learn from industry veterans.</p>
                   </div>
                 </div>
               </div>
 
-              <div className="pt-6">
+              <div className="pt-4">
                 <a 
                   href="/speakers" 
-                  className="inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-brand-red transition-all group shadow-lg shadow-gray-200"
+                  className="group inline-flex items-center gap-3 bg-brand-black text-white px-8 py-4 rounded-full font-bold hover:bg-gradient-to-r hover:from-brand-red hover:to-brand-orange transition-all duration-300 shadow-xl shadow-gray-200 hover:shadow-brand-red/25"
                 >
                   Meet Our Speakers
-                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight size={18} className="group-hover:translate-x-1.5 transition-transform" />
                 </a>
               </div>
             </div>

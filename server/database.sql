@@ -1,9 +1,24 @@
 -- =========================================================
 -- PHOTIZO CONFERENCE - SUPABASE DATABASE SCHEMA
--- Run this script in the Supabase SQL Editor
+-- Run this entire script in your Supabase SQL Editor
 -- =========================================================
 
--- 0. Registration Sequence for Sequential Pass Numbers (0001, 0002, ...)
+-- Enable PGCrypto Extension
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- ---------------------------------------------------------
+-- 0. SCHEMA PERMISSIONS & GRANTS
+-- Ensures Supabase GoTrue Auth & Public clients have proper access
+-- ---------------------------------------------------------
+GRANT USAGE ON SCHEMA public TO postgres, anon, authenticated, service_role, supabase_auth_admin;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO postgres, service_role, supabase_auth_admin;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO postgres, service_role, supabase_auth_admin;
+GRANT ALL ON ALL ROUTINES IN SCHEMA public TO postgres, service_role, supabase_auth_admin;
+
+-- ---------------------------------------------------------
+-- 1. REGISTRATION PASS NUMBER SEQUENCE & GENERATOR FUNCTION
+-- Generates sequential attendee IDs: 0001, 0002, 0003...
+-- ---------------------------------------------------------
 CREATE SEQUENCE IF NOT EXISTS public.registration_number_seq START WITH 1;
 
 CREATE OR REPLACE FUNCTION public.get_next_registration_number()
@@ -16,7 +31,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- 1. Create Registrations Table
+-- ---------------------------------------------------------
+-- 2. REGISTRATIONS TABLE
+-- ---------------------------------------------------------
 CREATE TABLE IF NOT EXISTS public.registrations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     registration_number VARCHAR(50) UNIQUE,
@@ -56,7 +73,9 @@ BEGIN
     END IF;
 END $$;
 
--- 2. Create Merchandise Orders Table
+-- ---------------------------------------------------------
+-- 3. MERCHANDISE ORDERS TABLE
+-- ---------------------------------------------------------
 CREATE TABLE IF NOT EXISTS public.merchandise_orders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     order_number VARCHAR(50) UNIQUE,
@@ -79,7 +98,9 @@ CREATE TABLE IF NOT EXISTS public.merchandise_orders (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 3. Create Payments Log Table
+-- ---------------------------------------------------------
+-- 4. PAYMENTS LOG TABLE
+-- ---------------------------------------------------------
 CREATE TABLE IF NOT EXISTS public.payments (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     reference VARCHAR(120) UNIQUE NOT NULL,
@@ -95,40 +116,46 @@ CREATE TABLE IF NOT EXISTS public.payments (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 4. Create Admin Profiles Table (Associated with Supabase auth.users)
+-- ---------------------------------------------------------
+-- 5. ADMIN USERS TABLE
+-- ---------------------------------------------------------
 CREATE TABLE IF NOT EXISTS public.admin_users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE UNIQUE NOT NULL,
     email VARCHAR(255) NOT NULL,
     full_name VARCHAR(200) NOT NULL,
-    role VARCHAR(50) DEFAULT 'admin', -- 'admin', 'superadmin', 'viewer'
+    role VARCHAR(50) DEFAULT 'admin', -- 'admin', 'superadmin', 'editor', 'viewer'
     is_approved BOOLEAN DEFAULT true,
     is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Indexes for performance
-CREATE INDEX IF NOT EXISTS idx_photizo_reg_email ON public.registrations(email);
-CREATE INDEX IF NOT EXISTS idx_photizo_reg_number ON public.registrations(registration_number);
-CREATE INDEX IF NOT EXISTS idx_photizo_reg_status ON public.registrations(payment_status);
-CREATE INDEX IF NOT EXISTS idx_photizo_reg_reference ON public.registrations(payment_reference);
+-- ---------------------------------------------------------
+-- 6. PERFORMANCE INDEXES
+-- ---------------------------------------------------------
+CREATE INDEX IF NOT EXISTS idx_registrations_email ON public.registrations(email);
+CREATE INDEX IF NOT EXISTS idx_registrations_reg_number ON public.registrations(registration_number);
+CREATE INDEX IF NOT EXISTS idx_registrations_payment_status ON public.registrations(payment_status);
+CREATE INDEX IF NOT EXISTS idx_registrations_reference ON public.registrations(payment_reference);
 
-CREATE INDEX IF NOT EXISTS idx_photizo_merch_email ON public.merchandise_orders(customer_email);
-CREATE INDEX IF NOT EXISTS idx_photizo_merch_order_number ON public.merchandise_orders(order_number);
-CREATE INDEX IF NOT EXISTS idx_photizo_merch_status ON public.merchandise_orders(payment_status);
-CREATE INDEX IF NOT EXISTS idx_photizo_merch_reference ON public.merchandise_orders(payment_reference);
+CREATE INDEX IF NOT EXISTS idx_merch_orders_email ON public.merchandise_orders(customer_email);
+CREATE INDEX IF NOT EXISTS idx_merch_orders_order_number ON public.merchandise_orders(order_number);
+CREATE INDEX IF NOT EXISTS idx_merch_orders_payment_status ON public.merchandise_orders(payment_status);
+CREATE INDEX IF NOT EXISTS idx_merch_orders_reference ON public.merchandise_orders(payment_reference);
 
-CREATE INDEX IF NOT EXISTS idx_photizo_payments_ref ON public.payments(reference);
-CREATE INDEX IF NOT EXISTS idx_photizo_payments_email ON public.payments(customer_email);
-CREATE INDEX IF NOT EXISTS idx_photizo_admin_user_id ON public.admin_users(user_id);
+CREATE INDEX IF NOT EXISTS idx_payments_reference ON public.payments(reference);
+CREATE INDEX IF NOT EXISTS idx_payments_customer_email ON public.payments(customer_email);
+CREATE INDEX IF NOT EXISTS idx_admin_users_user_id ON public.admin_users(user_id);
 
--- Row Level Security (RLS) Policies
+-- ---------------------------------------------------------
+-- 7. ROW LEVEL SECURITY (RLS) POLICIES
+-- ---------------------------------------------------------
 ALTER TABLE public.registrations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.merchandise_orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
 
--- 1. Registrations Policies
+-- 7.1 Registrations Policies
 DROP POLICY IF EXISTS "Allow public read for own registration by reg_number" ON public.registrations;
 DROP POLICY IF EXISTS "Allow public insert for registrations" ON public.registrations;
 DROP POLICY IF EXISTS "Allow public update for registrations" ON public.registrations;
@@ -156,7 +183,7 @@ CREATE POLICY "Allow authenticated admins full access to registrations"
         )
     );
 
--- 2. Merchandise Orders Policies
+-- 7.2 Merchandise Orders Policies
 DROP POLICY IF EXISTS "Allow public read for own merchandise order by order_number" ON public.merchandise_orders;
 DROP POLICY IF EXISTS "Allow public insert for merchandise orders" ON public.merchandise_orders;
 DROP POLICY IF EXISTS "Allow public update for merchandise orders" ON public.merchandise_orders;
@@ -184,7 +211,7 @@ CREATE POLICY "Allow authenticated admins full access to merchandise_orders"
         )
     );
 
--- 3. Payments Policies
+-- 7.3 Payments Policies
 DROP POLICY IF EXISTS "Allow public insert for payments" ON public.payments;
 DROP POLICY IF EXISTS "Allow public update for payments" ON public.payments;
 DROP POLICY IF EXISTS "Allow authenticated admins full access to payments" ON public.payments;
@@ -207,127 +234,48 @@ CREATE POLICY "Allow authenticated admins full access to payments"
         )
     );
 
--- 4. Admin Users Policies
+-- 7.4 Admin Users Policies
 DROP POLICY IF EXISTS "Allow authenticated users to read admin_users" ON public.admin_users;
+DROP POLICY IF EXISTS "Allow public insert for admin application" ON public.admin_users;
+DROP POLICY IF EXISTS "Allow authenticated admins full access to admin_users" ON public.admin_users;
 
 CREATE POLICY "Allow authenticated users to read admin_users"
     ON public.admin_users FOR SELECT
     TO authenticated
     USING (true);
 
--- =========================================================
--- 5. CREATE / SEED SUPERADMIN USER SCRIPT
--- =========================================================
--- NOTE: The easiest way to create an admin user is directly in
--- Supabase Dashboard -> Authentication -> Users -> "Add User" -> "Create User"
--- (Make sure to toggle "Auto Confirm User" to ON).
---
--- Then link the user to the admin_users table by running:
---   INSERT INTO public.admin_users (user_id, email, full_name, role, is_approved, is_active)
---   SELECT id, email, 'Photizo Super Admin', 'superadmin', true, true
---   FROM auth.users WHERE email = 'admin@photizo.org'
---   ON CONFLICT (user_id) DO UPDATE SET is_approved = true, is_active = true, role = 'superadmin';
---
--- Alternatively, you can run the PL/pgSQL block below:
--- =========================================================
+CREATE POLICY "Allow public insert for admin application"
+    ON public.admin_users FOR INSERT
+    WITH CHECK (true);
 
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE POLICY "Allow authenticated admins full access to admin_users"
+    ON public.admin_users FOR ALL
+    TO authenticated
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.admin_users AS au
+            WHERE au.user_id = auth.uid() AND au.is_active = true AND (au.role = 'superadmin' OR au.role = 'admin')
+        )
+    );
 
-DO $$
-DECLARE
-    new_user_id UUID;
-    admin_email TEXT := 'admin@photizo.org';           -- <--- REPLACE WITH YOUR ADMIN EMAIL
-    admin_password TEXT := 'PhotizoAdminSecure2026!';  -- <--- REPLACE WITH YOUR ADMIN PASSWORD
-    admin_name TEXT := 'Photizo Super Admin';
-BEGIN
-    -- Check if user already exists in auth.users
-    SELECT id INTO new_user_id FROM auth.users WHERE email = admin_email;
+-- ---------------------------------------------------------
+-- 8. AUTO-LINK REGISTERED USERS TO ADMIN_USERS
+-- (If user already exists in auth.users, link to admin_users)
+-- ---------------------------------------------------------
+INSERT INTO public.admin_users (user_id, email, full_name, role, is_approved, is_active)
+SELECT 
+    id, 
+    email, 
+    COALESCE(raw_user_meta_data->>'full_name', 'Photizo Super Admin'), 
+    'superadmin', 
+    true, 
+    true
+FROM auth.users
+WHERE email = 'admin@photizo.org'
+ON CONFLICT (user_id) DO UPDATE 
+SET 
+    is_approved = true, 
+    is_active = true, 
+    role = 'superadmin';
 
-    IF new_user_id IS NULL THEN
-        -- Generate a new UUID
-        new_user_id := gen_random_uuid();
-
-        -- Insert into Supabase auth.users with 10 bcrypt salt rounds (expected by GoTrue)
-        INSERT INTO auth.users (
-            id,
-            instance_id,
-            email,
-            encrypted_password,
-            email_confirmed_at,
-            raw_app_meta_data,
-            raw_user_meta_data,
-            aud,
-            role,
-            created_at,
-            updated_at
-        ) VALUES (
-            new_user_id,
-            '00000000-0000-0000-0000-000000000000',
-            admin_email,
-            crypt(admin_password, gen_salt('bf', 10)),
-            NOW(),
-            '{"provider":"email","providers":["email"]}'::jsonb,
-            jsonb_build_object('full_name', admin_name),
-            'authenticated',
-            'authenticated',
-            NOW(),
-            NOW()
-        );
-
-        -- Also create identity record in auth.identities
-        INSERT INTO auth.identities (
-            id,
-            user_id,
-            identity_data,
-            provider,
-            provider_id,
-            last_sign_in_at,
-            created_at,
-            updated_at
-        ) VALUES (
-            new_user_id,
-            new_user_id,
-            jsonb_build_object('sub', new_user_id::text, 'email', admin_email),
-            'email',
-            new_user_id::text,
-            NOW(),
-            NOW(),
-            NOW()
-        );
-    ELSE
-        -- Update password and ensure email is confirmed
-        UPDATE auth.users
-        SET 
-            encrypted_password = crypt(admin_password, gen_salt('bf', 10)),
-            email_confirmed_at = COALESCE(email_confirmed_at, NOW()),
-            updated_at = NOW()
-        WHERE id = new_user_id;
-    END IF;
-
-    -- Insert or update the public.admin_users profile
-    INSERT INTO public.admin_users (
-        user_id,
-        email,
-        full_name,
-        role,
-        is_approved,
-        is_active,
-        created_at
-    ) VALUES (
-        new_user_id,
-        admin_email,
-        admin_name,
-        'superadmin',
-        true,
-        true,
-        NOW()
-    )
-    ON CONFLICT (user_id) DO UPDATE
-    SET 
-        role = 'superadmin',
-        is_approved = true,
-        is_active = true;
-
-    RAISE NOTICE '✅ Superadmin created/updated successfully for % with User ID: %', admin_email, new_user_id;
-END $$;
-
+SELECT '✅ Photizo Database Schema initialized successfully!' AS status;

@@ -217,7 +217,18 @@ CREATE POLICY "Allow authenticated users to read admin_users"
 
 -- =========================================================
 -- 5. CREATE / SEED SUPERADMIN USER SCRIPT
--- Run this in the Supabase SQL Editor to create or reset the Super Admin
+-- =========================================================
+-- NOTE: The easiest way to create an admin user is directly in
+-- Supabase Dashboard -> Authentication -> Users -> "Add User" -> "Create User"
+-- (Make sure to toggle "Auto Confirm User" to ON).
+--
+-- Then link the user to the admin_users table by running:
+--   INSERT INTO public.admin_users (user_id, email, full_name, role, is_approved, is_active)
+--   SELECT id, email, 'Photizo Super Admin', 'superadmin', true, true
+--   FROM auth.users WHERE email = 'admin@photizo.org'
+--   ON CONFLICT (user_id) DO UPDATE SET is_approved = true, is_active = true, role = 'superadmin';
+--
+-- Alternatively, you can run the PL/pgSQL block below:
 -- =========================================================
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
@@ -236,7 +247,7 @@ BEGIN
         -- Generate a new UUID
         new_user_id := gen_random_uuid();
 
-        -- Insert into Supabase auth.users
+        -- Insert into Supabase auth.users with 10 bcrypt salt rounds (expected by GoTrue)
         INSERT INTO auth.users (
             id,
             instance_id,
@@ -253,7 +264,7 @@ BEGIN
             new_user_id,
             '00000000-0000-0000-0000-000000000000',
             admin_email,
-            crypt(admin_password, gen_salt('bf')),
+            crypt(admin_password, gen_salt('bf', 10)),
             NOW(),
             '{"provider":"email","providers":["email"]}'::jsonb,
             jsonb_build_object('full_name', admin_name),
@@ -284,10 +295,10 @@ BEGIN
             NOW()
         );
     ELSE
-        -- Update password if user already exists
+        -- Update password and ensure email is confirmed
         UPDATE auth.users
         SET 
-            encrypted_password = crypt(admin_password, gen_salt('bf')),
+            encrypted_password = crypt(admin_password, gen_salt('bf', 10)),
             email_confirmed_at = COALESCE(email_confirmed_at, NOW()),
             updated_at = NOW()
         WHERE id = new_user_id;
@@ -319,3 +330,4 @@ BEGIN
 
     RAISE NOTICE '✅ Superadmin created/updated successfully for % with User ID: %', admin_email, new_user_id;
 END $$;
+

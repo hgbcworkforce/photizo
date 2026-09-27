@@ -14,7 +14,6 @@ export default function Merchandise() {
     }, {} as Record<string, string>),
   );
 
-
   const handleColorChange = (productId: string, colorName: string) => {
     setSelectedColors((prevColors) => ({
       ...prevColors,
@@ -30,7 +29,7 @@ export default function Merchandise() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#fafafa]">
       {/* Navbar */}
       <Navbar onNavigate={scrollToSection} />
 
@@ -41,84 +40,92 @@ export default function Merchandise() {
       />
 
       {/* Merchandise Section */}
-      <main className="py-20">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="overflow-hidden p-8">
-            <div className="space-y-8">
-              {merchandiseItems.map((product, index) => {
-                const selectedColor = product.colors.find(
-                  (color) => color.name === selectedColors[product.id],
-                );
-                const productImage = selectedColor
-                  ? selectedColor.image
-                  : product.colors[0].image;
+      <main className="py-20 lg:py-24">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="space-y-12">
+            {merchandiseItems.map((product, index) => {
+              const selectedColor = product.colors.find(
+                (color) => color.name === selectedColors[product.id],
+              );
+              const productImage = selectedColor
+                ? selectedColor.image
+                : product.colors[0].image;
 
-                return (
-                  <div
-                    key={product.id}
-                    className={`flex flex-col-reverse lg:flex-row items-center gap-8 py-0 lg:py-8 px-8 rounded-lg shadow-md overflow-hidden ${
-                      index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                    }`}
-                  >
-                    <div className="md:w-1/2 text-center md:text-left mb-20 lg:mb-0">
-                      <h3 className="text-2xl font-semibold text-gray-800 mb-3">
-                        {product.name}
-                      </h3>
-                      <p className="text-gray-600 mb-4">
-                        {product.description}
-                      </p>
-                      <p className="text-lg font-bold text-brand-red mb-2">
+              return (
+                <div
+                  key={product.id}
+                  className={`flex flex-col-reverse lg:flex-row items-center gap-10 p-8 sm:p-12 rounded-3xl border border-gray-100/80 shadow-md transition-all duration-300 hover:shadow-xl hover:shadow-brand-orange/5 ${
+                    index % 2 === 0 ? "bg-white" : "bg-gradient-to-br from-white to-gray-50/80"
+                  }`}
+                >
+                  <div className="lg:w-1/2 text-center lg:text-left">
+                    <h3 className="text-3xl font-extrabold text-gray-900 mb-3 tracking-tight">
+                      {product.name}
+                    </h3>
+                    <p className="text-gray-600 mb-6 text-base leading-relaxed font-normal">
+                      {product.description}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-4 justify-center lg:justify-start mb-6">
+                      <span className="text-2xl font-black text-brand-red">
                         {product.price}
-                      </p>
-                      <p className="text-sm text-gray-500 mb-4">
+                      </span>
+                      <span className="inline-block px-3 py-1 bg-brand-orange/10 text-brand-orange rounded-full text-xs font-bold uppercase tracking-wider">
                         {product.timeFrame}
-                      </p>
-
-                      {product.colors && product.colors.length > 0 && (
-                        <div className="flex items-center space-x-2 mt-4">
-                          <span className="text-gray-700 font-medium">
-                            Color:
-                          </span>
-                          {product.colors.map((color) => (
-                            <button
-                              key={color.name}
-                              className={`w-8 h-8 rounded-full border-2 ${
-                                selectedColors[product.id] === color.name
-                                  ? "border-blue-500"
-                                  : "border-gray-300"
-                              } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
-                              style={{
-                                backgroundColor: color.name
-                                  .toLowerCase()
-                                  .replace(" ", ""),
-                              }}
-                              title={color.name}
-                              onClick={() =>
-                                handleColorChange(product.id, color.name)
-                              }
-                            ></button>
-                          ))}
-                        </div>
-                      )}
-                      {/* THIS IS THE NEW CODE FOR THE ORDER NOW BUTTON */}
-                      <Link
-                        to={`/merchandisedetails/${product.id}`}
-                        className="mt-6 inline-block bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-300"
-                      >
-                        Order now
-                      </Link>
+                      </span>
                     </div>
-                    <div className="md:w-1/2 flex justify-center">
+
+                    {product.colors && product.colors.length > 0 && (
+                      <div className="flex items-center justify-center lg:justify-start space-x-3 mb-8">
+                        <span className="text-gray-700 font-bold text-sm">
+                          Color:
+                        </span>
+                        <div className="flex gap-2">
+                          {product.colors.map((color) => {
+                            const isSelected = selectedColors[product.id] === color.name;
+                            return (
+                              <button
+                                key={color.name}
+                                className={`w-8 h-8 rounded-full border-2 transition-all ${
+                                  isSelected
+                                    ? "border-brand-orange scale-110 shadow-md ring-2 ring-brand-orange/30"
+                                    : "border-gray-200 hover:scale-105"
+                                } focus:outline-none`}
+                                style={{
+                                  backgroundColor: color.name
+                                    .toLowerCase()
+                                    .replace(" ", ""),
+                                }}
+                                title={color.name}
+                                onClick={() =>
+                                  handleColorChange(product.id, color.name)
+                                }
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    <Link
+                      to={`/merchandisedetails/${product.id}`}
+                      className="inline-flex items-center justify-center bg-gradient-to-r from-brand-red to-brand-orange hover:from-brand-red/90 hover:to-brand-orange/90 text-white font-bold py-3.5 px-8 rounded-full shadow-lg shadow-brand-red/25 hover:shadow-xl hover:shadow-brand-red/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 text-sm uppercase tracking-wider"
+                    >
+                      Order now
+                    </Link>
+                  </div>
+
+                  <div className="lg:w-1/2 flex justify-center">
+                    <div className="relative group max-w-sm w-full aspect-square rounded-3xl overflow-hidden bg-gray-50 p-6 flex items-center justify-center border border-gray-100 shadow-inner">
                       <img
                         src={productImage}
                         alt={`${product.name} - ${selectedColors[product.id]}`}
-                        className="max-w-xs h-auto rounded-lg shadow-md object-contain"
+                        className="max-h-[320px] w-auto rounded-2xl object-contain transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </main>

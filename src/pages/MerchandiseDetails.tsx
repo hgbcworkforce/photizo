@@ -136,7 +136,6 @@ export default function MerchandiseDetails() {
             access_code: result.accessCode,
             callback: (response: PaystackResponse) => {
               if (response.reference) {
-                // Redirect to your backend verification route instead of the frontend navigate()
                 window.location.href = getBackendVerifyUrl(response.reference);
               }
             },
@@ -146,7 +145,6 @@ export default function MerchandiseDetails() {
             },
           });
           
-          // Note: Paystack library uses .openIframe() (deprecation warning is expected)
           handler.openIframe();
         } catch (paystackError) {
           console.error("Paystack initialization error:", paystackError);
@@ -166,77 +164,93 @@ export default function MerchandiseDetails() {
   if (!merchandiseItem || !selectedColor) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#fafafa]">
       <Navbar onNavigate={() => {}} />
-      <main className="max-w-7xl mx-auto py-20 px-4 pt-32">
-        <nav className="text-sm mb-8">
-          <ol className="flex items-center space-x-2 text-gray-500">
-            <li><Link to="/merchandise" className="hover:text-brand-red">Merchandise</Link></li>
-            <li>/</li>
-            <li className="text-gray-900 font-medium">{merchandiseItem.name}</li>
+      <main className="max-w-7xl mx-auto py-20 px-4 sm:px-6 lg:px-8 pt-36">
+        <nav className="text-sm mb-10">
+          <ol className="flex items-center space-x-2.5 text-gray-500 font-medium">
+            <li><Link to="/merchandise" className="hover:text-brand-red transition-colors">Merchandise</Link></li>
+            <li className="text-gray-300">/</li>
+            <li className="text-gray-900 font-bold">{merchandiseItem.name}</li>
           </ol>
         </nav>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Image Gallery */}
-          <div className="space-y-4">
-            <img
-              src={selectedColor.image}
-              className="w-full rounded-2xl shadow-lg transition-all duration-300"
-              alt={merchandiseItem.name}
-            />
-            <div className="flex gap-2">
+          <div className="lg:col-span-6 space-y-6">
+            <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex items-center justify-center aspect-square">
+              <img
+                src={selectedColor.image}
+                className="max-h-[400px] w-auto object-contain rounded-2xl transition-all duration-300 hover:scale-105"
+                alt={merchandiseItem.name}
+              />
+            </div>
+            <div className="flex gap-3 overflow-x-auto pb-2">
               {merchandiseItem.colors.map((c: any) => (
-                <img
+                <button
                   key={c.name}
-                  src={c.image}
+                  type="button"
                   onClick={() => handleColorSelect(c)}
-                  className={`w-20 h-20 rounded-lg cursor-pointer border-2 transition-all ${
-                    selectedColor.name === c.name ? "border-brand-red scale-105" : "border-transparent opacity-70"
+                  className={`w-20 h-20 rounded-2xl p-2 bg-white border-2 transition-all flex items-center justify-center shrink-0 cursor-pointer ${
+                    selectedColor.name === c.name ? "border-brand-orange scale-105 shadow-md ring-2 ring-brand-orange/20" : "border-gray-200 opacity-70 hover:opacity-100"
                   }`}
-                />
+                >
+                  <img
+                    src={c.image}
+                    alt={c.name}
+                    className="w-full h-full object-contain"
+                  />
+                </button>
               ))}
             </div>
           </div>
 
           {/* Details & Form */}
-          <div className="space-y-6">
-            <h1 className="text-4xl font-bold text-gray-800">{merchandiseItem.name}</h1>
-            <p className="text-2xl text-brand-red font-bold">₦{unitPrice.toLocaleString()}</p>
+          <div className="lg:col-span-6 space-y-6">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">{merchandiseItem.name}</h1>
+              <p className="text-3xl text-brand-red font-black mt-2">₦{unitPrice.toLocaleString()}</p>
+            </div>
 
-            <form onSubmit={handleBuyNow} className="bg-white p-6 rounded-xl shadow-md space-y-4">
-              <input
-                required
-                name="fullName"
-                placeholder="Full Name"
-                value={formData.fullName}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-red outline-none text-gray-700"
-              />
-              <input
-                required
-                name="email"
-                type="email"
-                placeholder="Email Address"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-red outline-none text-gray-700"
-              />
-              <input
-                required
-                name="phoneNumber"
-                placeholder="Phone Number"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-red outline-none text-gray-700"
-              />
+            <form onSubmit={handleBuyNow} className="bg-white p-8 rounded-3xl border border-gray-100 shadow-md space-y-4">
+              <div>
+                <input
+                  required
+                  name="fullName"
+                  placeholder="Full Name"
+                  value={formData.fullName}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3.5 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange outline-none text-gray-800 text-sm font-medium transition-all"
+                />
+              </div>
+              <div>
+                <input
+                  required
+                  name="email"
+                  type="email"
+                  placeholder="Email Address"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3.5 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange outline-none text-gray-800 text-sm font-medium transition-all"
+                />
+              </div>
+              <div>
+                <input
+                  required
+                  name="phoneNumber"
+                  placeholder="Phone Number"
+                  value={formData.phoneNumber}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3.5 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange outline-none text-gray-800 text-sm font-medium transition-all"
+                />
+              </div>
 
               <div className="flex gap-4">
                 <select
                   name="size"
                   value={formData.size}
                   onChange={handleInputChange}
-                  className="flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-red outline-none text-gray-700"
+                  className="flex-1 px-4 py-3.5 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange outline-none text-gray-800 text-sm font-medium bg-white transition-all"
                 >
                   {merchandiseItem.sizes.map((s: string) => (
                     <option key={s} value={s}>{s}</option>
@@ -248,51 +262,42 @@ export default function MerchandiseDetails() {
                   min="1"
                   value={formData.quantity}
                   onChange={handleInputChange}
-                  className="w-24 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-red outline-none text-gray-700"
+                  className="w-28 px-4 py-3.5 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange outline-none text-gray-800 text-sm font-medium transition-all"
                 />
               </div>
 
               {/* Self-Setting Color Input */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Selected Color</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Selected Color</label>
                 <input
                   type="text"
                   name="color"
                   value={formData.color}
                   readOnly
-                  className="w-full p-3 border rounded-lg bg-gray-50 cursor-not-allowed font-semibold text-brand-red"
+                  className="w-full px-4 py-3.5 border border-gray-200 rounded-2xl bg-gray-50 cursor-not-allowed font-bold text-brand-red text-sm"
                 />
               </div>
 
               {/* Pricing Summary */}
-              <div className="bg-gray-50 p-4 rounded-lg space-y-2 border border-gray-200">
-                <div className="flex justify-between text-gray-700">
+              <div className="bg-gray-50 p-5 rounded-2xl space-y-2.5 border border-gray-100">
+                <div className="flex justify-between text-gray-700 text-sm font-medium">
                   <span>Subtotal</span>
                   <span>₦{subtotal.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between text-sm text-gray-500">
+                <div className="flex justify-between text-xs text-gray-500">
                   <span>Charges (2.5%)</span>
                   <span>₦{charges.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between font-bold text-lg text-gray-800 border-t pt-2 mt-2">
+                <div className="flex justify-between font-black text-lg text-gray-900 border-t border-gray-200/80 pt-3 mt-1">
                   <span>Total</span>
-                  <span>₦{totalAmount.toLocaleString()}</span>
+                  <span className="text-brand-red">₦{totalAmount.toLocaleString()}</span>
                 </div>
               </div>
-
-              {/* <button
-                disabled={isProcessing}
-                className={`w-full py-4 rounded-lg font-bold text-white transition-all ${
-                  isProcessing ? "bg-gray-400" : "bg-brand-red/90 hover:bg-brand-red shadow-lg"
-                }`}
-              >
-                {isProcessing ? "Initializing Payment..." : "Pay with Paystack"}
-              </button> */}
 
               <button
                 type="button"
                 disabled
-                className="w-full py-4 rounded-lg font-bold text-white bg-gray-400 cursor-not-allowed uppercase tracking-[0.08em]"
+                className="w-full py-4 rounded-2xl font-black text-xs text-white bg-gray-300 cursor-not-allowed uppercase tracking-wider"
               >
                 ORDER CLOSED
               </button>

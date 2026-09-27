@@ -26,69 +26,69 @@ export default function MerchandiseSuccessPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-[#fafafa] flex flex-col">
       <Navbar onNavigate={() => {}} />
 
-      <main className="flex-grow py-20 px-4">
+      <main className="flex-grow py-20 px-4 pt-36">
         <div className="max-w-2xl mx-auto text-center">
           <div className="flex justify-center mb-8">
-            <div className="rounded-full bg-brand-red/10 p-6">
-              <ShoppingBag className="h-16 w-16 text-brand-red" />
+            <div className="rounded-3xl bg-brand-red/10 p-6 border border-brand-red/20 shadow-lg shadow-brand-red/5">
+              <ShoppingBag className="h-14 w-14 text-brand-red" />
             </div>
           </div>
 
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">
             Merchandise Purchase Complete!
           </h1>
-          <p className="text-lg text-gray-600 mb-8">
+          <p className="text-base sm:text-lg text-gray-600 mb-10 leading-relaxed max-w-xl mx-auto font-normal">
             Your order has been received and payment was successful. We will process your merchandise and contact you with shipping details.
           </p>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-8 text-left">
-            <h3 className="text-xl font-semibold text-gray-900 mb-6 border-b pb-4">
+          <div className="bg-white rounded-3xl shadow-md border border-gray-100 p-8 sm:p-10 mb-10 text-left">
+            <h3 className="text-lg font-bold text-gray-900 mb-6 border-b border-gray-100 pb-4 uppercase tracking-wider text-xs">
               What happens next?
             </h3>
 
             <ul className="space-y-6">
               <li className="flex items-start">
-                <div className="bg-brand-red/10 p-2 rounded-lg mr-4">
-                  <Download className="h-5 w-5 text-brand-red" />
+                <div className="bg-brand-red/10 p-2.5 rounded-2xl mr-4 shrink-0 text-brand-red">
+                  <Download className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">Order Reference</p>
-                  <p className="text-sm font-mono text-gray-500 uppercase">{ref ?? "Not available"}</p>
+                  <p className="font-bold text-gray-900 text-sm">Order Reference</p>
+                  <p className="text-xs font-mono text-gray-500 uppercase mt-0.5">{ref ?? "Not available"}</p>
                 </div>
               </li>
 
               <li className="flex items-start">
-                <div className="bg-brand-red/10 p-2 rounded-lg mr-4">
-                  <CheckCircle className="h-5 w-5 text-brand-red" />
+                <div className="bg-brand-orange/10 p-2.5 rounded-2xl mr-4 shrink-0 text-brand-orange">
+                  <CheckCircle className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">Order Confirmation</p>
-                  <p className="text-sm text-gray-500">We will email you an order summary and delivery details shortly.</p>
+                  <p className="font-bold text-gray-900 text-sm">Order Confirmation</p>
+                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">We will email you an order summary and delivery details shortly.</p>
                 </div>
               </li>
             </ul>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3.5 justify-center">
             <button
               onClick={handleDownloadReceipt}
-              className="inline-flex items-center justify-center px-6 py-3 border border-brand-red text-brand-red rounded-lg bg-white hover:bg-gray-100 transition-colors shadow-sm"
+              className="inline-flex items-center justify-center px-6 py-3.5 border border-brand-red/30 text-brand-red rounded-full bg-white hover:bg-brand-red/5 transition-all text-xs font-bold uppercase tracking-wider shadow-sm cursor-pointer"
             >
-              <Download className="h-5 w-5 mr-2" />
+              <Download className="h-4 w-4 mr-2" />
               Download PDF Receipt
             </button>
             <Link
               to="/merchandise"
-              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-brand-red/90 hover:bg-brand-red transition-colors shadow-md"
+              className="inline-flex items-center justify-center px-7 py-3.5 rounded-full text-white bg-gradient-to-r from-brand-red to-brand-orange hover:shadow-lg hover:shadow-brand-red/25 transition-all text-xs font-bold uppercase tracking-wider shadow-md"
             >
               Continue Shopping
             </Link>
             <Link
               to="/"
-              className="inline-flex items-center justify-center px-6 py-3 border border-brand-red text-brand-red rounded-lg bg-white hover:bg-gray-100 transition-colors shadow-sm"
+              className="inline-flex items-center justify-center px-6 py-3.5 border border-gray-200 text-gray-700 rounded-full bg-white hover:bg-gray-50 transition-all text-xs font-bold uppercase tracking-wider shadow-sm"
             >
               Return Home
             </Link>

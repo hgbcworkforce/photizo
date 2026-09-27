@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { RefreshCw, LogOut } from 'lucide-react';
 import { dashboardAPI } from '../services/apiService';
 import { authUtils } from '../utils/authUtils';
+import { supabase } from '../lib/supabase';
 import LoginPage from './LoginPage';
 import RegistrationsTab from '../components/dashboard/RegistrationsTab';
 import MerchandiseTab from '../components/dashboard/MerchandiseTab';
@@ -140,6 +141,7 @@ export default function Admin() {
   // ── Handle Logout ──────────────────────────────────────────────────────
   const handleLogout = async () => {
     try {
+      await supabase.auth.signOut();
       if (token) {
         await dashboardAPI.logout(token);
       }

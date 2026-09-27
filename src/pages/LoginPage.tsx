@@ -1,17 +1,8 @@
 import React, { useState, type KeyboardEvent, type ChangeEvent } from 'react';
-import { dashboardAPI } from "../services/apiService";
+import { supabase } from '../lib/supabase';
 
 interface LoginPageProps {
   onLogin: (token: string) => void;
-}
-
-// Ensure this matches the structure your backend returns
-interface LoginResponse {
-  token?: string;
-  accessToken?: string;
-  data?: {
-    token: string;
-  };
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
@@ -30,20 +21,34 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     setError('');
 
     try {
-      // dashboardAPI.login should accept an object with email and password
-      const data = await dashboardAPI.login({ email, password }) as LoginResponse;
+      // 1. Direct Supabase authentication (matches BISUM architecture)
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password: password,
+      });
 
-      const token = data.token || data.accessToken || data.data?.token;
-
-      if (token) {
-        onLogin(token);
-      } else {
-        throw new Error('No token returned');
+      if (signInError) throw signInError;
+      if (!data.user || !data.session?.access_token) {
+        throw new Error('Authentication failed. No active session returned.');
       }
+
+      // 2. Verify administrator privileges in public.admin_users
+      const { data: adminData, error: adminError } = await supabase
+        .from('admin_users')
+        .select('*')
+        .eq('user_id', data.user.id)
+        .single();
+
+      if (adminError || !adminData || !adminData.is_active) {
+        await supabase.auth.signOut();
+        throw new Error('Access restricted. This account does not have active administrator privileges.');
+      }
+
+      // 3. Pass the valid JWT token
+      onLogin(data.session.access_token);
     } catch (err: any) {
-      // Handle axios errors or generic errors
-      const message = err.response?.data?.message || 'Invalid credentials or server error.';
-      setError(message);
+      console.error('Sign in error:', err);
+      setError(err.message || 'Failed to sign in. Please verify your credentials.');
     } finally {
       setLoading(false);
     }
@@ -75,7 +80,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
           <label>Email Address</label>
           <input
             type="email"
-            placeholder="admin@example.com"
+            placeholder="admin@photizo.org"
             value={email}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             onKeyDown={onKey}

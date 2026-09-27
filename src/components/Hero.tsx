@@ -47,8 +47,8 @@ export default function Hero() {
     >
       {/* ── Atmospheric glows using Brand Palette ── */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute -top-32 left-1/4 w-[600px] h-[600px] bg-brand-red/15 rounded-full blur-[140px] animate-pulse-glow" />
-        <div className="absolute top-1/3 right-10 w-[500px] h-[500px] bg-brand-orange/15 rounded-full blur-[130px]" />
+        <div className="absolute -top-32 left-1/4 w-[600px] h-[600px] bg-brand-red/25 rounded-full blur-[140px] animate-pulse-glow" />
+        <div className="absolute top-1/3 right-10 w-[500px] h-[500px] bg-brand-orange/25 rounded-full blur-[130px]" />
         <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-brand-yellow/10 rounded-full blur-[160px]" />
       </div>
 
@@ -69,22 +69,19 @@ export default function Hero() {
           return (
             <div
               key={imageSrc}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                isActive ? "opacity-35 z-[1]" : "opacity-0 z-0 pointer-events-none"
-              }`}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${isActive ? "opacity-35 z-[1]" : "opacity-0 z-0 pointer-events-none"
+                }`}
             >
               <img
                 src={imageSrc}
                 alt=""
-                className={`h-full w-full object-cover transition-transform duration-[6000ms] ease-out ${
-                  isActive ? "scale-105" : "scale-100"
-                }`}
+                className={`h-full w-full object-cover transition-transform duration-[6000ms] ease-out ${isActive ? "scale-105" : "scale-100"
+                  }`}
               />
             </div>
           );
         })}
         {/* Film Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/75 to-brand-black/90 z-[2]" />
       </div>
 
       {/* ══════════════════════════════════════
@@ -94,7 +91,6 @@ export default function Hero() {
 
         {/* Badge */}
         <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-brand-red/40 bg-brand-red/10 px-4 py-1.5 backdrop-blur-md shadow-[0_0_20px_rgba(239,64,35,0.2)]">
-          <span className="h-2 w-2 animate-ping rounded-full bg-brand-red" />
           <span className="text-xs font-bold uppercase tracking-[0.25em] text-white">
             Photizo 2026
           </span>
@@ -127,13 +123,24 @@ export default function Hero() {
         </div>
 
         {/* ── Countdown & Info Row ── */}
-        <div className="mt-12 flex flex-col lg:flex-row lg:items-end justify-between gap-10 border-t border-white/10 pt-10">
-          
+        <div className="mt-5 md:mt-12 flex flex-col justify-between gap-10 pt-8">
+
+          {/* Conference Date & Location Info Box */}
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 max-w-[660px]  bg-white/5 border border-white/10 backdrop-blur-sm p-4 shadow-lg text-center rounded-2xl px-6 py-4 mb-8 text-sm">
+            <div className="flex items-center space-x-2.5 text-slate-200">
+              <Calendar className="w-4 h-4 text-brand-orange flex-shrink-0" />
+              <span className="font-semibold">May 21st – 23rd, 2026</span>
+            </div>
+            <div className="hidden sm:block text-slate-700">|</div>
+            <div className="flex items-center space-x-0 md:space-x-2.5 text-slate-300 text-center sm:text-left">
+              <MapPin className="w-4 h-4 text-brand-red flex-shrink-0" />
+              <span className="font-semibold">Higher Ground Baptist Church Ogbomoso, Nigeria.</span>
+            </div>
+          </div>
+
+
           {/* Countdown timer */}
           <div>
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">
-              Conference starts in
-            </p>
             <div className="flex items-center gap-2 sm:gap-3">
               {[
                 { v: countdown.days, l: "Days" },
@@ -142,12 +149,12 @@ export default function Hero() {
                 { v: countdown.seconds, l: "Secs" },
               ].map(({ v, l }, i) => (
                 <div key={l} className="flex items-center">
-                  <div className="flex flex-col items-center justify-center bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl px-3.5 py-2.5 sm:px-5 sm:py-3.5 min-w-[68px] sm:min-w-[84px] shadow-lg">
+                  <div className="flex flex-col items-center justify-center bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl px-3.5 py-2.5 sm:px-5 sm:py-3.5 min-w-[48px] sm:min-w-[84px] shadow-lg">
                     <span
                       className="tabular-nums font-black leading-none text-white"
                       style={{
                         fontFamily: "'Bebas Neue', sans-serif",
-                        fontSize: "clamp(34px, 5vw, 48px)",
+                        fontSize: "clamp(28px, 5vw, 28px)",
                       }}
                     >
                       {pad(v)}
@@ -166,23 +173,6 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Date & Location Chips */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-            {[
-              { icon: <Calendar size={16} className="text-brand-orange" />, label: "May 21st – 23rd, 2026" },
-              { icon: <MapPin size={16} className="text-brand-red" />, label: "Ogbomoso, Nigeria" },
-            ].map(({ icon, label }) => (
-              <div
-                key={label}
-                className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl text-sm font-semibold text-gray-200 shadow-sm"
-              >
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/10 border border-white/10">
-                  {icon}
-                </span>
-                {label}
-              </div>
-            ))}
-          </div>
 
         </div>
 
@@ -192,7 +182,7 @@ export default function Hero() {
             {/* Primary CTA button */}
             <a
               href="/register"
-              className="group flex items-center gap-3 rounded-full bg-gradient-to-r from-brand-red to-brand-orange px-9 py-4 text-sm font-bold uppercase tracking-wider text-white shadow-[0_0_30px_rgba(239,64,35,0.4)] hover:shadow-[0_0_45px_rgba(239,64,35,0.6)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
+              className="group flex items-center gap-3 rounded-full bg-gradient-to-r from-brand-red to-brand-orange px-9 py-4 text-sm font-bold uppercase tracking-wider text-white shadow-[0_0_30px_rgba(239,64,35,0.4)] hover:shadow-[0_0_45px_rgba(239,64,35,0.6)] active:translate-y-0 transition-all duration-300"
             >
               Secure Your Seat
               <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
@@ -205,22 +195,6 @@ export default function Hero() {
             >
               Purchase Merchnadise
             </a>
-          </div>
-
-          {/* Slide Indicators */}
-          <div className="flex items-center gap-2 bg-white/5 border border-white/10 backdrop-blur-md px-3.5 py-2 rounded-full">
-            {slideImages.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentSlide(idx)}
-                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                  idx === currentSlide
-                    ? "w-7 bg-gradient-to-r from-brand-red to-brand-orange"
-                    : "w-2 bg-white/30 hover:bg-white/60"
-                }`}
-                aria-label={`Go to slide ${idx + 1}`}
-              />
-            ))}
           </div>
         </div>
 

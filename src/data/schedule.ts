@@ -16,7 +16,7 @@ export type Sessions = {
 }
 
 import gloria from "/speakers/gloria.jpeg";
-import pov from "/speakers/pov.jpeg";
+import pov from "/speakers/victor.jpeg";
 import oladipo from "/speakers/oladipo.jpeg";
 // import ogunleye from "/speakers/ogunleye.jpeg";
 // import opajobi from "/speakers/opajobi.jpg";

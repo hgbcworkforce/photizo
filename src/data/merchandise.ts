@@ -1,12 +1,12 @@
 // Face Cap
-import ocap from '/merch/orange-cap.jpeg';
-import Wcap from '/merch/white-cap.jpeg';
-import bcap from '/merch/black-cap.jpeg';
+import ocap from '/merchandise/orange-cap.jpeg';
+import Wcap from '/merchandise/white-cap.jpeg';
+import bcap from '/merchandise/black-cap.jpeg';
 
 // T-Shirt
-import oshirt from '/merch/orange-shirt.jpeg';
-import wshirt from '/merch/white-shirt.jpeg';
-import bshirt from '/merch/black-shirt.jpeg';
+import oshirt from '/merchandise/orange-shirt.jpeg';
+import wshirt from '/merchandise/white-shirt.jpeg';
+import bshirt from '/merchandise/black-shirt.jpeg';
 
 
 type MerchandiseItem = {

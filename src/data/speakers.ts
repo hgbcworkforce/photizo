@@ -1,4 +1,4 @@
-import pvo from '/speakers/pov.jpeg';
+import pvo from '/speakers/victor.jpeg';
 import vta from '/speakers/victory.jpeg';
 import ok from '/speakers/oladipo.jpeg';
 

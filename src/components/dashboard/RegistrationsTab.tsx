@@ -107,9 +107,9 @@ export default function RegistrationsTab() {
         setAllFilteredRegistrations(Array.isArray(allResults) ? allResults : []);
 
         // Handle pagination info using the table response
-        const pagination = res.pagination || {};
-        setTotalPages(pagination.totalPages ?? res.totalPages ?? 1);
-        setTotalItems(pagination.total ?? res.total ?? results.length);
+        const pagination = (res as any).pagination || {};
+        setTotalPages(pagination.totalPages ?? (res as any).totalPages ?? 1);
+        setTotalItems(pagination.total ?? (res as any).total ?? results.length);
       } catch (err) {
         console.error("Fetch error:", err);
         setError(

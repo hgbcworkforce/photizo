@@ -60,7 +60,7 @@ export default function Navbar({ onNavigate }: { onNavigate?: (sectionId: string
                   <Link
                     key={item.id}
                     to={item.path}
-                    className="ml-4 inline-flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-bold text-white bg-gradient-to-r from-brand-red to-brand-orange shadow-md shadow-brand-red/25 hover:shadow-lg hover:shadow-brand-red/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 tracking-wide"
+                    className="ml-4 inline-flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-bold text-white bg-gradient-to-r from-brand-red to-brand-orange shadow-md shadow-brand-red/25 hover:shadow-lg hover:shadow-brand-red/40  transition-all duration-200 tracking-wide"
                   >
                     {item.label}
                   </Link>
@@ -70,7 +70,7 @@ export default function Navbar({ onNavigate }: { onNavigate?: (sectionId: string
               const active = isActive(item);
               const linkClasses = `relative px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
                 active
-                  ? "text-brand-red font-bold bg-brand-red/10"
+                  ? "text-brand-red font-bold bg-brand-red/10" 
                   : "text-gray-700 hover:text-brand-red hover:bg-brand-red/5"
               }`;
 

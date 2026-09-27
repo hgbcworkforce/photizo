@@ -106,8 +106,8 @@ export default function Admin() {
       ]);
       
       setAllData({
-        registrations: regRes.attendees || regRes.data || [],
-        merchandise_orders: merchRes.data || merchRes.orders || [],
+        registrations: (regRes.attendees || (regRes as any).data || []) as any,
+        merchandise_orders: (merchRes.data || (merchRes as any).orders || []) as any,
       });
       setLastRefresh(new Date());
     } catch (err) {

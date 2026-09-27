@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { supabase } from '../lib/supabase';
+import { authUtils } from '../utils/authUtils';
 import type { RegistrationData, Attendee, PaymentResponse } from '../types/registration';
 import type { OrderPayload } from '../types/merchandise';
 
@@ -32,6 +34,23 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+// Automatic JWT Authorization Header Interceptor matching BISUM
+apiClient.interceptors.request.use(async (config) => {
+  try {
+    const { data } = await supabase.auth.getSession();
+    const token = data.session?.access_token || authUtils.getToken();
+    if (token && !config.headers.Authorization) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  } catch (err) {
+    const token = authUtils.getToken();
+    if (token && !config.headers.Authorization) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  return config;
 });
 
 export const registrationAPI = {

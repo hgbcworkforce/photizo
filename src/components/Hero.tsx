@@ -1,11 +1,19 @@
 import { useState, useEffect } from "react";
 import { ArrowRight, MapPin, Calendar } from "lucide-react";
-import hero from '/slides/slide-1.jpeg';
+
+const slideImages = [
+  "/slides/slide-1.jpeg",
+  "/slides/slide-2.webp",
+  "/slides/slide-3.webp",
+  "/slides/slide-4.webp",
+];
 
 export default function Hero() {
   const conferenceDate = new Date("May 21, 2026 17:00:00").getTime();
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Countdown timer effect
   useEffect(() => {
     const timer = setInterval(() => {
       const now = Date.now();
@@ -21,6 +29,14 @@ export default function Hero() {
     }, 1000);
     return () => clearInterval(timer);
   }, [conferenceDate]);
+
+  // Smooth background slider effect
+  useEffect(() => {
+    const slideInterval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slideImages.length);
+    }, 5000);
+    return () => clearInterval(slideInterval);
+  }, []);
 
   const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -46,14 +62,29 @@ export default function Hero() {
         }}
       />
 
-      {/* ── Background Hero Image with Film Overlay ── */}
+      {/* ── Background Hero Image Smooth Slider ── */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        <img
-          src={hero}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-35 scale-105 transition-transform duration-1000 ease-out"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/75 to-brand-black/90" />
+        {slideImages.map((imageSrc, index) => {
+          const isActive = index === currentSlide;
+          return (
+            <div
+              key={imageSrc}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                isActive ? "opacity-35 z-[1]" : "opacity-0 z-0 pointer-events-none"
+              }`}
+            >
+              <img
+                src={imageSrc}
+                alt=""
+                className={`h-full w-full object-cover transition-transform duration-[6000ms] ease-out ${
+                  isActive ? "scale-105" : "scale-100"
+                }`}
+              />
+            </div>
+          );
+        })}
+        {/* Film Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/75 to-brand-black/90 z-[2]" />
       </div>
 
       {/* ══════════════════════════════════════
@@ -155,24 +186,42 @@ export default function Hero() {
 
         </div>
 
-        {/* ── CTA Row ── */}
-        <div className="mt-10 flex flex-wrap items-center gap-4 sm:gap-5">
-          {/* Primary CTA button */}
-          <a
-            href="/register"
-            className="group flex items-center gap-3 rounded-full bg-gradient-to-r from-brand-red to-brand-orange px-9 py-4 text-sm font-bold uppercase tracking-wider text-white shadow-[0_0_30px_rgba(239,64,35,0.4)] hover:shadow-[0_0_45px_rgba(239,64,35,0.6)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
-          >
-            Secure Your Seat
-            <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-          </a>
+        {/* ── CTA Row & Slide Indicators ── */}
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-5">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-5">
+            {/* Primary CTA button */}
+            <a
+              href="/register"
+              className="group flex items-center gap-3 rounded-full bg-gradient-to-r from-brand-red to-brand-orange px-9 py-4 text-sm font-bold uppercase tracking-wider text-white shadow-[0_0_30px_rgba(239,64,35,0.4)] hover:shadow-[0_0_45px_rgba(239,64,35,0.6)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
+            >
+              Secure Your Seat
+              <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+            </a>
 
-          {/* Secondary button */}
-          <a
-            href="/merchandise"
-            className="rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-8 py-4 text-sm font-bold tracking-wider text-white hover:bg-white/20 hover:border-white/30 active:scale-[0.98] transition-all duration-300"
-          >
-            Purchase Merchnadise
-          </a>
+            {/* Secondary button */}
+            <a
+              href="/merchandise"
+              className="rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-8 py-4 text-sm font-bold tracking-wider text-white hover:bg-white/20 hover:border-white/30 active:scale-[0.98] transition-all duration-300"
+            >
+              Purchase Merchnadise
+            </a>
+          </div>
+
+          {/* Slide Indicators */}
+          <div className="flex items-center gap-2 bg-white/5 border border-white/10 backdrop-blur-md px-3.5 py-2 rounded-full">
+            {slideImages.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentSlide(idx)}
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                  idx === currentSlide
+                    ? "w-7 bg-gradient-to-r from-brand-red to-brand-orange"
+                    : "w-2 bg-white/30 hover:bg-white/60"
+                }`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
         </div>
 
       </div>

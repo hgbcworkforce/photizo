@@ -14,10 +14,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          # Remove or fix the cache-dependency-path
-          # Option 1: Remove cache entirely (simplest)
-          # Option 2: Fix the path (see below)
+          node-version: "22"
       
       - name: Install dependencies and build
         run: |
@@ -25,8 +22,9 @@ jobs:
           npm run build
         env:
           VITE_PUBLIC_API_URL: ${{ secrets.VITE_PUBLIC_API_URL }}
-          VITE_PAYSTACK_SECRET_KEY: ${{ secrets.VITE_PAYSTACK_SECRET_KEY }}
-          VITE_PAYSTACK_PUBLIC_KEY: ${{ secrets.VITE_PAYSTACK_PUBLIC_KEY }}
+          VITE_PUBLIC_SUPABASE_URL: ${{ secrets.VITE_PUBLIC_SUPABASE_URL }}
+          VITE_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.VITE_PUBLIC_SUPABASE_ANON_KEY }}
+          VITE_PUBLIC_PAYSTACK_PUBLIC_KEY: ${{ secrets.VITE_PUBLIC_PAYSTACK_PUBLIC_KEY }}
       
       - name: 📂 Upload files to cPanel via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5

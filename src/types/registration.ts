@@ -1,14 +1,25 @@
-export type PaymentStatus = 'pending' | 'completed' | 'failed';
+export type PaymentStatus = 'pending' | 'completed' | 'paid' | 'failed';
 
 export interface RegistrationData {
+  id?: string;
   firstName: string;
   lastName: string;
   email: string;
-  phoneNumber: string;
+  phone?: string;
+  phoneNumber?: string;
+  gender?: string;
+  ageRange?: string;
   attendanceMode: string;
   referralSource: string;
   breakoutSessionChoice: string;
   expectations?: string;
+  registrationType?: 'student' | 'professional' | string;
+  amount?: number;
+  amountPaid?: number;
+  paymentStatus?: PaymentStatus;
+  registrationNumber?: string;
+  paymentReference?: string;
+  createdAt?: string;
 }
 
 export interface Attendee extends RegistrationData {
@@ -19,8 +30,11 @@ export interface Attendee extends RegistrationData {
 }
 
 export interface PaymentResponse {
+  authorizationUrl?: string;
   checkoutUrl?: string;
-  accessCode?: string; // If using Paystack Access Code flow
+  accessCode?: string;
   reference: string;
-  amount: number;
+  amount?: number;
+  registrationId?: string;
+  registration?: Attendee;
 }

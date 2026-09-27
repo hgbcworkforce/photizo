@@ -1,107 +1,163 @@
-import { useState } from "react";
-import type { ChangeEvent, FormEvent } from "react";
-import { ArrowRight } from "lucide-react";
+import React, { useState } from "react";
+import { ArrowRight, CheckCircle, ShieldCheck } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import SectionHero from "../components/SectionHero";
 import { registrationAPI } from "../services/apiService";
-import { getBackendVerifyUrl } from "../services/apiService";
-import type { RegistrationData } from "../types/registration";
 
-// Paystack v2 Type Definitions
-interface PaystackResponse {
-  reference: string;
-  status?: string;
-  message?: string;
-  transaction?: {
-    reference?: string;
-    status?: string;
-    [key: string]: any;
-  };
-  [key: string]: any;
-}
+const REGISTRATION_TYPES = [
+  {
+    value: "student",
+    label: "Student",
+    price: 1000,
+    description: "Full conference admission for students (₦1,000).",
+  },
+  {
+    value: "professional",
+    label: "Professional",
+    price: 2000,
+    description: "Full conference admission for working professionals (₦2,000).",
+  },
+];
+
+const GENDER_OPTIONS = [
+  { value: "", label: "Select Gender" },
+  { value: "male", label: "Male" },
+  { value: "female", label: "Female" },
+];
+
+const AGE_RANGE_OPTIONS = [
+  { value: "", label: "Select Age Range" },
+  { value: "15-20", label: "15 - 20" },
+  { value: "21-25", label: "21 - 25" },
+  { value: "26-30", label: "26 - 30" },
+  { value: "31-40", label: "31 - 40" },
+  { value: "40+", label: "40+" },
+];
+
+const REFERRAL_OPTIONS = [
+  { value: "", label: "Select Referral Source" },
+  { value: "church", label: "Church" },
+  { value: "instagram", label: "Instagram" },
+  { value: "recommendation_from_friend", label: "Friend Recommendation" },
+  { value: "whatsapp", label: "WhatsApp" },
+  { value: "facebook", label: "Facebook" },
+  { value: "flyer", label: "Flyer / Banner" },
+];
+
+const BREAKOUT_OPTIONS = [
+  { value: "", label: "Select Breakout Session" },
+  { value: "Art", label: "Art & Entertainment" },
+  { value: "Business", label: "Business & Entrepreneurship" },
+  { value: "Education", label: "Education & Academics" },
+  { value: "Family", label: "Family & Relationships" },
+  { value: "Media", label: "Media & Communications" },
+  { value: "Politics", label: "Politics & Governance" },
+  { value: "Religion", label: "Religion & Ministry" },
+];
+
+const ATTENDANCE_MODES = [
+  { value: "On-site", label: "On-site", description: "In-person at HGBC, Ogbomoso" },
+  { value: "Online", label: "Online", description: "Live interactive streaming" },
+];
 
 export default function Registration() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState<RegistrationData>({
+  const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    phoneNumber: "",
-    attendanceMode: "",
+    phone: "",
+    gender: "",
+    ageRange: "",
+    attendanceMode: "On-site",
     referralSource: "",
     breakoutSessionChoice: "",
     expectations: "",
+    registrationType: "student",
   });
 
-  // --- Pricing Logic ---
-  const BASE_FEE = 2000;
-  const CHARGE_PERCENTAGE = 0.025; // 2.5%
-  const processingFee = BASE_FEE * CHARGE_PERCENTAGE;
-  const totalAmount = BASE_FEE + processingFee;
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [registrationNumber, setRegistrationNumber] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // --- Handlers ---
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const selectedTypeObj =
+    REGISTRATION_TYPES.find((t) => t.value === formData.registrationType) ||
+    REGISTRATION_TYPES[0];
+  const currentPrice = selectedTypeObj.price;
+  const paystackFee = currentPrice > 0 ? Math.round(currentPrice * 0.015 + 100) : 0;
+  const chargedPrice = currentPrice + paystackFee;
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
   };
 
-  const handleRegistration = async (e: FormEvent) => {
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
+    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+    if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
+    if (!formData.gender) newErrors.gender = "Gender is required";
+    if (!formData.ageRange) newErrors.ageRange = "Age range is required";
+    if (!formData.attendanceMode) newErrors.attendanceMode = "Please select how you want to attend";
+    if (!formData.referralSource) newErrors.referralSource = "Please select how you heard about Photizo";
+    if (!formData.breakoutSessionChoice) newErrors.breakoutSessionChoice = "Please select a breakout session";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     setIsSubmitting(true);
+    setErrorMessage("");
 
     try {
-      // Trim whitespace and transform values to match backend expectations
       const payload = {
         ...formData,
-        firstName: formData.firstName.trim(),
-        lastName: formData.lastName.trim(),
-        attendanceMode: formData.attendanceMode === "physical" ? "physical" : "virtual",
-        breakoutSessionChoice: formData.breakoutSessionChoice.charAt(0).toUpperCase() + formData.breakoutSessionChoice.slice(1),
-        referralSource: formData.referralSource.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-        expectations: formData.expectations || "No specific expectations",
+        phoneNumber: formData.phone,
+        amount: chargedPrice,
+        callbackUrl: `${window.location.origin}/registration-success`,
       };
 
-      // 1. Save data to Node.js backend (Status: Pending)
-      const regResult = await registrationAPI.register(payload);
+      const result = await registrationAPI.initiate(payload);
 
-      // 2. Initialize Payment to get access_code from Paystack via backend
-      const payResult = await registrationAPI.initializePayment(regResult.attendee.id);
-
-      if (!payResult.accessCode) {
-        throw new Error("Payment initialization failed: no access code received");
-      }
-
-      // 3. Trigger Paystack Popup using v2 API
-      if (typeof window !== "undefined" && window.PaystackPop) {
-        try {
-          const handler = window.PaystackPop.setup({
-            key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
-            email: formData.email,
-            amount: Math.round(totalAmount * 100), // Convert to kobo (205000)
-            access_code: payResult.accessCode,
-            onClose: () => {
-              alert("Payment window closed. Please complete payment to secure your spot.");
-              setIsSubmitting(false);
-            },
-            // 4. Handle successful payment - redirect to backend for verification
-            callback: (response: PaystackResponse) => {
-              window.location.href = getBackendVerifyUrl(response.reference);
-            },
-        });
-          
-          handler.openIframe();
-        } catch (paystackError) {
-          console.error("Paystack initialization error:", paystackError);
-          throw new Error("Failed to initialize payment. Please try again.");
+      if (result.success && result.data) {
+        if (result.data.authorizationUrl) {
+          // Paid registration -> Redirect to Paystack Checkout
+          sessionStorage.setItem("lastRegistration", JSON.stringify(result.data));
+          window.location.href = result.data.authorizationUrl;
+        } else {
+          setIsSuccess(true);
+          setRegistrationNumber(
+            result.data.registration?.registrationNumber ||
+            result.data.registrationNumber ||
+            "PHOTIZO-2026-CONFIRMED"
+          );
         }
       } else {
-        throw new Error("Payment service (Paystack) is not loaded. Please refresh the page and try again.");
+        setErrorMessage(result.message || "Registration failed. Please try again.");
       }
-    } catch (error: unknown) {
-      console.error("Registration/Payment Error:", error);
-      const message = error instanceof Error ? error.message : "An error occurred. Please try again.";
-      alert(message);
+    } catch (err: any) {
+      console.error("Registration initiation error:", err);
+      const message =
+        err?.response?.data?.message || err?.message || "An unexpected error occurred. Please try again.";
+      setErrorMessage(message);
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -119,176 +175,378 @@ export default function Registration() {
 
       <SectionHero
         tag="Register"
-        title="Secure your Spot at Photizo'25"
+        title="Secure your Spot at Photizo'26"
         description="Join us for an inspiring experience of innovation, learning, and networking"
       />
 
-      <main className="py-20 lg:py-24">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-[32px] sm:rounded-[40px] shadow-xl border border-gray-100 p-8 sm:p-12">
-            <div className="mb-10 text-center">
-              <h2 className="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">Registration Form</h2>
-              <p className="text-gray-500 text-sm sm:text-base font-normal">
-                Please fill out all required information to secure your spot.
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {isSuccess ? (
+          <div className="bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 text-center shadow-sm">
+            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="w-10 h-10 text-emerald-600" />
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">
+              Registration Successful!
+            </h2>
+            <p className="text-base text-slate-600 mb-6">
+              Welcome to Photizo Conference 2026. We look forward to having you!
+            </p>
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 mb-8 inline-block text-left max-w-md w-full">
+              <p className="text-xs font-bold text-orange-600 uppercase tracking-wider">
+                Your Registration Number
               </p>
-            </div>  
+              <p className="text-2xl font-mono font-extrabold text-slate-900 mt-1">
+                {registrationNumber}
+              </p>
+              <p className="text-xs text-slate-500 mt-2">
+                A confirmation email has been dispatched to {formData.email}
+              </p>
+              <div className="mt-3 pt-3 border-t border-slate-200 flex justify-between text-xs text-slate-600">
+                <span>Attendance Mode:</span>
+                <span className="font-bold text-slate-900">{formData.attendanceMode}</span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 lg:p-12 shadow-sm">
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-6 border-b border-slate-100 pb-4">
+              Personal & Conference Details
+            </h2>
 
-            <form onSubmit={handleRegistration} className="space-y-8">
-              {/* Personal Info */}
+            {errorMessage && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+                {errorMessage}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Category Selector */}
               <div>
-                <h3 className="text-base font-bold uppercase tracking-wider text-xs text-brand-orange mb-4">
-                  Personal Information
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">First Name *</label>
-                    <input
-                      required
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      className="block w-full px-4 py-3.5 border border-gray-200 rounded-2xl text-sm leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange text-gray-800 transition-all font-medium"
-                      placeholder="First Name"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Last Name *</label>
-                    <input
-                      required
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      className="block w-full px-4 py-3.5 border border-gray-200 rounded-2xl text-sm leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange text-gray-800 transition-all font-medium"
-                      placeholder="Last Name"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Email *</label>
-                    <input
-                      required
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="block w-full px-4 py-3.5 border border-gray-200 rounded-2xl text-sm leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange text-gray-800 transition-all font-medium"
-                      placeholder="email@example.com"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Phone *</label>
-                    <input
-                      required
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
-                      onChange={handleInputChange}
-                      className="block w-full px-4 py-3.5 border border-gray-200 rounded-2xl text-sm leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange text-gray-800 transition-all font-medium"
-                      placeholder="+234..."
-                    />
-                  </div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2.5">
+                  Select Registration Category *
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {REGISTRATION_TYPES.map((type) => {
+                    const isSelected = formData.registrationType === type.value;
+                    return (
+                      <div
+                        key={type.value}
+                        onClick={() =>
+                          setFormData((prev) => ({ ...prev, registrationType: type.value }))
+                        }
+                        className={`relative p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between ${
+                          isSelected
+                            ? "border-orange-600 bg-orange-50/50 shadow-sm"
+                            : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <div className="flex items-center space-x-2">
+                              <span className="font-extrabold text-slate-900 text-base">
+                                {type.label}
+                              </span>
+                              {type.value === "student" && (
+                                <span className="px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide rounded-full bg-orange-100 text-orange-700">
+                                  Subsidized
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-xs text-slate-500 mt-1">{type.description}</p>
+                          </div>
+                          <div
+                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                              isSelected ? "border-orange-600 bg-orange-600" : "border-slate-300"
+                            }`}
+                          >
+                            {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
+                          </div>
+                        </div>
+                        <div className="mt-4 pt-3 border-t border-slate-200/60 flex items-baseline justify-between">
+                          <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
+                            Pass Fee
+                          </span>
+                          <span className="text-lg font-mono font-black text-slate-900">
+                            ₦{type.price.toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
+              {/* Name fields */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Select Attendance Mode *</label>
-                  <select 
-                    required 
-                    name="attendanceMode" 
-                    value={formData.attendanceMode} 
-                    onChange={handleInputChange} 
-                    className="block w-full px-4 py-3.5 border border-gray-200 rounded-2xl text-sm leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange text-gray-800 transition-all font-medium"
-                  >
-                    <option value="">Select Attendance Mode</option>
-                    <option value="physical">Physical (On Site)</option>
-                    <option value="virtual">Virtual (Online)</option>
-                  </select>   
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                    First Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm bg-white"
+                    placeholder="e.g. John"
+                  />
+                  {errors.firstName && (
+                    <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
+                  )}
                 </div>
-
                 <div>
-                  <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Breakout Session *</label>
-                  <select 
-                    required 
-                    name="breakoutSessionChoice" 
-                    value={formData.breakoutSessionChoice} 
-                    onChange={handleInputChange} 
-                    className="block w-full px-4 py-3.5 border border-gray-200 rounded-2xl text-sm leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange text-gray-800 transition-all font-medium"
-                  >
-                    <option value="">Select Breakout Session</option>
-                    <option value="art">Art</option>
-                    <option value="business">Business</option>
-                    <option value="education">Education</option>
-                    <option value="family">Family</option>
-                    <option value="media">Media</option>
-                    <option value="politics">Politics</option>
-                    <option value="religion">Religion</option>
-                  </select>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                    Last Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm bg-white"
+                    placeholder="e.g. Doe"
+                  />
+                  {errors.lastName && (
+                    <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
+                  )}
                 </div>
               </div>
 
-              {/* Selections */}
-              <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">How did you hear about us? *</label>
-                <select 
-                  required 
-                  name="referralSource" 
-                  value={formData.referralSource} 
-                  onChange={handleInputChange} 
-                  className="block w-full px-4 py-3.5 border border-gray-200 rounded-2xl text-sm leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange text-gray-800 transition-all font-medium"
-                >
-                  <option value="">How did you hear about us?</option>
-                  <option value="church">Church</option>
-                  <option value="instagram">Instagram</option>
-                  <option value="recommendation_from_friend">Recommendation from a friend</option>
-                  <option value="whatsapp">WhatsApp</option>
-                  <option value="facebook">Facebook</option>
-                  <option value="flyer">Flyer</option>
-                </select>
+              {/* Contact info */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm bg-white"
+                    placeholder="john.doe@example.com"
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                    Phone Number *
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm bg-white"
+                    placeholder="+234 800 000 0000"
+                  />
+                  {errors.phone && (
+                    <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+                  )}
+                </div>
               </div>
 
+              {/* Gender and Age Range */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                    Gender *
+                  </label>
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm bg-white"
+                  >
+                    {GENDER_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.gender && (
+                    <p className="text-red-500 text-xs mt-1">{errors.gender}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                    Age Range *
+                  </label>
+                  <select
+                    name="ageRange"
+                    value={formData.ageRange}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm bg-white"
+                  >
+                    {AGE_RANGE_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.ageRange && (
+                    <p className="text-red-500 text-xs mt-1">{errors.ageRange}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Attendance Mode (On-site vs Online) */}
               <div>
-                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Expectations (Optional)</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                  How do you want to attend? *
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {ATTENDANCE_MODES.map((opt) => {
+                    const isSelected = formData.attendanceMode === opt.value;
+                    return (
+                      <div
+                        key={opt.value}
+                        onClick={() => {
+                          setFormData((prev) => ({ ...prev, attendanceMode: opt.value }));
+                          if (errors.attendanceMode) {
+                            setErrors((prev) => ({ ...prev, attendanceMode: "" }));
+                          }
+                        }}
+                        className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between ${
+                          isSelected
+                            ? "border-orange-600 bg-orange-50/50 shadow-xs"
+                            : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60"
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <div
+                            className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${
+                              isSelected ? "border-orange-600 bg-orange-600" : "border-slate-300"
+                            }`}
+                          >
+                            {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                          </div>
+                          <div>
+                            <span className="font-bold text-slate-900 text-sm">{opt.label}</span>
+                            <p className="text-[11px] text-slate-500">{opt.description}</p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                {errors.attendanceMode && (
+                  <p className="text-red-500 text-xs mt-1">{errors.attendanceMode}</p>
+                )}
+              </div>
+
+              {/* Referral Source & Breakout Session */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                    How did you hear about Photizo? *
+                  </label>
+                  <select
+                    name="referralSource"
+                    value={formData.referralSource}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm bg-white"
+                  >
+                    {REFERRAL_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.referralSource && (
+                    <p className="text-red-500 text-xs mt-1">{errors.referralSource}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                    Breakout Session Choice *
+                  </label>
+                  <select
+                    name="breakoutSessionChoice"
+                    value={formData.breakoutSessionChoice}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm bg-white"
+                  >
+                    {BREAKOUT_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.breakoutSessionChoice && (
+                    <p className="text-red-500 text-xs mt-1">{errors.breakoutSessionChoice}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Expectations */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                  Expectations (Optional)
+                </label>
                 <textarea
                   name="expectations"
+                  rows={3}
                   value={formData.expectations}
                   onChange={handleInputChange}
-                  placeholder="Expectations (Optional)"
-                  className="block w-full px-4 py-3.5 border border-gray-200 rounded-2xl text-sm leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange text-gray-800 transition-all font-medium resize-none"
-                  rows={3}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm bg-white"
+                  placeholder="What do you hope to gain from Photizo 2026?"
                 />
               </div>
 
-              {/* Summary Box */}
-              <div className="bg-gradient-to-br from-brand-red/5 to-brand-orange/5 border border-brand-red/20 rounded-2xl p-6 space-y-3">
-                <div className="flex justify-between text-gray-700 text-sm font-medium">
-                  <span>Registration Fee</span>
-                  <span>₦{BASE_FEE.toLocaleString()}</span>
+              {/* Pricing & Fee Summary */}
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 text-xs">
+                <div className="flex justify-between text-slate-600">
+                  <span>{selectedTypeObj.label} Admission Pass</span>
+                  <span className="font-semibold text-slate-900 font-mono">
+                    ₦{currentPrice.toLocaleString()}
+                  </span>
                 </div>
-                <div className="flex justify-between text-gray-500 text-xs">
-                  <span>Processing Fee (2.5%)</span>
-                  <span>₦{processingFee.toLocaleString()}</span>
-                </div>
-                <div className="border-t border-brand-red/15 pt-3 flex justify-between items-center">
-                  <span className="font-bold text-gray-900 text-base">Total Amount</span>
-                  <span className="text-2xl font-black text-brand-red">₦{totalAmount.toLocaleString()}</span>
+                {paystackFee > 0 && (
+                  <div className="flex justify-between text-slate-500">
+                    <span>Paystack Gateway Processing Fee</span>
+                    <span className="font-mono">₦{paystackFee.toLocaleString()}</span>
+                  </div>
+                )}
+                <div className="pt-2 border-t border-slate-200 flex justify-between items-center text-sm font-bold text-slate-900">
+                  <span>Total Payable</span>
+                  <span className="font-mono text-base font-extrabold text-orange-600">
+                    ₦{chargedPrice.toLocaleString()}
+                  </span>
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`w-full py-4 rounded-full text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer ${
-                  isSubmitting
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-brand-red to-brand-orange hover:shadow-xl hover:shadow-brand-red/30 hover:-translate-y-0.5 active:translate-y-0 shadow-lg shadow-brand-red/20"
-                }`}
-              >
-                {isSubmitting ? "Processing..." : "Register & Pay Now"}
-                {!isSubmitting && <ArrowRight className="h-4 w-4" />}
-              </button>
+              {/* Submit Button */}
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-brand-red to-brand-orange text-white font-bold py-3.5 px-8 rounded-xl transition-colors flex items-center justify-center space-x-2 text-base disabled:opacity-50 cursor-pointer shadow-md"
+                >
+                  {isSubmitting ? (
+                    <span>Processing Registration...</span>
+                  ) : (
+                    <>
+                      <span>Proceed to Payment (₦{chargedPrice.toLocaleString()})</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+                <div className="mt-3 flex items-center justify-center space-x-1.5 text-[11px] text-slate-500 text-center">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>
+                    Secured by Paystack • Supports <strong>OPay</strong>, <strong>Cards</strong>,{" "}
+                    <strong>Bank Transfer</strong> & <strong>USSD</strong>
+                  </span>
+                </div>
+              </div>
             </form>
           </div>
-        </div>
-      </main>
+        )}
+      </div>
+
       <Footer />
     </div>
   );

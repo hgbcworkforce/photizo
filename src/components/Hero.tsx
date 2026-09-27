@@ -185,7 +185,7 @@ export default function Hero() {
               className="group flex items-center gap-3 rounded-full bg-gradient-to-r from-brand-red to-brand-orange px-9 py-4 text-sm font-bold uppercase tracking-wider text-white shadow-[0_0_30px_rgba(239,64,35,0.4)] hover:shadow-[0_0_45px_rgba(239,64,35,0.6)] active:translate-y-0 transition-all duration-300"
             >
               Secure Your Seat
-              <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+              <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" />
             </a>
 
             {/* Secondary button */}

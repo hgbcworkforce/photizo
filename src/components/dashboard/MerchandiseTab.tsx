@@ -196,58 +196,58 @@ export default function MerchandiseTab() {
     <div>
       {/* Error Alert */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-sm text-red-800">
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-6 text-sm text-red-800 font-medium">
           {error}
         </div>
       )}
 
       {/* Charts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-0.5 mb-6">
-        <div className="bg-white border border-gray-100 p-5">
-          <div className="text-xs font-semibold text-gray-500 mb-4 uppercase tracking-wide">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="bg-gray-50/70 border border-gray-100 p-6 rounded-3xl">
+          <div className="text-xs font-bold text-gray-500 mb-4 uppercase tracking-wider">
             Type of Merchandise Ordered
           </div>
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={catData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-              <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-              <YAxis tick={{ fontSize: 10 }} />
-              <Tooltip contentStyle={{ fontSize: 11, borderRadius: 0 }} />
-              <Bar dataKey="count" fill={ORANGE} radius={0} />
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={catData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#71717a' }} />
+              <YAxis tick={{ fontSize: 11, fill: '#71717a' }} />
+              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 12, border: '1px solid #e4e4e7' }} />
+              <Bar dataKey="count" fill={ORANGE} radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div className="bg-white border border-gray-100 p-5">
-          <div className="text-xs font-semibold text-gray-500 mb-4 uppercase tracking-wide">
+        <div className="bg-gray-50/70 border border-gray-100 p-6 rounded-3xl">
+          <div className="text-xs font-bold text-gray-500 mb-4 uppercase tracking-wider">
             Most Popular Colors
           </div>
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={intData} layout="vertical" margin={{ top: 0, right: 0, left: 60, bottom: 0 }}>
-              <XAxis type="number" tick={{ fontSize: 10 }} />
-              <YAxis dataKey="name" type="category" tick={{ fontSize: 9 }} width={60} />
-              <Tooltip contentStyle={{ fontSize: 11, borderRadius: 0 }} />
-              <Bar dataKey="count" fill="#111" radius={0} />
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={intData} layout="vertical" margin={{ top: 10, right: 10, left: 60, bottom: 0 }}>
+              <XAxis type="number" tick={{ fontSize: 11, fill: '#71717a' }} />
+              <YAxis dataKey="name" type="category" tick={{ fontSize: 10, fill: '#71717a' }} width={60} />
+              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 12, border: '1px solid #e4e4e7' }} />
+              <Bar dataKey="count" fill="#ef4023" radius={[0, 8, 8, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       {/* Filters and Controls */}
-      <div className="flex flex-col md:flex-row gap-3 mb-4">
+      <div className="flex flex-wrap items-center gap-3 mb-6">
         {/* Search */}
-        <div className="relative grow max-w-xs border border-gray-200  text-black">
+        <div className="relative flex-1 min-w-[220px] max-w-sm">
           <input
             type="text"
-            className="input-field text-sm py-2 pl-9 w-full"
+            className="w-full pl-10 pr-4 py-2.5 text-xs font-medium border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange text-gray-800"
             placeholder="Search name, email, city..."
             value={search}
             onChange={(e: ChangeEvent<HTMLInputElement>) => handleSearch(e.target.value)}
           />
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
         </div>
 
         {/* Category Filter */}
         <select
-          className="select-field max-w-xs text-sm text-gray-800 py-2 border border-gray-200"
+          className="text-xs font-medium text-gray-700 py-2.5 px-3 border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-brand-orange/30"
           value={filterCategory}
           onChange={(e: ChangeEvent<HTMLSelectElement>) => handleFilterCategory(e.target.value)}
         >
@@ -259,96 +259,97 @@ export default function MerchandiseTab() {
           ))}
         </select>
 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap items-center gap-2 ml-auto">
           <button
             onClick={handleRefresh}
             disabled={loading}
-            className="flex items-center gap-1.5 text-xs  text-gray-800 font-medium border border-gray-200 px-4 py-2 hover:border-brand-orange hover:text-brand-orange transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 text-xs text-gray-700 font-bold border border-gray-200 px-4 py-2.5 rounded-2xl hover:border-brand-orange hover:text-brand-orange transition-colors disabled:opacity-50 cursor-pointer bg-white shadow-sm"
           >
-            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> Refresh
+            <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Refresh
           </button>
           <button
             onClick={() => downloadCSV(data, 'merchandise_orders.csv')}
-            className="flex items-center gap-1.5 text-xs text-gray-800 font-medium border border-gray-200 px-4 py-2 hover:border-brand-orange hover:text-brand-orange transition-colors"
+            className="flex items-center gap-1.5 text-xs text-gray-700 font-bold border border-gray-200 px-4 py-2.5 rounded-2xl hover:border-brand-orange hover:text-brand-orange transition-colors cursor-pointer bg-white shadow-sm"
           >
-            <Download size={14} /> Export CSV
+            <Download size={13} /> Export CSV
           </button>
-          <span className="text-xs text-gray-400 self-center">
-            {totalItems === 0 ? 0 : (page - 1) * LIMIT + 1} - {Math.min(page * LIMIT, totalItems)} of {totalItems} records {activeFilters > 0 && ` · ${activeFilters} filter${activeFilters > 1 ? 's' : ''}`}
-          </span>
         </div>
       </div>
 
+      <div className="mb-4 text-xs font-medium text-gray-400">
+        {totalItems === 0 ? 0 : (page - 1) * LIMIT + 1} - {Math.min(page * LIMIT, totalItems)} of {totalItems} records {activeFilters > 0 && ` · ${activeFilters} filter${activeFilters > 1 ? 's' : ''}`}
+      </div>
+
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs border-collapse">
+      <div className="overflow-x-auto rounded-2xl border border-gray-100">
+        <table className="w-full text-xs border-collapse bg-white">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
+            <tr className="bg-gray-50/80 border-b border-gray-100">
               {['Name', 'Email', 'Phone', 'Product', 'Color', 'Size', 'Qty', 'Total', 'Action'].map((h) => (
                 <th
                   key={h}
-                  className="text-left px-3 py-2.5 font-semibold text-gray-500 uppercase tracking-wide text-[10px] whitespace-nowrap"
+                  className="text-left px-4 py-3.5 font-bold text-gray-500 uppercase tracking-wider text-[10px] whitespace-nowrap"
                 >
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-100">
             {loading ? (
               <tr>
-                <td colSpan={10} className="text-center py-10 text-gray-400 text-sm">
+                <td colSpan={9} className="text-center py-12 text-gray-400 text-sm">
                   Loading...
                 </td>
               </tr>
             ) : error ? (
               <tr>
-                <td colSpan={10} className="text-center py-10 text-red-600 text-sm">
+                <td colSpan={9} className="text-center py-12 text-red-600 text-sm">
                   {error}
                 </td>
               </tr>
             ) : data.length === 0 ? (
               <tr>
-                <td colSpan={10} className="text-center py-10 text-gray-400 text-sm">
+                <td colSpan={9} className="text-center py-12 text-gray-400 text-sm">
                   No records found.
                 </td>
               </tr>
             ) : (
               data.map((r, i) => (
-                <tr key={i} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                  <td className="px-3 py-2.5 font-medium text-brand-black whitespace-nowrap">
+                <tr key={i} className="hover:bg-gray-50/70 transition-colors">
+                  <td className="px-4 py-3.5 font-bold text-gray-900 whitespace-nowrap">
                     {r.fullName}
                   </td>
-                  <td className="px-3 py-2.5 text-gray-500">{r.email}</td>
-                  <td className="px-3 py-2.5 text-gray-500">{r.phoneNumber || '—'}</td>
+                  <td className="px-4 py-3.5 text-gray-600 font-medium">{r.email}</td>
+                  <td className="px-4 py-3.5 text-gray-500">{r.phoneNumber || '—'}</td>
 
                   {/* Product */}
-                  <td className="px-3 py-2.5">
-                    <span className="px-1.5 py-0.5 bg-orange-50 text-brand-orange  font-medium rounded-sm">
+                  <td className="px-4 py-3.5">
+                    <span className="px-2.5 py-1 bg-brand-orange/10 text-brand-orange font-bold text-[10px] uppercase tracking-wider rounded-full">
                       {r.merchandiseId || '—'}
                     </span>
                   </td>
 
                   {/* Color */}
-                  <td className="px-3 py-2.5 text-gray-500">{r.color || '—'}</td>
+                  <td className="px-4 py-3.5 text-gray-600 font-medium">{r.color || '—'}</td>
 
                   {/* Size */}
-                  <td className="px-3 py-2.5 text-center text-gray-600 font-medium">{r.size || '—'}</td>
+                  <td className="px-4 py-3.5 text-center text-gray-700 font-bold">{r.size || '—'}</td>
 
                   {/* Quantity */}
-                  <td className="px-3 py-2.5 text-center text-gray-600">{r.quantity || 0}</td>
+                  <td className="px-4 py-3.5 text-center text-gray-700 font-bold">{r.quantity || 0}</td>
 
                   {/* Total Amount */}
-                  <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">
+                  <td className="px-4 py-3.5 text-brand-red font-bold whitespace-nowrap">
                     ₦{r.totalAmount?.toLocaleString() || 0}
                   </td>
-                  <td className="px-3 py-2.5 whitespace-nowrap">
+                  <td className="px-4 py-3.5 whitespace-nowrap">
                     <button
                       onClick={() => handleDelete(r.id)}
                       disabled={deletingId === r.id}
-                      className="inline-flex items-center gap-1 rounded-sm border border-red-200 px-2.5 py-1 text-[10px] font-semibold text-red-600 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="inline-flex items-center gap-1 rounded-xl border border-red-200 px-3 py-1.5 text-[11px] font-bold text-red-600 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors"
                     >
-                      <Trash2 size={12} />
+                      <Trash2 size={13} />
                       {deletingId === r.id ? 'Deleting' : 'Delete'}
                     </button>
                   </td>
@@ -361,21 +362,21 @@ export default function MerchandiseTab() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-3 mt-6">
+        <div className="flex justify-center items-center gap-3 mt-8">
           <button
             disabled={page === 1}
             onClick={() => setPage((p) => p - 1)}
-            className="text-xs font-medium border border-gray-200 px-3 py-1.5 rounded hover:border-brand-orange hover:text-brand-orange transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-xs text-gray-600 font-bold border border-gray-200 px-4 py-2 rounded-xl hover:border-brand-orange hover:text-brand-orange transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer bg-white shadow-sm"
           >
             Previous
           </button>
-          <span className="text-xs text-gray-500 font-medium">
+          <span className="text-xs text-gray-500 font-bold px-2">
             Page {page} of {totalPages}
           </span>
           <button
             disabled={page >= totalPages}
             onClick={() => setPage((p) => p + 1)}
-            className="text-xs font-medium border border-gray-200 px-3 py-1.5 rounded hover:border-brand-orange hover:text-brand-orange transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-xs text-gray-600 font-bold border border-gray-200 px-4 py-2 rounded-xl hover:border-brand-orange hover:text-brand-orange transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer bg-white shadow-sm"
           >
             Next
           </button>

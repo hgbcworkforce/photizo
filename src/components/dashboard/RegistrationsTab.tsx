@@ -95,14 +95,14 @@ export default function RegistrationsTab() {
           breakoutSessionChoice: session || undefined,
         });
 
-        // ✅ Run both requests at the same time
+        // Run both requests at the same time
         const [res, allRes] = await Promise.all([tableReq, allReq]);
 
         // Set the table data (20 items max)
         const results = res.attendees || res.data || [];
         setRegistrations(Array.isArray(results) ? results : []);
 
-        // ✅ Set the chart/export data (all items)
+        // Set the chart/export data (all items)
         const allResults = allRes.attendees || allRes.data || [];
         setAllFilteredRegistrations(Array.isArray(allResults) ? allResults : []);
 
@@ -191,7 +191,6 @@ export default function RegistrationsTab() {
 
   const catCount: Record<string, number> = {};
   allFilteredRegistrations.forEach((r) => {
-    // ✅ Check if it exists as a string, then tally it directly
     if (r.attendanceMode) {
       const normalizedMode = r.attendanceMode.toLowerCase();
       catCount[normalizedMode] = (catCount[normalizedMode] || 0) + 1;
@@ -206,7 +205,6 @@ export default function RegistrationsTab() {
 
   const intCount: Record<string, number> = {};
   allFilteredRegistrations.forEach((r) => {
-    // ✅ Same here, tally the string directly instead of looping
     if (r.breakoutSessionChoice) {
       intCount[r.breakoutSessionChoice] =
         (intCount[r.breakoutSessionChoice] || 0) + 1;
@@ -236,60 +234,60 @@ export default function RegistrationsTab() {
     <div>
       {/* Error Alert */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-sm text-red-800">
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-6 text-sm text-red-800 font-medium">
           {error}
         </div>
       )}
 
       {/* Charts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-0.5 mb-6">
-        <div className="bg-white border border-gray-100 p-5">
-          <div className="text-xs font-semibold text-gray-500 mb-4 uppercase tracking-wide">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="bg-gray-50/70 border border-gray-100 p-6 rounded-3xl">
+          <div className="text-xs font-bold text-gray-500 mb-4 uppercase tracking-wider">
             By Attendance Mode
           </div>
-          <ResponsiveContainer width="100%" height={180}>
+          <ResponsiveContainer width="100%" height={200}>
             <BarChart
               data={catData}
-              margin={{ top: 0, right: 0, left: -20, bottom: 0 }}
+              margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
             >
-              <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-              <YAxis tick={{ fontSize: 10 }} />
-              <Tooltip contentStyle={{ fontSize: 11, borderRadius: 0 }} />
-              <Bar dataKey="count" fill={ORANGE} radius={0} />
+              <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#71717a' }} />
+              <YAxis tick={{ fontSize: 11, fill: '#71717a' }} />
+              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 12, border: '1px solid #e4e4e7' }} />
+              <Bar dataKey="count" fill={ORANGE} radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div className="bg-white border border-gray-100 p-5">
-          <div className="text-xs font-semibold text-gray-500 mb-4 uppercase tracking-wide">
+        <div className="bg-gray-50/70 border border-gray-100 p-6 rounded-3xl">
+          <div className="text-xs font-bold text-gray-500 mb-4 uppercase tracking-wider">
             Top Breakout Sessions
           </div>
-          <ResponsiveContainer width="100%" height={180}>
+          <ResponsiveContainer width="100%" height={200}>
             <BarChart
               data={intData}
               layout="vertical"
-              margin={{ top: 0, right: 0, left: 60, bottom: 0 }}
+              margin={{ top: 10, right: 10, left: 60, bottom: 0 }}
             >
-              <XAxis type="number" tick={{ fontSize: 10 }} />
+              <XAxis type="number" tick={{ fontSize: 11, fill: '#71717a' }} />
               <YAxis
                 dataKey="name"
                 type="category"
-                tick={{ fontSize: 9 }}
+                tick={{ fontSize: 10, fill: '#71717a' }}
                 width={60}
               />
-              <Tooltip contentStyle={{ fontSize: 11, borderRadius: 0 }} />
-              <Bar dataKey="count" fill="#111" radius={0} />
+              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 12, border: '1px solid #e4e4e7' }} />
+              <Bar dataKey="count" fill="#ef4023" radius={[0, 8, 8, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       {/* Filters and Controls */}
-      <div className="flex flex-col md:flex-row gap-3 mb-4">
+      <div className="flex flex-wrap items-center gap-3 mb-6">
         {/* Search */}
-        <div className="relative grow max-w-xs border border-gray-200  text-black">
+        <div className="relative flex-1 min-w-[220px] max-w-sm">
           <input
             type="text"
-            className="input-field text-sm py-2 pl-9 w-full"
+            className="w-full pl-10 pr-4 py-2.5 text-xs font-medium border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange text-gray-800"
             placeholder="Search name, email, phone..."
             value={search}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -298,13 +296,13 @@ export default function RegistrationsTab() {
           />
           <Search
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
           />
         </div>
 
         {/* Attendance Mode Filter */}
         <select
-          className="select-field max-w-xs text-sm text-gray-800 py-2 border border-gray-200 "
+          className="text-xs font-medium text-gray-700 py-2.5 px-3 border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-brand-orange/30"
           value={filterMode}
           onChange={(e: ChangeEvent<HTMLSelectElement>) =>
             handleFilterMode(e.target.value)
@@ -317,7 +315,7 @@ export default function RegistrationsTab() {
 
         {/* Payment Status Filter */}
         <select
-          className="select-field max-w-xs text-sm text-gray-800 py-2 border border-gray-200 "
+          className="text-xs font-medium text-gray-700 py-2.5 px-3 border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-brand-orange/30"
           value={filterStatus}
           onChange={(e: ChangeEvent<HTMLSelectElement>) =>
             handleFilterStatus(e.target.value)
@@ -330,7 +328,7 @@ export default function RegistrationsTab() {
 
         {/* Breakout Session Filter */}
         <select
-          className="select-field max-w-xs text-sm text-gray-800  py-2 border border-gray-200 "
+          className="text-xs font-medium text-gray-700 py-2.5 px-3 border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-brand-orange/30"
           value={filterSession}
           onChange={(e: ChangeEvent<HTMLSelectElement>) =>
             handleFilterSession(e.target.value)
@@ -344,33 +342,34 @@ export default function RegistrationsTab() {
           ))}
         </select>
 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap items-center gap-2 ml-auto">
           <button
             onClick={handleRefresh}
             disabled={loading}
-            className="flex items-center gap-1.5 text-xs text-gray-800 font-medium border border-gray-200 px-4 py-2 hover:border-brand-orange hover:text-brand-orange transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 text-xs text-gray-700 font-bold border border-gray-200 px-4 py-2.5 rounded-2xl hover:border-brand-orange hover:text-brand-orange transition-colors disabled:opacity-50 cursor-pointer bg-white shadow-sm"
           >
-            <RefreshCw size={14} className={loading ? "animate-spin" : ""} />{" "}
+            <RefreshCw size={13} className={loading ? "animate-spin" : ""} />{" "}
             Refresh
           </button>
           <button
             onClick={() => downloadCSV(allFilteredRegistrations, "registrations_page.csv")}
-            className="flex items-center gap-1.5 text-xs text-gray-800 font-medium border border-gray-200 px-4 py-2 hover:border-brand-orange hover:text-brand-orange transition-colors"
+            className="flex items-center gap-1.5 text-xs text-gray-700 font-bold border border-gray-200 px-4 py-2.5 rounded-2xl hover:border-brand-orange hover:text-brand-orange transition-colors cursor-pointer bg-white shadow-sm"
           >
-            <Download size={14} /> Export CSV
+            <Download size={13} /> Export CSV
           </button>
-          <span className="text-xs text-gray-400 self-center">
-            {totalItems === 0 ? 0 : (page - 1) * LIMIT + 1} - {Math.min(page * LIMIT, totalItems)} of {totalItems} records
-            {activeFilters > 0 && ` · ${activeFilters} filter${activeFilters > 1 ? 's' : ''}`}
-          </span>
         </div>
       </div>
 
+      <div className="mb-4 text-xs font-medium text-gray-400">
+        {totalItems === 0 ? 0 : (page - 1) * LIMIT + 1} - {Math.min(page * LIMIT, totalItems)} of {totalItems} records
+        {activeFilters > 0 && ` · ${activeFilters} filter${activeFilters > 1 ? 's' : ''}`}
+      </div>
+
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs border-collapse">
+      <div className="overflow-x-auto rounded-2xl border border-gray-100">
+        <table className="w-full text-xs border-collapse bg-white">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
+            <tr className="bg-gray-50/80 border-b border-gray-100">
               {[
                 "Name",
                 "Email",
@@ -383,19 +382,19 @@ export default function RegistrationsTab() {
               ].map((h) => (
                 <th
                   key={h}
-                  className="text-left px-3 py-2.5 font-semibold text-gray-500 uppercase tracking-wide text-[10px] whitespace-nowrap"
+                  className="text-left px-4 py-3.5 font-bold text-gray-500 uppercase tracking-wider text-[10px] whitespace-nowrap"
                 >
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-100">
             {loading ? (
               <tr>
                 <td
-                  colSpan={9}
-                  className="text-center py-10 text-gray-400 text-sm"
+                  colSpan={8}
+                  className="text-center py-12 text-gray-400 text-sm"
                 >
                   Loading...
                 </td>
@@ -403,8 +402,8 @@ export default function RegistrationsTab() {
             ) : registrations.length === 0 ? (
               <tr>
                 <td
-                  colSpan={9}
-                  className="text-center py-10 text-gray-400 text-sm"
+                  colSpan={8}
+                  className="text-center py-12 text-gray-400 text-sm"
                 >
                   No records found.
                 </td>
@@ -413,58 +412,56 @@ export default function RegistrationsTab() {
               registrations.map((r, i) => (
                 <tr
                   key={r.id || i}
-                  className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
+                  className="hover:bg-gray-50/70 transition-colors"
                 >
-                  <td className="px-3 py-2.5 font-medium text-brand-black whitespace-nowrap">
+                  <td className="px-4 py-3.5 font-bold text-gray-900 whitespace-nowrap">
                     {r.firstName} {r.lastName}
                   </td>
-                  <td className="px-3 py-2.5 text-gray-500">
+                  <td className="px-4 py-3.5 text-gray-600 font-medium">
                     {r.email}
                   </td>
-                  <td className="px-3 py-2.5 text-gray-500">
+                  <td className="px-4 py-3.5 text-gray-500">
                     {r.phoneNumber || "—"}
                   </td>
-                  <td className="px-3 py-2.5">
+                  <td className="px-4 py-3.5">
                     <span
-
-                      className={`px-2 py-1 text-[9px] font-medium rounded-sm ${
+                      className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full ${
                         r.attendanceMode === "physical" || r.attendanceMode === "Physical"
-                          ? "bg-blue-50 text-blue-700"
-                          : "bg-purple-50 text-purple-700"
+                          ? "bg-brand-red/10 text-brand-red"
+                          : "bg-brand-orange/10 text-brand-orange"
                       }`}
                     >
                       {r.attendanceMode || "—"}
                     </span>
                   </td>
-                  <td className="px-3 py-2.5 text-gray-600 text-sm">
+                  <td className="px-4 py-3.5 text-gray-700 font-medium">
                     {r.breakoutSessionChoice || "—"}
                   </td>
-                  <td className="px-3 py-2.5">
+                  <td className="px-4 py-3.5">
                     <span
-                      className={`px-1.5 py-0.5 text-[9px] font-medium rounded-sm ${r.paymentStatus === "complete" ||
-                        r.paymentStatus === "paid"
-                        ? "bg-green-50 text-green-700"
-                        : r.paymentStatus === "pending"
-                          ? "bg-yellow-50 text-yellow-700"
-                          : "bg-gray-50 text-gray-600"
-                        }`}
+                      className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full ${
+                        r.paymentStatus === "complete" || r.paymentStatus === "paid"
+                          ? "bg-green-50 text-green-700 border border-green-200"
+                          : r.paymentStatus === "pending"
+                          ? "bg-yellow-50 text-yellow-700 border border-yellow-200"
+                          : "bg-gray-100 text-gray-600"
+                      }`}
                     >
-                      {r.paymentStatus === "complete" ||
-                        r.paymentStatus === "paid"
+                      {r.paymentStatus === "complete" || r.paymentStatus === "paid"
                         ? "Paid"
                         : r.paymentStatus || "—"}
                     </span>
                   </td>
-                  <td className="px-3 py-2.5 text-gray-400 whitespace-nowrap">
+                  <td className="px-4 py-3.5 text-gray-400 whitespace-nowrap font-medium">
                     {fmt(r.createdAt)}
                   </td>
-                  <td className="px-3 py-2.5 whitespace-nowrap">
+                  <td className="px-4 py-3.5 whitespace-nowrap">
                     <button
                       onClick={() => handleDelete(r.id)}
                       disabled={deletingId === r.id}
-                      className="inline-flex items-center gap-1 rounded-sm border border-red-200 px-2.5 py-1 text-[10px] font-semibold text-red-600 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="inline-flex items-center gap-1 rounded-xl border border-red-200 px-3 py-1.5 text-[11px] font-bold text-red-600 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors"
                     >
-                      <Trash2 size={12} />
+                      <Trash2 size={13} />
                       {deletingId === r.id ? "Deleting" : "Delete"}
                     </button>
                   </td>
@@ -477,21 +474,21 @@ export default function RegistrationsTab() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-3 mt-6">
+        <div className="flex justify-center items-center gap-3 mt-8">
           <button
             disabled={page === 1}
             onClick={() => setPage((p) => p - 1)}
-            className="text-xs text-gray-500 font-medium border border-gray-200 px-3 py-1.5 rounded hover:border-brand-orange hover:text-brand-orange transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-xs text-gray-600 font-bold border border-gray-200 px-4 py-2 rounded-xl hover:border-brand-orange hover:text-brand-orange transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer bg-white shadow-sm"
           >
             Previous
           </button>
-          <span className="text-xs text-gray-500 font-medium">
+          <span className="text-xs text-gray-500 font-bold px-2">
             Page {page} of {totalPages}
           </span>
           <button
             disabled={page >= totalPages}
             onClick={() => setPage((p) => p + 1)}
-            className="text-xs text-black font-medium border border-gray-200 px-3 py-1.5 rounded hover:border-brand-orange hover:text-brand-orange transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-xs text-gray-600 font-bold border border-gray-200 px-4 py-2 rounded-xl hover:border-brand-orange hover:text-brand-orange transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer bg-white shadow-sm"
           >
             Next
           </button>

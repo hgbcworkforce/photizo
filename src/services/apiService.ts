@@ -2,8 +2,9 @@ import axios from 'axios';
 import type { RegistrationData, Attendee, PaymentResponse } from '../types/registration';
 import type { OrderPayload } from '../types/merchandise';
 
-export const API_BASE_URL = import.meta.env.VITE_PUBLIC_API_URL || 'http://localhost:5000/api';
-const API_ROOT = API_BASE_URL.replace(/\/$/, '').replace(/\/api$/, '');
+const rawApiUrl = (import.meta.env.VITE_PUBLIC_API_URL || 'http://localhost:5000/api').trim();
+export const API_ROOT = rawApiUrl.replace(/\/$/, '').replace(/\/api$/, '');
+export const API_BASE_URL = `${API_ROOT}/api`;
 
 export const getBackendVerifyUrl = (reference: string): string => {
   return `${API_ROOT}/api/payments/verify/${encodeURIComponent(reference)}`;

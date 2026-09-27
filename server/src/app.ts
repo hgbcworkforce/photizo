@@ -74,6 +74,7 @@ app.use('/api', limiter);
 
 // Mount API Routes
 app.use('/api', routes);
+app.use('/', routes);
 
 // Root route
 app.get('/', (req, res) => {

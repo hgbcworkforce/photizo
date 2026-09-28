@@ -116,7 +116,7 @@ export const MERCHANDISE_SECTION_TEXT = {
   headingPre: "Exclusive ",
   headingHighlight: "Swag",
   availabilityLabel: "Availability",
-  orderClosedButton: "ORDER CLOSED",
+  orderNowButton: "Order Now",
 } as const;
 
 // ============================================================================
@@ -214,7 +214,7 @@ export const MERCHANDISE_DETAILS_TEXT = {
     total: "Total",
   },
   buttons: {
-    orderClosed: "ORDER CLOSED",
+    orderNow: "Order Now",
     payWithPaystack: "Pay with Paystack",
     initializingPayment: "Initializing Payment...",
   },
@@ -241,7 +241,6 @@ export const MERCHANDISE_SUCCESS_TEXT = {
       "We will email you an order summary and delivery details shortly.",
   },
   buttons: {
-    downloadReceipt: "Download PDF Receipt",
     continueShopping: "Continue Shopping",
     returnHome: "Return Home",
   },
@@ -355,7 +354,6 @@ export const REGISTRATION_SUCCESS_TEXT = {
     transactionRefTitle: "Transaction Reference",
   },
   buttons: {
-    downloadReceipt: "Download PDF Receipt",
     returnHome: "Return to Homepage",
   },
 } as const;

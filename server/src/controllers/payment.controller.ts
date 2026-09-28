@@ -155,7 +155,7 @@ export const paymentController = {
         });
 
         if (order && !order.email_sent) {
-          await emailService.sendMerchandiseOrderConfirmation({
+          const emailRes = await emailService.sendMerchandiseOrderConfirmation({
             orderNumber: order.order_number,
             customerName: order.customer_name,
             customerEmail: order.customer_email,
@@ -169,7 +169,9 @@ export const paymentController = {
             pickupOption: order.pickup_option,
           });
 
-          await merchandiseService.markEmailSent(order.id);
+          if (emailRes.success) {
+            await merchandiseService.markEmailSent(order.id);
+          }
         }
 
         return res.status(200).json({
@@ -205,7 +207,7 @@ export const paymentController = {
         });
 
         if (attendee && !attendee.email_sent) {
-          await emailService.sendRegistrationConfirmation({
+          const emailRes = await emailService.sendRegistrationConfirmation({
             firstName: attendee.first_name,
             lastName: attendee.last_name,
             email: attendee.email,
@@ -217,7 +219,9 @@ export const paymentController = {
             amountPaid: attendee.amount_paid,
           });
 
-          await attendeeService.markEmailSent(attendee.id);
+          if (emailRes.success) {
+            await attendeeService.markEmailSent(attendee.id);
+          }
         }
 
         return res.status(200).json({

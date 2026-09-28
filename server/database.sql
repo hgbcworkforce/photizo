@@ -258,24 +258,109 @@ CREATE POLICY "Allow authenticated admins full access to admin_users"
         )
     );
 
--- ---------------------------------------------------------
--- 8. AUTO-LINK REGISTERED USERS TO ADMIN_USERS
--- (If user already exists in auth.users, link to admin_users)
--- ---------------------------------------------------------
-INSERT INTO public.admin_users (user_id, email, full_name, role, is_approved, is_active)
-SELECT 
-    id, 
-    email, 
-    COALESCE(raw_user_meta_data->>'full_name', 'Photizo Super Admin'), 
-    'superadmin', 
-    true, 
-    true
-FROM auth.users
-WHERE email = 'admin@photizo.org'
-ON CONFLICT (user_id) DO UPDATE 
-SET 
-    is_approved = true, 
-    is_active = true, 
-    role = 'superadmin';
+-- =========================================================
+-- 8. CREATE / SEED SUPERADMIN USER SCRIPT
+-- Run this in the Supabase SQL Editor to create or reset the Super Admin
+-- =========================================================
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+DO $$
+DECLARE
+    new_user_id UUID;
+    admin_email TEXT := 'admin@photizo.org';           -- <--- REPLACE WITH YOUR ADMIN EMAIL
+    admin_password TEXT := 'PhotizoAdminSecure2026!';  -- <--- REPLACE WITH YOUR ADMIN PASSWORD
+    admin_name TEXT := 'Photizo Super Admin';
+BEGIN
+    -- Check if user already exists in auth.users
+    SELECT id INTO new_user_id FROM auth.users WHERE email = admin_email;
+
+    IF new_user_id IS NULL THEN
+        -- Generate a new UUID
+        new_user_id := gen_random_uuid();
+
+        -- Insert into Supabase auth.users
+        INSERT INTO auth.users (
+            id,
+            instance_id,
+            email,
+            encrypted_password,
+            email_confirmed_at,
+            raw_app_meta_data,
+            raw_user_meta_data,
+            aud,
+            role,
+            created_at,
+            updated_at
+        ) VALUES (
+            new_user_id,
+            '00000000-0000-0000-0000-000000000000',
+            admin_email,
+            crypt(admin_password, gen_salt('bf')),
+            NOW(),
+            '{"provider":"email","providers":["email"]}'::jsonb,
+            jsonb_build_object('full_name', admin_name),
+            'authenticated',
+            'authenticated',
+            NOW(),
+            NOW()
+        );
+
+        -- Also create identity record in auth.identities
+        INSERT INTO auth.identities (
+            id,
+            user_id,
+            identity_data,
+            provider,
+            provider_id,
+            last_sign_in_at,
+            created_at,
+            updated_at
+        ) VALUES (
+            new_user_id,
+            new_user_id,
+            jsonb_build_object('sub', new_user_id::text, 'email', admin_email),
+            'email',
+            new_user_id::text,
+            NOW(),
+            NOW(),
+            NOW()
+        );
+    ELSE
+        -- Update password if user already exists
+        UPDATE auth.users
+        SET 
+            encrypted_password = crypt(admin_password, gen_salt('bf')),
+            email_confirmed_at = COALESCE(email_confirmed_at, NOW()),
+            updated_at = NOW()
+        WHERE id = new_user_id;
+    END IF;
+
+    -- Insert or update the public.admin_users profile
+    INSERT INTO public.admin_users (
+        user_id,
+        email,
+        full_name,
+        role,
+        is_approved,
+        is_active,
+        created_at
+    ) VALUES (
+        new_user_id,
+        admin_email,
+        admin_name,
+        'superadmin',
+        true,
+        true,
+        NOW()
+    )
+    ON CONFLICT (user_id) DO UPDATE
+    SET 
+        role = 'superadmin',
+        is_approved = true,
+        is_active = true;
+
+    RAISE NOTICE '✅ Superadmin created/updated successfully for % with User ID: %', admin_email, new_user_id;
+END $$;
 
 SELECT '✅ Photizo Database Schema initialized successfully!' AS status;

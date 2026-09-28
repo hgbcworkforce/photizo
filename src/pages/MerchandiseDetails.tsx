@@ -4,7 +4,6 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { merchandiseItems } from "../data/merchandise";
 import { merchandiseAPI } from "../services/apiService";
-import { getBackendVerifyUrl } from "../services/apiService";
 
 // Define the charge percentage for transparency
 const CHARGE_PERCENTAGE = 0.025; // 2.5%
@@ -62,7 +61,6 @@ export default function MerchandiseDetails() {
   const [merchandiseItem, setMerchandiseItem] = useState<any>(null);
   const [selectedColor, setSelectedColor] = useState<any>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  void isProcessing; // Suppress unused variable warning since the order button is currently disabled
 
   // --- Load Item Data ---
   useEffect(() => {
@@ -135,8 +133,11 @@ export default function MerchandiseDetails() {
             amount: Math.round(totalAmount * 100), // Convert to kobo
             access_code: result.accessCode,
             callback: (response: PaystackResponse) => {
-              if (response.reference) {
-                window.location.href = getBackendVerifyUrl(response.reference);
+              const paymentRef = response.reference || response.transaction?.reference;
+              if (paymentRef) {
+                navigate(`/merchandise-success?reference=${encodeURIComponent(paymentRef)}`);
+              } else {
+                navigate('/merchandise-success');
               }
             },
             onClose: () => {
@@ -295,11 +296,15 @@ export default function MerchandiseDetails() {
               </div>
 
               <button
-                type="button"
-                disabled
-                className="w-full py-4 rounded-2xl font-black text-xs text-white bg-gray-300 cursor-not-allowed uppercase tracking-wider"
+                type="submit"
+                disabled={isProcessing}
+                className={`w-full py-4 rounded-2xl font-bold text-xs text-white uppercase tracking-wider transition-all shadow-md ${
+                  isProcessing
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-gradient-to-r from-brand-red to-brand-orange hover:shadow-lg hover:shadow-brand-red/25 cursor-pointer"
+                }`}
               >
-                ORDER CLOSED
+                {isProcessing ? "Initializing Payment..." : `Proceed to Payment (₦${totalAmount.toLocaleString()})`}
               </button>
             </form>
           </div>

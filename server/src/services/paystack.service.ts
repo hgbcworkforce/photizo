@@ -24,7 +24,7 @@ export const paystackService = {
           email: params.email,
           amount: Math.round(params.amount * 100), // Paystack accepts amount in kobo
           reference: params.reference,
-          callback_url: params.callbackUrl || `${env.FRONTEND_URL}/registration-success`,
+          callback_url: params.callbackUrl || `${env.FRONTEND_URL}/payment/callback`,
           metadata: params.metadata || {},
           channels: params.channels || [
             'card',

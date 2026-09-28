@@ -1,24 +1,9 @@
 -- =========================================================
--- PHOTIZO CONFERENCE - SUPABASE DATABASE SCHEMA
--- Run this entire script in your Supabase SQL Editor
+-- BISUM CONFERENCE 2025 - SUPABASE DATABASE SCHEMA
+-- Run this script in the Supabase SQL Editor
 -- =========================================================
 
--- Enable PGCrypto Extension
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
-
--- ---------------------------------------------------------
--- 0. SCHEMA PERMISSIONS & GRANTS
--- Ensures Supabase GoTrue Auth & Public clients have proper access
--- ---------------------------------------------------------
-GRANT USAGE ON SCHEMA public TO postgres, anon, authenticated, service_role, supabase_auth_admin;
-GRANT ALL ON ALL TABLES IN SCHEMA public TO postgres, service_role, supabase_auth_admin;
-GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO postgres, service_role, supabase_auth_admin;
-GRANT ALL ON ALL ROUTINES IN SCHEMA public TO postgres, service_role, supabase_auth_admin;
-
--- ---------------------------------------------------------
--- 1. REGISTRATION PASS NUMBER SEQUENCE & GENERATOR FUNCTION
--- Generates sequential attendee IDs: 0001, 0002, 0003...
--- ---------------------------------------------------------
+-- 0. Registration Sequence for Sequential Pass Numbers (0001, 0002, ...)
 CREATE SEQUENCE IF NOT EXISTS public.registration_number_seq START WITH 1;
 
 CREATE OR REPLACE FUNCTION public.get_next_registration_number()
@@ -31,9 +16,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- ---------------------------------------------------------
--- 2. REGISTRATIONS TABLE
--- ---------------------------------------------------------
+-- 1. Create Registrations Table
 CREATE TABLE IF NOT EXISTS public.registrations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     registration_number VARCHAR(50) UNIQUE,
@@ -56,9 +39,17 @@ CREATE TABLE IF NOT EXISTS public.registrations (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Safe migration helper for existing tables
+-- Safe migration helper for existing tables (run if updating from previous version)
 DO $$ 
 BEGIN
+    -- Make legacy columns optional if they exist
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='registrations' AND column_name='institution') THEN
+        ALTER TABLE public.registrations ALTER COLUMN institution DROP NOT NULL;
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='registrations' AND column_name='church') THEN
+        ALTER TABLE public.registrations ALTER COLUMN church DROP NOT NULL;
+    END IF;
+    -- Add any newly introduced columns safely
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='registrations' AND column_name='expectations') THEN
         ALTER TABLE public.registrations ADD COLUMN expectations TEXT;
     END IF;
@@ -73,9 +64,7 @@ BEGIN
     END IF;
 END $$;
 
--- ---------------------------------------------------------
--- 3. MERCHANDISE ORDERS TABLE
--- ---------------------------------------------------------
+-- 2. Create Merchandise Orders Table
 CREATE TABLE IF NOT EXISTS public.merchandise_orders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     order_number VARCHAR(50) UNIQUE,
@@ -98,9 +87,7 @@ CREATE TABLE IF NOT EXISTS public.merchandise_orders (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- ---------------------------------------------------------
--- 4. PAYMENTS LOG TABLE
--- ---------------------------------------------------------
+-- 3. Create Payments Log Table
 CREATE TABLE IF NOT EXISTS public.payments (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     reference VARCHAR(120) UNIQUE NOT NULL,
@@ -116,23 +103,19 @@ CREATE TABLE IF NOT EXISTS public.payments (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- ---------------------------------------------------------
--- 5. ADMIN USERS TABLE
--- ---------------------------------------------------------
+-- 4. Create Admin Profiles Table (Associated with Supabase auth.users)
 CREATE TABLE IF NOT EXISTS public.admin_users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE UNIQUE NOT NULL,
     email VARCHAR(255) NOT NULL,
     full_name VARCHAR(200) NOT NULL,
-    role VARCHAR(50) DEFAULT 'admin', -- 'admin', 'superadmin', 'editor', 'viewer'
+    role VARCHAR(50) DEFAULT 'admin', -- 'admin', 'superadmin', 'viewer'
     is_approved BOOLEAN DEFAULT true,
     is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- ---------------------------------------------------------
--- 6. PERFORMANCE INDEXES
--- ---------------------------------------------------------
+-- Indexes for performance
 CREATE INDEX IF NOT EXISTS idx_registrations_email ON public.registrations(email);
 CREATE INDEX IF NOT EXISTS idx_registrations_reg_number ON public.registrations(registration_number);
 CREATE INDEX IF NOT EXISTS idx_registrations_payment_status ON public.registrations(payment_status);
@@ -147,15 +130,13 @@ CREATE INDEX IF NOT EXISTS idx_payments_reference ON public.payments(reference);
 CREATE INDEX IF NOT EXISTS idx_payments_customer_email ON public.payments(customer_email);
 CREATE INDEX IF NOT EXISTS idx_admin_users_user_id ON public.admin_users(user_id);
 
--- ---------------------------------------------------------
--- 7. ROW LEVEL SECURITY (RLS) POLICIES
--- ---------------------------------------------------------
+-- Row Level Security (RLS) Policies
 ALTER TABLE public.registrations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.merchandise_orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
 
--- 7.1 Registrations Policies
+-- 1. Registrations Policies
 DROP POLICY IF EXISTS "Allow public read for own registration by reg_number" ON public.registrations;
 DROP POLICY IF EXISTS "Allow public insert for registrations" ON public.registrations;
 DROP POLICY IF EXISTS "Allow public update for registrations" ON public.registrations;
@@ -183,7 +164,7 @@ CREATE POLICY "Allow authenticated admins full access to registrations"
         )
     );
 
--- 7.2 Merchandise Orders Policies
+-- 2. Merchandise Orders Policies
 DROP POLICY IF EXISTS "Allow public read for own merchandise order by order_number" ON public.merchandise_orders;
 DROP POLICY IF EXISTS "Allow public insert for merchandise orders" ON public.merchandise_orders;
 DROP POLICY IF EXISTS "Allow public update for merchandise orders" ON public.merchandise_orders;
@@ -211,7 +192,7 @@ CREATE POLICY "Allow authenticated admins full access to merchandise_orders"
         )
     );
 
--- 7.3 Payments Policies
+-- 3. Payments Policies
 DROP POLICY IF EXISTS "Allow public insert for payments" ON public.payments;
 DROP POLICY IF EXISTS "Allow public update for payments" ON public.payments;
 DROP POLICY IF EXISTS "Allow authenticated admins full access to payments" ON public.payments;
@@ -234,32 +215,16 @@ CREATE POLICY "Allow authenticated admins full access to payments"
         )
     );
 
--- 7.4 Admin Users Policies
+-- 4. Admin Users Policies
 DROP POLICY IF EXISTS "Allow authenticated users to read admin_users" ON public.admin_users;
-DROP POLICY IF EXISTS "Allow public insert for admin application" ON public.admin_users;
-DROP POLICY IF EXISTS "Allow authenticated admins full access to admin_users" ON public.admin_users;
 
 CREATE POLICY "Allow authenticated users to read admin_users"
     ON public.admin_users FOR SELECT
     TO authenticated
     USING (true);
 
-CREATE POLICY "Allow public insert for admin application"
-    ON public.admin_users FOR INSERT
-    WITH CHECK (true);
-
-CREATE POLICY "Allow authenticated admins full access to admin_users"
-    ON public.admin_users FOR ALL
-    TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM public.admin_users AS au
-            WHERE au.user_id = auth.uid() AND au.is_active = true AND (au.role = 'superadmin' OR au.role = 'admin')
-        )
-    );
-
 -- =========================================================
--- 8. CREATE / SEED SUPERADMIN USER SCRIPT
+-- 5. CREATE / SEED SUPERADMIN USER SCRIPT
 -- Run this in the Supabase SQL Editor to create or reset the Super Admin
 -- =========================================================
 
@@ -268,9 +233,9 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 DO $$
 DECLARE
     new_user_id UUID;
-    admin_email TEXT := 'admin@photizo.org';           -- <--- REPLACE WITH YOUR ADMIN EMAIL
-    admin_password TEXT := 'PhotizoAdminSecure2026!';  -- <--- REPLACE WITH YOUR ADMIN PASSWORD
-    admin_name TEXT := 'Photizo Super Admin';
+    admin_email TEXT := 'admin@example.com';           -- <--- REPLACE WITH YOUR ADMIN EMAIL
+    admin_password TEXT := 'SuperAdminSecure2025!';  -- <--- REPLACE WITH YOUR ADMIN PASSWORD
+    admin_name TEXT := 'BISUM Super Admin';
 BEGIN
     -- Check if user already exists in auth.users
     SELECT id INTO new_user_id FROM auth.users WHERE email = admin_email;
@@ -362,5 +327,3 @@ BEGIN
 
     RAISE NOTICE '✅ Superadmin created/updated successfully for % with User ID: %', admin_email, new_user_id;
 END $$;
-
-SELECT '✅ Photizo Database Schema initialized successfully!' AS status;

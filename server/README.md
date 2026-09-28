@@ -1,136 +1,102 @@
-# ⚡ Photizo Conference Backend API
+# 🚀 BISUM Conference 2025 - Node.js API Backend
 
-Node.js + Express + TypeScript API backend for **Photizo Conference** by Higher Ground Baptist Church, featuring Supabase PostgreSQL database integration, Paystack gateway payment processing, and Resend transactional email delivery.
-
----
-
-## 🏗️ Architecture & Stack
-
-- **Runtime**: Node.js & TypeScript (`tsx` for dev, `tsc` for production build)
-- **Framework**: Express 4 with security middleware (`helmet`, `cors`, `morgan`, `express-rate-limit`)
-- **Database**: Supabase PostgreSQL with Row-Level Security (RLS) & Sequential Pass Number Generator
-- **Payments**: Paystack Gateway API (Card, Bank Transfer, USSD, OPay, Webhooks HMAC-SHA512 verification)
-- **Emails**: Resend API with responsive HTML templates for Registrations & Merchandise Orders
+Secure, production-ready REST API backend for **BISUM Conference 2025** built with **Express**, **TypeScript**, **Supabase** (PostgreSQL Database), **Paystack** (Payment Gateway & Webhook verification), and **Resend** (Transactional Email Notifications).
 
 ---
 
-## 📁 Directory Structure
+## 🛠 Features & Capabilities
 
-```
-photizo/server/
-├── database.sql                  # Supabase schema, RLS policies, sequences & admin seed
-├── .env.example                  # Environment variables template
-├── package.json                  # Dependencies & scripts
-├── tsconfig.json                 # TypeScript configuration
-└── src/
-    ├── app.ts                    # Express app configuration & middleware
-    ├── server.ts                 # Server entry point & graceful shutdown
-    ├── config/
-    │   ├── env.ts                # Zod runtime environment variable validation
-    │   ├── supabase.ts           # Supabase Admin Service Role client
-    │   └── resend.ts             # Resend email client instance
-    ├── types/
-    │   └── index.ts              # Global TypeScript interfaces
-    ├── services/
-    │   ├── attendee.service.ts   # Registration & attendee operations + sequential ID
-    │   ├── merchandise.service.ts# Merchandise order operations
-    │   ├── payment.service.ts    # Payment audit trail log
-    │   ├── paystack.service.ts   # Paystack checkout init & verification
-    │   └── email.service.ts      # Resend email dispatcher
-    ├── controllers/
-    │   ├── registration.controller.ts
-    │   ├── merchandise.controller.ts
-    │   ├── payment.controller.ts
-    │   ├── webhook.controller.ts
-    │   ├── admin.controller.ts
-    │   └── auth.controller.ts
-    ├── routes/
-    │   ├── registration.routes.ts
-    │   ├── merchandise.routes.ts
-    │   ├── payment.routes.ts
-    │   ├── webhook.routes.ts
-    │   ├── admin.routes.ts
-    │   ├── auth.routes.ts
-    │   └── index.ts
-    ├── middlewares/
-    │   ├── auth.middleware.ts    # Supabase JWT & admin privilege verification
-    │   ├── validate.middleware.ts# Zod payload validator
-    │   └── error.middleware.ts   # Global error handling middleware
-    └── templates/
-        ├── registrationEmail.ts  # HTML email template for attendees
-        └── merchandiseEmail.ts   # HTML email template for merchandise orders
-```
+- 🛡️ **Paystack Payment & Verification Engine**:
+  - Initializes payment checkout with attendee metadata.
+  - Verifies incoming payments with HMAC-SHA512 cryptographic Webhook signature checking.
+  - Server-side verification fallback for frontend redirection callbacks.
+  - Idempotent processing (prevents double charges or duplicate confirmation emails).
+- 📧 **Resend Email Automation**:
+  - Sends high-conversion, responsive HTML confirmation passes with unique conference ID badges (`BISUM-2025-XXXXX`).
+  - Supports manual resend triggers from the admin dashboard.
+- 🔐 **Supabase PostgreSQL & Admin Auth**:
+  - Full CRUD operations on Attendees and Payment transactions.
+  - Middleware-protected admin routes using Supabase JWT and RBAC checks (`admin_users` table).
+  - Summary metrics and real-time dashboard analytics.
+- 📦 **Render Ready**:
+  - Zero-downtime deployment with health check endpoint (`/api/health`).
+  - `render.yaml` Infrastructure-as-Code Blueprint included.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start (Local Development)
 
 ### 1. Install Dependencies
 ```bash
-cd d:\OVERSIGHT\Hgbc\photizo\server
+cd server
 npm install
 ```
 
-### 2. Database Setup
-1. Open your **Supabase Dashboard** -> **SQL Editor**.
-2. Copy the content of [`database.sql`](./database.sql) and execute it.
-3. This creates:
-   - `registrations` table with sequential registration number generator (`0001`, `0002`, ...).
-   - `merchandise_orders` table.
-   - `payments` table.
-   - `admin_users` table and initial superadmin profile.
-
-### 3. Environment Variables
-Create a `.env` file in `server/`:
-```env
-PORT=5000
-NODE_ENV=development
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
-PAYSTACK_SECRET_KEY=sk_test_xxx
-PAYSTACK_PUBLIC_KEY=pk_test_xxx
-RESEND_API_KEY=re_xxx
-RESEND_FROM_EMAIL=Photizo Conference <onboarding@resend.dev>
-FRONTEND_URL=http://localhost:5173
-CONFERENCE_NAME=Photizo Conference 2026
-CONFERENCE_DATES=May 21 - 23, 2026
-CONFERENCE_VENUE=Higher Ground Baptist Church, Ogbomoso, Nigeria.
+### 2. Configure Environment Variables
+Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
 ```
+Fill in your credentials from Supabase, Paystack, and Resend.
 
-### 4. Run Development Server
+### 3. Run Database Schema Migration
+Run the SQL queries in `database.sql` inside your **Supabase Project > SQL Editor**.
+
+### 4. Start Development Server
 ```bash
 npm run dev
 ```
+Server runs at `http://localhost:5000` (Health check: `http://localhost:5000/api/health`).
 
 ---
 
-## 📡 API Endpoints
+## 📡 API Endpoints Reference
 
-### 🎫 Registration
-- `POST /api/registration/initiate` - Initiates registration and creates Paystack checkout session.
-- `GET /api/registration/status/:reference` - Gets registration status by reference.
+### 🎟 Public Registration & Payments
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/api/registration/initiate` | Initiates attendee registration and returns Paystack checkout URL (or completes free pass). |
+| `GET` | `/api/registration/status/:reference` | Checks registration status by payment reference. |
+| `GET` | `/api/payments/verify/:reference` | Verifies Paystack transaction, confirms seat, and triggers confirmation email. |
+| `POST` | `/api/webhooks/paystack` | Secure HMAC-verified webhook endpoint for Paystack `charge.success` events. |
+| `GET` | `/api/health` | Service health status. |
 
-### 🛍️ Merchandise
-- `POST /api/merchandise/initiate` - Initiates merchandise pre-order checkout.
-- `GET /api/merchandise/status/:reference` - Gets merchandise order status.
+### 🔒 Admin Protected Endpoints (Requires `Authorization: Bearer <Supabase_JWT>`)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/admin/metrics` | Summary stats (total revenue, paid passes, breakout session breakdowns). |
+| `GET` | `/api/admin/attendees` | Paginated attendee list with search (`?search=`), filtering (`?status=`, `?breakoutSession=`). |
+| `GET` | `/api/admin/attendees/:id` | Single attendee record. |
+| `PUT` | `/api/admin/attendees/:id` | Update attendee information. |
+| `DELETE` | `/api/admin/attendees/:id` | Delete attendee record. |
+| `POST` | `/api/admin/attendees/:id/resend-email` | Re-trigger Resend confirmation email to the attendee. |
+| `GET` | `/api/admin/attendees/export/csv` | Download full attendees list as CSV. |
+| `GET` | `/api/admin/payments` | Audit trail of all Paystack payment transactions. |
 
-### 💳 Payments & Webhooks
-- `POST /api/payments/initialize` - Initializes transaction.
-- `GET /api/payments/verify/:reference` - Verifies payment with Paystack, updates DB, sends confirmation email.
-- `POST /api/webhooks/paystack` - Paystack HMAC-SHA512 webhook handler.
+---
 
-### 🔐 Authentication & Admin
-- `POST /api/auth/login` - Admin login.
-- `POST /api/auth/logout` - Admin logout.
-- `GET /api/admin/metrics` - Dashboard metrics & stats.
-- `GET /api/admin/attendees` - Paginated attendee list with search and filters.
-- `GET /api/admin/attendees/export/csv` - Export attendees to CSV.
-- `PUT /api/admin/attendees/:id` - Update attendee.
-- `DELETE /api/admin/attendees/:id` - Delete attendee.
-- `POST /api/admin/attendees/:id/resend-email` - Re-send pass confirmation email.
-- `GET /api/admin/merchandise/orders` - Merchandise orders list.
-- `GET /api/admin/merchandise/orders/export/csv` - Export merchandise orders to CSV.
-- `PUT /api/admin/merchandise/orders/:id` - Update merchandise order.
-- `DELETE /api/admin/merchandise/orders/:id` - Delete merchandise order.
-- `POST /api/admin/merchandise/orders/:id/resend-email` - Re-send merchandise order email.
-- `GET /api/admin/payments` - Payment audit logs.
+## 🌐 Deploying to Render
+
+1. Push your changes to GitHub.
+2. Go to [Render Dashboard](https://dashboard.render.com).
+3. Click **New +** > **Blueprint** (or **Web Service**).
+4. Select your `bisum` repository.
+5. If using Web Service directly:
+   - **Root Directory**: `server`
+   - **Environment**: `Node`
+   - **Build Command**: `npm install && npm run build`
+   - **Start Command**: `npm start`
+   - **Health Check Path**: `/api/health`
+6. Add your Environment Variables in Render:
+   - `SUPABASE_URL`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `PAYSTACK_SECRET_KEY`
+   - `PAYSTACK_PUBLIC_KEY`
+   - `RESEND_API_KEY`
+   - `RESEND_FROM_EMAIL`
+   - `FRONTEND_URL`
+7. Click **Create Web Service**.
+
+### 🔗 Configure Paystack Webhook
+In your **Paystack Dashboard** > **Settings** > **API Keys & Webhooks**:
+- Set **Live/Test Webhook URL** to: `https://<your-render-app>.onrender.com/api/webhooks/paystack`

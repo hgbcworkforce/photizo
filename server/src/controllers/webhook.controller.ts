@@ -45,10 +45,7 @@ export const webhookController = {
           return res.status(200).json({ received: true });
         }
 
-        const isMerchandise =
-          metadata?.type === 'merchandise_order' ||
-          reference.startsWith('PHOTIZO-MERCH') ||
-          reference.startsWith('BISUM-MERCH');
+        const isMerchandise = metadata?.type === 'merchandise_order' || reference.startsWith('BISUM-MERCH');
 
         if (isMerchandise) {
           // --- Handle Merchandise Order ---
@@ -63,8 +60,7 @@ export const webhookController = {
           await paymentService.recordPayment({
             reference,
             paystackId: String(paystackId),
-            customerName:
-              order?.customer_name || `${customer.first_name || ''} ${customer.last_name || ''}`.trim(),
+            customerName: order?.customer_name || `${customer.first_name || ''} ${customer.last_name || ''}`.trim(),
             customerEmail: customer.email,
             amount: amountInNaira,
             currency: 'NGN',
@@ -76,7 +72,7 @@ export const webhookController = {
 
           // Send Confirmation Email via Resend
           if (order && !order.email_sent) {
-            const emailRes = await emailService.sendMerchandiseOrderConfirmation({
+            await emailService.sendMerchandiseOrderConfirmation({
               orderNumber: order.order_number,
               customerName: order.customer_name,
               customerEmail: order.customer_email,
@@ -90,9 +86,7 @@ export const webhookController = {
               pickupOption: order.pickup_option,
             });
 
-            if (emailRes.success) {
-              await merchandiseService.markEmailSent(order.id);
-            }
+            await merchandiseService.markEmailSent(order.id);
           }
 
           console.log(`✅ Webhook: Processed merchandise order and sent confirmation: ${reference}`);
@@ -121,7 +115,7 @@ export const webhookController = {
 
           // Send Confirmation Email via Resend
           if (attendee && !attendee.email_sent) {
-            const emailRes = await emailService.sendRegistrationConfirmation({
+            await emailService.sendRegistrationConfirmation({
               firstName: attendee.first_name,
               lastName: attendee.last_name,
               email: attendee.email,
@@ -133,9 +127,7 @@ export const webhookController = {
               amountPaid: attendee.amount_paid,
             });
 
-            if (emailRes.success) {
-              await attendeeService.markEmailSent(attendee.id);
-            }
+            await attendeeService.markEmailSent(attendee.id);
           }
 
           console.log(`✅ Webhook: Processed registration payment and sent confirmation: ${reference}`);

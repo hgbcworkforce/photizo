@@ -3,24 +3,22 @@ import { z } from 'zod';
 import { attendeeService } from '../services/attendee.service';
 import { paystackService } from '../services/paystack.service';
 import { paymentService } from '../services/payment.service';
+import { emailService } from '../services/email.service';
 
 export const registrationSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
   lastName: z.string().min(2, 'Last name must be at least 2 characters'),
   email: z.string().email('Please provide a valid email address'),
-  phone: z.string().optional(),
-  phoneNumber: z.string().optional(),
+  phone: z.string().min(7, 'Please provide a valid phone number'),
   gender: z.string().optional(),
   ageRange: z.string().optional(),
   referralSource: z.string().optional(),
   breakoutSessionChoice: z.string().optional(),
   attendanceMode: z.string().optional(),
   expectations: z.string().optional(),
-  registrationType: z
-    .enum(['student', 'professional'], {
-      errorMap: () => ({ message: 'Registration type must be either Student or Professional' }),
-    })
-    .default('student'),
+  registrationType: z.enum(['student', 'professional'], {
+    errorMap: () => ({ message: 'Registration type must be either Student or Professional' }),
+  }).default('student'),
   amount: z.number().positive('Registration requires a valid paid amount (₦1,000 for Student, ₦2,000 for Professional)'),
   callbackUrl: z.string().url().optional(),
 });
@@ -32,13 +30,11 @@ export const registrationController = {
   async initiate(req: Request, res: Response) {
     try {
       const data = req.body;
-      const phone = data.phone || data.phoneNumber || '';
-      const paymentReference = `PHOTIZO-TX-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
+      const paymentReference = `BISUM-TX-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
 
       // 1. Create or update Pending Attendee Record
       const pendingAttendee = await attendeeService.createPendingRegistration({
         ...data,
-        phone,
         amountPaid: data.amount,
         paymentReference,
       });
@@ -53,7 +49,7 @@ export const registrationController = {
           registration_id: pendingAttendee.id,
           first_name: data.firstName,
           last_name: data.lastName,
-          phone,
+          phone: data.phone,
           registration_type: data.registrationType,
           breakout_session_choice: data.breakoutSessionChoice,
           attendance_mode: data.attendanceMode || 'On-site',

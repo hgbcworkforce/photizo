@@ -72,9 +72,7 @@ export const attendeeService = {
     if (existingUser) {
       // If already paid, prevent double registration
       if (existingUser.payment_status === 'paid') {
-        throw new Error(
-          `This email (${cleanEmail}) is already registered with Pass ID ${existingUser.registration_number}.`
-        );
+        throw new Error(`This email (${cleanEmail}) is already registered with Pass ID ${existingUser.registration_number}.`);
       }
 
       // If pending, UPDATE the existing record instead of creating a duplicate row
@@ -269,9 +267,7 @@ export const attendeeService = {
 
     if (params.search) {
       const s = `%${params.search}%`;
-      query = query.or(
-        `first_name.ilike.${s},last_name.ilike.${s},email.ilike.${s},registration_number.ilike.${s},phone.ilike.${s},attendance_mode.ilike.${s}`
-      );
+      query = query.or(`first_name.ilike.${s},last_name.ilike.${s},email.ilike.${s},registration_number.ilike.${s},phone.ilike.${s},attendance_mode.ilike.${s}`);
     }
 
     if (params.status && params.status !== 'all') {
@@ -296,28 +292,7 @@ export const attendeeService = {
     if (error) throw error;
 
     return {
-      attendees: (data || []).map((r: any) => ({
-        id: r.id,
-        firstName: r.first_name,
-        lastName: r.last_name,
-        email: r.email,
-        phone: r.phone,
-        phoneNumber: r.phone,
-        gender: r.gender,
-        ageRange: r.age_range,
-        referralSource: r.referral_source,
-        breakoutSessionChoice: r.breakout_session_choice,
-        attendanceMode: r.attendance_mode,
-        expectations: r.expectations,
-        registrationType: r.registration_type,
-        registrationNumber: r.registration_number,
-        paymentStatus: r.payment_status,
-        amountPaid: r.amount_paid,
-        paymentReference: r.payment_reference,
-        emailSent: r.email_sent,
-        createdAt: r.created_at,
-        updatedAt: r.updated_at,
-      })),
+      attendees: data || [],
       total: count || 0,
       page,
       limit,
@@ -336,7 +311,7 @@ export const attendeeService = {
     if (updates.firstName) payload.first_name = updates.firstName;
     if (updates.lastName) payload.last_name = updates.lastName;
     if (updates.email) payload.email = updates.email;
-    if (updates.phone || (updates as any).phoneNumber) payload.phone = updates.phone || (updates as any).phoneNumber;
+    if (updates.phone) payload.phone = updates.phone;
     if (updates.gender) payload.gender = updates.gender;
     if (updates.ageRange) payload.age_range = updates.ageRange;
     if (updates.breakoutSessionChoice) payload.breakout_session_choice = updates.breakoutSessionChoice;
@@ -370,11 +345,7 @@ export const attendeeService = {
    */
   async getDashboardAnalytics() {
     const [attendeesResult, paymentsResult] = await Promise.all([
-      supabaseAdmin
-        .from('registrations')
-        .select(
-          'id, payment_status, registration_type, breakout_session_choice, attendance_mode, amount_paid, created_at'
-        ),
+      supabaseAdmin.from('registrations').select('id, payment_status, registration_type, breakout_session_choice, attendance_mode, amount_paid, created_at'),
       supabaseAdmin.from('payments').select('id, amount, status, created_at'),
     ]);
 
@@ -409,11 +380,11 @@ export const attendeeService = {
     // Attendance mode breakdown (On-site vs Online)
     const onsiteCount = attendees.filter((a) => {
       const mode = (a.attendance_mode || 'On-site').toLowerCase();
-      return mode === 'on-site' || mode === 'onsite' || mode === 'physical';
+      return mode === 'on-site' || mode === 'onsite';
     }).length;
     const onlineCount = attendees.filter((a) => {
       const mode = (a.attendance_mode || '').toLowerCase();
-      return mode === 'online' || mode === 'virtual';
+      return mode === 'online';
     }).length;
 
     return {

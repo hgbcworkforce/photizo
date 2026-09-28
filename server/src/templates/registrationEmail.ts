@@ -14,15 +14,10 @@ interface EmailTemplateProps {
 
 export function generateRegistrationEmailTemplate(data: EmailTemplateProps): string {
   const displayRegNumber = data.registrationNumber || '0001';
-  const passTypeLabel =
-    data.registrationType.toLowerCase() === 'student' ? 'Student Pass' : 'Professional Pass';
+  const passTypeLabel = data.registrationType.toLowerCase() === 'student' ? 'Student Pass' : 'Professional Pass';
   const attendanceModeLabel = data.attendanceMode || 'On-site';
   const formattedAmount = data.amountPaid
-    ? new Intl.NumberFormat('en-NG', {
-        style: 'currency',
-        currency: 'NGN',
-        maximumFractionDigits: 0,
-      }).format(data.amountPaid)
+    ? new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(data.amountPaid)
     : data.registrationType.toLowerCase() === 'student'
     ? '₦1,000'
     : '₦2,000';
@@ -33,11 +28,11 @@ export function generateRegistrationEmailTemplate(data: EmailTemplateProps): str
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${env.CONFERENCE_NAME} Registration Confirmed</title>
+  <title>BISUM Conference 2025 Registration Confirmed</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background-color: #09090b;
+      background-color: #0f172a;
       color: #334155;
       margin: 0;
       padding: 20px;
@@ -51,18 +46,17 @@ export function generateRegistrationEmailTemplate(data: EmailTemplateProps): str
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
     }
     .header {
-      background: linear-gradient(135deg, #18181b 0%, #09090b 100%);
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
       padding: 40px 30px;
       text-align: center;
       color: #ffffff;
-      border-bottom: 3px solid #ef4023;
     }
     .badge-label {
       display: inline-block;
       padding: 6px 14px;
-      background: rgba(239, 64, 35, 0.15);
-      border: 1px solid #ef4023;
-      color: #f58320;
+      background: rgba(234, 88, 12, 0.15);
+      border: 1px solid #ea580c;
+      color: #fb923c;
       font-size: 12px;
       font-weight: 700;
       letter-spacing: 1px;
@@ -79,7 +73,7 @@ export function generateRegistrationEmailTemplate(data: EmailTemplateProps): str
     }
     .subtitle {
       font-size: 14px;
-      color: #a1a1aa;
+      color: #94a3b8;
       margin: 0;
     }
     .content {
@@ -182,7 +176,7 @@ export function generateRegistrationEmailTemplate(data: EmailTemplateProps): str
     }
     .cta-button {
       display: inline-block;
-      background: linear-gradient(135deg, #ef4023, #f58320);
+      background-color: #0f172a;
       color: #ffffff !important;
       font-size: 14px;
       font-weight: 700;
@@ -270,10 +264,10 @@ export function generateRegistrationEmailTemplate(data: EmailTemplateProps): str
     <!-- Footer -->
     <div class="footer">
       <p class="footer-text">
-        Need assistance or have questions? Reach out to our team at photizo@hgbcinfluencers.org.
+        Need assistance or have questions? Reply directly to this email or reach out to our team at support@bisum.org.
       </p>
       <p class="footer-text">
-        © ${new Date().getFullYear()} ${env.CONFERENCE_NAME}. All rights reserved. Powered by Higher Ground Baptist Church.
+        © ${new Date().getFullYear()} ${env.CONFERENCE_NAME}. All rights reserved.
       </p>
     </div>
   </div>

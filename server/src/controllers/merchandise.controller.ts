@@ -9,7 +9,7 @@ export const merchandiseOrderSchema = z.object({
   customerEmail: z.string().email('Please enter a valid email address'),
   customerPhone: z.string().min(7, 'Please enter a valid phone number'),
   itemId: z.string().min(1, 'Item ID is required'),
-  itemName: z.string().optional().default('Official Merchandise'),
+  itemName: z.string().min(1, 'Item Name is required'),
   color: z.string().min(1, 'Color selection is required'),
   size: z.string().min(1, 'Size selection is required'),
   quantity: z.number().int().min(1, 'Quantity must be at least 1'),
@@ -26,7 +26,7 @@ export const merchandiseController = {
     try {
       const data = req.body;
       const totalAmount = data.unitPrice * data.quantity;
-      const paymentReference = `PHOTIZO-MERCH-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
+      const paymentReference = `BISUM-MERCH-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
 
       // 1. Create Pending Merchandise Order
       const pendingOrder = await merchandiseService.createPendingOrder({
@@ -34,7 +34,7 @@ export const merchandiseController = {
         customerEmail: data.customerEmail,
         customerPhone: data.customerPhone,
         itemId: data.itemId,
-        itemName: data.itemName || 'Official Merchandise',
+        itemName: data.itemName,
         color: data.color,
         size: data.size,
         quantity: data.quantity,
@@ -49,13 +49,13 @@ export const merchandiseController = {
         email: data.customerEmail,
         amount: totalAmount,
         reference: paymentReference,
-        callbackUrl: data.callbackUrl || `${req.protocol}://${req.get('host')}/merchandise-success`,
+        callbackUrl: data.callbackUrl,
         metadata: {
           type: 'merchandise_order',
           order_id: pendingOrder.id,
           customer_name: data.customerName,
           customer_phone: data.customerPhone,
-          item_name: data.itemName || 'Official Merchandise',
+          item_name: data.itemName,
           color: data.color,
           size: data.size,
           quantity: data.quantity,

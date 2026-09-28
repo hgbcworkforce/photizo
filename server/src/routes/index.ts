@@ -4,7 +4,6 @@ import merchandiseRoutes from './merchandise.routes';
 import paymentRoutes from './payment.routes';
 import webhookRoutes from './webhook.routes';
 import adminRoutes from './admin.routes';
-import authRoutes from './auth.routes';
 
 const router = Router();
 
@@ -13,22 +12,16 @@ router.get('/health', (req, res) => {
   res.status(200).json({
     status: 'online',
     timestamp: new Date().toISOString(),
-    service: 'photizo-backend',
+    service: 'bisum-backend',
     version: '1.0.0',
   });
 });
 
-// Domain routes
+// Mount domain routes
 router.use('/registration', registrationRoutes);
-router.use('/registrations', registrationRoutes);
-
 router.use('/merchandise', merchandiseRoutes);
-router.use('/orders/merchandise', merchandiseRoutes);
-
 router.use('/payments', paymentRoutes);
 router.use('/webhooks', webhookRoutes);
 router.use('/admin', adminRoutes);
-router.use('/dashboard', adminRoutes);
-router.use('/auth', authRoutes);
 
 export default router;

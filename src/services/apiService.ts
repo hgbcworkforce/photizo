@@ -202,16 +202,20 @@ export interface DashboardResponse<T> {
 export interface MerchandiseOrder {
   id?: string;
   orderNumber?: string;
-  customerName: string;
-  customerEmail: string;
-  customerPhone: string;
-  itemId: string;
-  itemName: string;
-  color: string;
-  size: string;
-  quantity: number;
-  unitPrice: number;
-  totalAmount: number;
+  customerName?: string;
+  fullName?: string;
+  customerEmail?: string;
+  email?: string;
+  customerPhone?: string;
+  phoneNumber?: string;
+  itemId?: string;
+  merchandiseId?: string;
+  itemName?: string;
+  color?: string;
+  size?: string;
+  quantity?: number;
+  unitPrice?: number;
+  totalAmount?: number;
   pickupOption?: string;
   paymentStatus?: string;
   fulfillmentStatus?: string;
@@ -219,24 +223,9 @@ export interface MerchandiseOrder {
 }
 
 export const dashboardAPI = {
-  login: async (credentials: { email: string; password: string }) => {
-    const response = await apiClient.post('/auth/login', credentials);
-    return response.data;
-  },
-
-  logout: async (token: string): Promise<{ success: boolean }> => {
-    const response = await apiClient.post(
-      '/auth/logout',
-      {},
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    return response.data;
-  },
-
-  getStats: async (token: string) => {
-    const response = await apiClient.get('/admin/metrics', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  getStats: async (token?: string) => {
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    const response = await apiClient.get('/admin/metrics', { headers });
     return response.data;
   },
 
@@ -260,27 +249,52 @@ export const dashboardAPI = {
     if (breakoutSessionChoice || breakoutSession) params.breakoutSession = (breakoutSessionChoice || breakoutSession) as string;
     if (registrationType) params.registrationType = registrationType;
 
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
     const response = await apiClient.get('/admin/attendees', {
       params,
-      headers: { Authorization: `Bearer ${token}` },
+      headers,
     });
 
-    // Normalize response for dashboard tables
     const resData = response.data;
+    const rawList = resData.data?.attendees || resData.data || [];
+    
+    // Normalize snake_case records from Bisum backend to both camelCase and snake_case
+    const normalizedAttendees = rawList.map((r: any) => ({
+      id: r.id,
+      firstName: r.first_name || r.firstName || '',
+      lastName: r.last_name || r.lastName || '',
+      email: r.email || '',
+      phoneNumber: r.phone || r.phoneNumber || '',
+      phone: r.phone || r.phoneNumber || '',
+      gender: r.gender,
+      ageRange: r.age_range || r.ageRange,
+      referralSource: r.referral_source || r.referralSource || '',
+      breakoutSessionChoice: r.breakout_session_choice || r.breakoutSessionChoice || '',
+      attendanceMode: r.attendance_mode || r.attendanceMode || 'On-site',
+      expectations: r.expectations,
+      registrationType: r.registration_type || r.registrationType || 'student',
+      registrationNumber: r.registration_number || r.registrationNumber || '',
+      paymentStatus: r.payment_status || r.paymentStatus || 'pending',
+      amountPaid: r.amount_paid || r.amountPaid || 0,
+      paymentReference: r.payment_reference || r.paymentReference,
+      emailSent: r.email_sent || r.emailSent,
+      createdAt: r.created_at || r.createdAt || '',
+      updatedAt: r.updated_at || r.updatedAt || '',
+    }));
+
     return {
       success: resData.success,
-      attendees: resData.data?.attendees || resData.data || [],
-      data: resData.data?.attendees || resData.data || [],
-      total: resData.data?.total || 0,
-      totalPages: resData.data?.totalPages || 1,
-      page: resData.data?.page || page,
+      attendees: normalizedAttendees,
+      data: normalizedAttendees,
+      total: resData.data?.total || resData.total || normalizedAttendees.length,
+      totalPages: resData.data?.totalPages || resData.totalPages || 1,
+      page: resData.data?.page || resData.page || page,
     };
   },
 
   deleteRegistration: async (token: string, registrationId: string) => {
-    const response = await apiClient.delete(`/admin/attendees/${registrationId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    const response = await apiClient.delete(`/admin/attendees/${registrationId}`, { headers });
     return response.data;
   },
 
@@ -288,25 +302,54 @@ export const dashboardAPI = {
     token: string,
     filters: Record<string, string | number> = {}
   ): Promise<DashboardResponse<MerchandiseOrder>> => {
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
     const response = await apiClient.get('/admin/merchandise/orders', {
       params: filters,
-      headers: { Authorization: `Bearer ${token}` },
+      headers,
     });
 
     const resData = response.data;
+    const rawList = resData.data?.orders || resData.data || [];
+
+    // Normalize snake_case records from Bisum backend
+    const normalizedOrders: MerchandiseOrder[] = rawList.map((o: any) => ({
+      id: o.id,
+      orderNumber: o.order_number || o.orderNumber || '',
+      customerName: o.customer_name || o.customerName || '',
+      fullName: o.customer_name || o.customerName || '',
+      customerEmail: o.customer_email || o.customerEmail || '',
+      email: o.customer_email || o.customerEmail || '',
+      customerPhone: o.customer_phone || o.customerPhone || '',
+      phoneNumber: o.customer_phone || o.customerPhone || '',
+      itemId: o.item_id || o.itemId || '',
+      merchandiseId: o.item_id || o.itemId || '',
+      itemName: o.item_name || o.itemName || '',
+      color: o.color || '',
+      size: o.size || '',
+      quantity: o.quantity || 1,
+      unitPrice: o.unit_price || o.unitPrice || 0,
+      totalAmount: o.total_amount || o.totalAmount || 0,
+      pickupOption: o.pickup_option || o.pickupOption || 'On-site Conference Pickup',
+      paymentStatus: o.payment_status || o.paymentStatus || 'pending',
+      fulfillmentStatus: o.fulfillment_status || o.fulfillmentStatus || 'unfulfilled',
+      paymentReference: o.payment_reference || o.paymentReference,
+      emailSent: o.email_sent || o.emailSent,
+      createdAt: o.created_at || o.createdAt || '',
+      updatedAt: o.updated_at || o.updatedAt || '',
+    }));
+
     return {
       success: resData.success,
-      data: resData.data?.orders || resData.data || [],
-      orders: resData.data?.orders || resData.data || [],
-      total: resData.data?.total || 0,
-      page: resData.data?.page || 1,
+      data: normalizedOrders,
+      orders: normalizedOrders,
+      total: resData.data?.total || resData.total || normalizedOrders.length,
+      page: resData.data?.page || resData.page || 1,
     };
   },
 
   deleteMerchandiseOrder: async (token: string, orderId: string) => {
-    const response = await apiClient.delete(`/admin/merchandise/orders/${orderId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    const response = await apiClient.delete(`/admin/merchandise/orders/${orderId}`, { headers });
     return response.data;
   },
 };

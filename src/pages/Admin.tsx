@@ -142,11 +142,8 @@ export default function Admin() {
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      if (token) {
-        await dashboardAPI.logout(token);
-      }
     } catch (err) {
-      console.error('Logout API error:', err);
+      console.error('Logout error:', err);
     } finally {
       authUtils.logout();
       setToken(null);

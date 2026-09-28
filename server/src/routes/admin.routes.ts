@@ -9,7 +9,6 @@ router.use(requireAuth as any);
 
 // Dashboard metrics
 router.get('/metrics', adminController.getDashboardMetrics as any);
-router.get('/stats', adminController.getDashboardMetrics as any);
 
 // Attendees CRUD
 router.get('/attendees', adminController.getAttendees as any);

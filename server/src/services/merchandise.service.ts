@@ -7,7 +7,7 @@ export const merchandiseService = {
    */
   generateOrderCode(): string {
     const randomDigits = Math.floor(100000 + Math.random() * 900000);
-    return `PHOTIZO-ORD-2026-${randomDigits}`;
+    return `BISUM-ORD-2025-${randomDigits}`;
   },
 
   /**
@@ -184,9 +184,7 @@ export const merchandiseService = {
 
     if (params.search) {
       const s = `%${params.search}%`;
-      query = query.or(
-        `order_number.ilike.${s},customer_name.ilike.${s},customer_email.ilike.${s},customer_phone.ilike.${s}`
-      );
+      query = query.or(`order_number.ilike.${s},customer_name.ilike.${s},customer_email.ilike.${s},customer_phone.ilike.${s}`);
     }
 
     if (params.paymentStatus && params.paymentStatus !== 'all') {
@@ -207,31 +205,7 @@ export const merchandiseService = {
     if (error) throw error;
 
     return {
-      orders: (data || []).map((o: any) => ({
-        id: o.id,
-        orderNumber: o.order_number,
-        customerName: o.customer_name,
-        fullName: o.customer_name,
-        customerEmail: o.customer_email,
-        email: o.customer_email,
-        customerPhone: o.customer_phone,
-        phoneNumber: o.customer_phone,
-        itemId: o.item_id,
-        merchandiseId: o.item_id,
-        itemName: o.item_name,
-        color: o.color,
-        size: o.size,
-        quantity: o.quantity,
-        unitPrice: o.unit_price,
-        totalAmount: o.total_amount,
-        pickupOption: o.pickup_option,
-        paymentStatus: o.payment_status,
-        fulfillmentStatus: o.fulfillment_status,
-        paymentReference: o.payment_reference,
-        emailSent: o.email_sent,
-        createdAt: o.created_at,
-        updatedAt: o.updated_at,
-      })),
+      orders: data || [],
       total: count || 0,
       page,
       limit,

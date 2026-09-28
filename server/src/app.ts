@@ -20,19 +20,20 @@ const allowedOrigins = [
   env.FRONTEND_URL,
   'http://localhost:3000',
   'http://localhost:5173',
-  'https://photizo.org',
-  'https://www.photizo.org',
-  'https://photizo.hgbcinfluencers.org',
+  'https://bisum.org',
+  'https://www.bisum.org',
+  'https://bisum.hgbcinfluencers.org',
   'https://hgbcinfluencers.org',
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, server-to-server)
       if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
         callback(null, true);
       } else {
-        callback(null, true);
+        callback(null, true); // Allow all during testing or restrict to allowedOrigins
       }
     },
     credentials: true,
@@ -74,12 +75,11 @@ app.use('/api', limiter);
 
 // Mount API Routes
 app.use('/api', routes);
-app.use('/', routes);
 
 // Root route
 app.get('/', (req, res) => {
   res.status(200).json({
-    service: 'Photizo Conference API Backend',
+    service: 'BISUM Conference API Backend',
     status: 'healthy',
     documentation: '/api/health',
   });

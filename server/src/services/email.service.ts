@@ -36,36 +36,23 @@ export const emailService = {
   async sendRegistrationConfirmation(data: SendConfirmationParams) {
     try {
       const html = generateRegistrationEmailTemplate(data);
-      const subject = `Pass Confirmed: Welcome to ${env.CONFERENCE_NAME}! [ID: ${data.registrationNumber}]`;
 
-      // 1. Primary Attempt with configured sender
-      let response = await resend.emails.send({
+      const response = await resend.emails.send({
         from: env.RESEND_FROM_EMAIL,
         to: [data.email],
-        subject,
+        subject: `Pass Confirmed: Welcome to ${env.CONFERENCE_NAME}! [ID: ${data.registrationNumber}]`,
         html,
       });
 
-      // 2. Fallback Attempt if custom sender domain is unverified on Resend
-      if (response.error && env.RESEND_FROM_EMAIL !== 'Photizo Conference <onboarding@resend.dev>') {
-        console.warn(`⚠️ Resend custom domain send failed (${JSON.stringify(response.error)}). Attempting fallback via onboarding@resend.dev...`);
-        response = await resend.emails.send({
-          from: 'Photizo Conference <onboarding@resend.dev>',
-          to: [data.email],
-          subject,
-          html,
-        });
-      }
-
       if (response.error) {
-        console.error('❌ Resend Registration Email Error:', response.error);
+        console.error('Resend Error Response:', response.error);
         return { success: false, error: response.error };
       }
 
-      console.log(`✅ Confirmation email successfully sent via Resend to ${data.email} (${data.registrationNumber}) [MessageId: ${response.data?.id}]`);
+      console.log(`✅ Confirmation email sent via Resend to ${data.email} (${data.registrationNumber})`);
       return { success: true, data: response.data };
     } catch (error: any) {
-      console.error('❌ Failed to send Resend registration email:', error?.message || error);
+      console.error('Failed to send Resend email:', error?.message || error);
       return { success: false, error: error?.message || 'Email delivery failed' };
     }
   },
@@ -76,36 +63,23 @@ export const emailService = {
   async sendMerchandiseOrderConfirmation(data: SendMerchandiseParams) {
     try {
       const html = generateMerchandiseEmailTemplate(data);
-      const subject = `Order Confirmed: ${env.CONFERENCE_NAME} Official Store [Order: ${data.orderNumber}]`;
 
-      // 1. Primary Attempt with configured sender
-      let response = await resend.emails.send({
+      const response = await resend.emails.send({
         from: env.RESEND_FROM_EMAIL,
         to: [data.customerEmail],
-        subject,
+        subject: `Order Confirmed: ${env.CONFERENCE_NAME} Official Store [Order: ${data.orderNumber}]`,
         html,
       });
 
-      // 2. Fallback Attempt if custom sender domain is unverified on Resend
-      if (response.error && env.RESEND_FROM_EMAIL !== 'Photizo Conference <onboarding@resend.dev>') {
-        console.warn(`⚠️ Resend custom domain send failed (${JSON.stringify(response.error)}). Attempting fallback via onboarding@resend.dev...`);
-        response = await resend.emails.send({
-          from: 'Photizo Conference <onboarding@resend.dev>',
-          to: [data.customerEmail],
-          subject,
-          html,
-        });
-      }
-
       if (response.error) {
-        console.error('❌ Resend Merchandise Email Error:', response.error);
+        console.error('Resend Merchandise Email Error:', response.error);
         return { success: false, error: response.error };
       }
 
-      console.log(`✅ Merchandise order email successfully sent via Resend to ${data.customerEmail} (${data.orderNumber}) [MessageId: ${response.data?.id}]`);
+      console.log(`✅ Merchandise order email sent via Resend to ${data.customerEmail} (${data.orderNumber})`);
       return { success: true, data: response.data };
     } catch (error: any) {
-      console.error('❌ Failed to send Resend merchandise email:', error?.message || error);
+      console.error('Failed to send Resend merchandise email:', error?.message || error);
       return { success: false, error: error?.message || 'Email delivery failed' };
     }
   },

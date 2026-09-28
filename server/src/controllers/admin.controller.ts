@@ -196,25 +196,25 @@ export const adminController = {
       ];
 
       const rows = attendees.map((a: any) => [
-        `"${a.registrationNumber || ''}"`,
-        `"${a.firstName || ''}"`,
-        `"${a.lastName || ''}"`,
+        `"${a.registration_number || ''}"`,
+        `"${a.first_name || ''}"`,
+        `"${a.last_name || ''}"`,
         `"${a.email || ''}"`,
         `"${a.phone || ''}"`,
         `"${a.gender || ''}"`,
-        `"${a.ageRange || ''}"`,
-        `"${a.attendanceMode || 'On-site'}"`,
-        `"${a.registrationType || ''}"`,
-        `"${a.breakoutSessionChoice || ''}"`,
-        `"${a.amountPaid || 0}"`,
-        `"${a.paymentStatus || ''}"`,
-        `"${a.createdAt || ''}"`,
+        `"${a.age_range || ''}"`,
+        `"${a.attendance_mode || 'On-site'}"`,
+        `"${a.registration_type || ''}"`,
+        `"${a.breakout_session_choice || ''}"`,
+        `"${a.amount_paid || 0}"`,
+        `"${a.payment_status || ''}"`,
+        `"${a.created_at || ''}"`,
       ]);
 
       const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
 
       res.setHeader('Content-Type', 'text/csv');
-      res.setHeader('Content-Disposition', `attachment; filename=photizo_attendees_${Date.now()}.csv`);
+      res.setHeader('Content-Disposition', `attachment; filename=bisum_attendees_${Date.now()}.csv`);
       return res.status(200).send(csvContent);
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
@@ -352,26 +352,26 @@ export const adminController = {
       ];
 
       const rows = orders.map((o: any) => [
-        `"${o.orderNumber || ''}"`,
-        `"${o.customerName || ''}"`,
-        `"${o.customerEmail || ''}"`,
-        `"${o.customerPhone || ''}"`,
-        `"${o.itemName || ''}"`,
+        `"${o.order_number || ''}"`,
+        `"${o.customer_name || ''}"`,
+        `"${o.customer_email || ''}"`,
+        `"${o.customer_phone || ''}"`,
+        `"${o.item_name || ''}"`,
         `"${o.color || ''}"`,
         `"${o.size || ''}"`,
         `"${o.quantity || 1}"`,
-        `"${o.unitPrice || 0}"`,
-        `"${o.totalAmount || 0}"`,
-        `"${o.paymentStatus || ''}"`,
-        `"${o.fulfillmentStatus || ''}"`,
-        `"${o.pickupOption || ''}"`,
-        `"${o.createdAt || ''}"`,
+        `"${o.unit_price || 0}"`,
+        `"${o.total_amount || 0}"`,
+        `"${o.payment_status || ''}"`,
+        `"${o.fulfillment_status || ''}"`,
+        `"${o.pickup_option || ''}"`,
+        `"${o.created_at || ''}"`,
       ]);
 
       const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
 
       res.setHeader('Content-Type', 'text/csv');
-      res.setHeader('Content-Disposition', `attachment; filename=photizo_merchandise_orders_${Date.now()}.csv`);
+      res.setHeader('Content-Disposition', `attachment; filename=bisum_merchandise_orders_${Date.now()}.csv`);
       return res.status(200).send(csvContent);
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });

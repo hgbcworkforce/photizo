@@ -33,11 +33,11 @@ export function generateMerchandiseEmailTemplate(data: MerchandiseEmailProps): s
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${env.CONFERENCE_NAME} Merchandise Order Confirmed</title>
+  <title>BISUM Conference Merchandise Order Confirmed</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background-color: #09090b;
+      background-color: #0f172a;
       color: #334155;
       margin: 0;
       padding: 20px;
@@ -51,18 +51,17 @@ export function generateMerchandiseEmailTemplate(data: MerchandiseEmailProps): s
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
     }
     .header {
-      background: linear-gradient(135deg, #18181b 0%, #09090b 100%);
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
       padding: 40px 30px;
       text-align: center;
       color: #ffffff;
-      border-bottom: 3px solid #f58320;
     }
     .badge-label {
       display: inline-block;
       padding: 6px 14px;
-      background: rgba(245, 131, 32, 0.15);
-      border: 1px solid #f58320;
-      color: #f58320;
+      background: rgba(37, 99, 235, 0.2);
+      border: 1px solid #3b82f6;
+      color: #93c5fd;
       font-size: 12px;
       font-weight: 700;
       letter-spacing: 1px;
@@ -79,7 +78,7 @@ export function generateMerchandiseEmailTemplate(data: MerchandiseEmailProps): s
     }
     .subtitle {
       font-size: 14px;
-      color: #a1a1aa;
+      color: #94a3b8;
       margin: 0;
     }
     .content {
@@ -99,7 +98,7 @@ export function generateMerchandiseEmailTemplate(data: MerchandiseEmailProps): s
     }
     .order-card {
       background: #f8fafc;
-      border: 2px dashed #fdba74;
+      border: 2px dashed #93c5fd;
       border-radius: 12px;
       padding: 24px;
       margin-bottom: 28px;
@@ -108,7 +107,7 @@ export function generateMerchandiseEmailTemplate(data: MerchandiseEmailProps): s
     .order-title {
       font-size: 12px;
       font-weight: 700;
-      color: #ea580c;
+      color: #2563eb;
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-bottom: 6px;
@@ -150,8 +149,8 @@ export function generateMerchandiseEmailTemplate(data: MerchandiseEmailProps): s
       text-align: right;
     }
     .pickup-box {
-      background: #fff7ed;
-      border: 1px solid #ffedd5;
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
       border-radius: 10px;
       padding: 18px;
       margin-bottom: 28px;
@@ -159,12 +158,12 @@ export function generateMerchandiseEmailTemplate(data: MerchandiseEmailProps): s
     .pickup-title {
       font-size: 14px;
       font-weight: 700;
-      color: #9a3412;
+      color: #1e40af;
       margin-bottom: 6px;
     }
     .pickup-text {
       font-size: 13px;
-      color: #c2410c;
+      color: #1e3a8a;
       margin: 0;
       line-height: 1.5;
     }
@@ -182,7 +181,7 @@ export function generateMerchandiseEmailTemplate(data: MerchandiseEmailProps): s
     }
     .cta-button {
       display: inline-block;
-      background: linear-gradient(135deg, #ef4023, #f58320);
+      background-color: #2563eb;
       color: #ffffff !important;
       font-size: 14px;
       font-weight: 700;
@@ -240,7 +239,7 @@ export function generateMerchandiseEmailTemplate(data: MerchandiseEmailProps): s
         </tr>
         <tr>
           <td class="label">Total Paid</td>
-          <td class="value" style="color: #ef4023; font-size: 15px;">${formattedTotal}</td>
+          <td class="value" style="color: #2563eb; font-size: 15px;">${formattedTotal}</td>
         </tr>
         <tr>
           <td class="label">Payment Status</td>
@@ -266,10 +265,10 @@ export function generateMerchandiseEmailTemplate(data: MerchandiseEmailProps): s
     <!-- Footer -->
     <div class="footer">
       <p class="footer-text">
-        Need assistance with your order? Reach out to our store team at photizo@hgbcinfluencers.org.
+        Need assistance with your order? Reach out to our store team at merchandise@bisum.org.
       </p>
       <p class="footer-text">
-        © ${new Date().getFullYear()} ${env.CONFERENCE_NAME}. All rights reserved. Powered by Higher Ground Baptist Church.
+        © ${new Date().getFullYear()} ${env.CONFERENCE_NAME}. All rights reserved.
       </p>
     </div>
   </div>

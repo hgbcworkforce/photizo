@@ -11,10 +11,10 @@ const envSchema = z.object({
   PAYSTACK_SECRET_KEY: z.string().min(1, { message: 'PAYSTACK_SECRET_KEY is required' }),
   PAYSTACK_PUBLIC_KEY: z.string().optional().default(''),
   RESEND_API_KEY: z.string().min(1, { message: 'RESEND_API_KEY is required' }),
-  RESEND_FROM_EMAIL: z.string().default('Photizo Conference <onboarding@resend.dev>'),
-  FRONTEND_URL: z.string().default('http://localhost:5173'),
-  CONFERENCE_NAME: z.string().default('Photizo Conference 2026'),
-  CONFERENCE_DATES: z.string().default('May 21 - 23, 2026'),
+  RESEND_FROM_EMAIL: z.string().default('BISUM Conference <onboarding@resend.dev>'),
+  FRONTEND_URL: z.string().default('http://localhost:3000'),
+  CONFERENCE_NAME: z.string().default('BISUM Conference 2025'),
+  CONFERENCE_DATES: z.string().default('November 13 - 15, 2025'),
   CONFERENCE_VENUE: z.string().default('Higher Ground Baptist Church, Ogbomoso, Nigeria.'),
 });
 
@@ -38,9 +38,9 @@ export const env = _env.success
       PAYSTACK_SECRET_KEY: process.env.PAYSTACK_SECRET_KEY || 'sk_test_mock',
       PAYSTACK_PUBLIC_KEY: process.env.PAYSTACK_PUBLIC_KEY || 'pk_test_mock',
       RESEND_API_KEY: process.env.RESEND_API_KEY || 're_mock',
-      RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL || 'Photizo Conference <onboarding@resend.dev>',
-      FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5173',
-      CONFERENCE_NAME: 'Photizo Conference 2026',
-      CONFERENCE_DATES: 'May 21 - 23, 2026',
+      RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL || 'BISUM Conference <onboarding@resend.dev>',
+      FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:3000',
+      CONFERENCE_NAME: 'BISUM Conference 2025',
+      CONFERENCE_DATES: 'November 13 - 15, 2025',
       CONFERENCE_VENUE: 'Higher Ground Baptist Church, Ogbomoso, Nigeria.',
     };

@@ -1,25 +1,16 @@
 {
-  "name": "photizo-backend",
+  "name": "bisum-backend",
   "version": "1.0.0",
-  "description": "Photizo Conference Node.js API Backend with Supabase, Paystack, and Resend",
+  "description": "BISUM Conference 2025 Node.js API Backend with Supabase, Paystack, and Resend",
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "rimraf dist && tsc",
     "start": "node dist/server.js",
-    "seed:admin": "tsx src/scripts/createAdmin.ts",
     "lint": "tsc --noEmit"
   },
-  "keywords": [
-    "photizo",
-    "hgbc",
-    "paystack",
-    "resend",
-    "supabase",
-    "express",
-    "backend"
-  ],
-  "author": "Higher Ground Baptist Church Dev Team",
+  "keywords": ["bisum", "paystack", "resend", "supabase", "express", "backend"],
+  "author": "BISUM Dev Team",
   "license": "ISC",
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",

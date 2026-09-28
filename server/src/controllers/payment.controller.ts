@@ -7,60 +7,11 @@ import { emailService } from '../services/email.service';
 
 export const paymentController = {
   /**
-   * Initializes a direct payment from attendee ID or parameters
-   */
-  async initializePayment(req: Request, res: Response) {
-    try {
-      const { attendeeId, email, amount, callbackUrl } = req.body;
-
-      let targetEmail = email;
-      let targetAmount = amount;
-      let attendee;
-
-      if (attendeeId) {
-        attendee = await attendeeService.getById(attendeeId);
-        if (!attendee) {
-          return res.status(404).json({ success: false, message: 'Attendee record not found' });
-        }
-        targetEmail = attendee.email;
-        targetAmount = attendee.amount_paid || 2050;
-      }
-
-      if (!targetEmail || !targetAmount) {
-        return res.status(400).json({ success: false, message: 'Email and amount are required' });
-      }
-
-      const reference = `PHOTIZO-TX-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
-
-      const paystackResponse = await paystackService.initializeTransaction({
-        email: targetEmail,
-        amount: targetAmount,
-        reference,
-        callbackUrl,
-        metadata: {
-          registration_id: attendeeId,
-        },
-      });
-
-      return res.status(200).json({
-        success: true,
-        accessCode: paystackResponse.data.access_code,
-        authorizationUrl: paystackResponse.data.authorization_url,
-        reference,
-        amount: targetAmount,
-      });
-    } catch (error: any) {
-      console.error('Initialize Payment Error:', error);
-      return res.status(500).json({ success: false, message: error.message || 'Payment initialization failed' });
-    }
-  },
-
-  /**
    * Verifies a Paystack payment reference, confirms registration or merchandise order, and triggers email
    */
   async verifyPayment(req: Request, res: Response) {
     try {
-      const reference = String(req.params.reference || req.query.reference);
+      const reference = String(req.params.reference);
 
       if (!reference || reference === 'undefined') {
         return res.status(400).json({
@@ -69,7 +20,7 @@ export const paymentController = {
         });
       }
 
-      const isMerchandise = reference.startsWith('PHOTIZO-MERCH') || reference.startsWith('BISUM-MERCH');
+      const isMerchandise = reference.startsWith('BISUM-MERCH');
 
       // 1. Check if already confirmed in our database
       if (isMerchandise) {
@@ -77,7 +28,6 @@ export const paymentController = {
         if (existingOrder && existingOrder.payment_status === 'paid') {
           return res.status(200).json({
             success: true,
-            status: 'success',
             message: 'Merchandise payment already verified and confirmed.',
             data: {
               verified: true,
@@ -91,7 +41,6 @@ export const paymentController = {
         if (existingAttendee && existingAttendee.payment_status === 'paid') {
           return res.status(200).json({
             success: true,
-            status: 'success',
             message: 'Registration payment already verified and confirmed.',
             data: {
               verified: true,
@@ -117,7 +66,6 @@ export const paymentController = {
 
         return res.status(400).json({
           success: false,
-          status: 'failed',
           message: paystackData.data.gateway_response || 'Payment was not successful.',
           data: {
             verified: false,
@@ -142,9 +90,7 @@ export const paymentController = {
         await paymentService.recordPayment({
           reference,
           paystackId: String(transaction.id),
-          customerName:
-            order?.customer_name ||
-            `${transaction.customer.first_name || ''} ${transaction.customer.last_name || ''}`.trim(),
+          customerName: order?.customer_name || `${transaction.customer.first_name || ''} ${transaction.customer.last_name || ''}`.trim(),
           customerEmail: transaction.customer.email,
           amount: amountInNaira,
           currency: transaction.currency,
@@ -155,7 +101,7 @@ export const paymentController = {
         });
 
         if (order && !order.email_sent) {
-          const emailRes = await emailService.sendMerchandiseOrderConfirmation({
+          await emailService.sendMerchandiseOrderConfirmation({
             orderNumber: order.order_number,
             customerName: order.customer_name,
             customerEmail: order.customer_email,
@@ -169,14 +115,11 @@ export const paymentController = {
             pickupOption: order.pickup_option,
           });
 
-          if (emailRes.success) {
-            await merchandiseService.markEmailSent(order.id);
-          }
+          await merchandiseService.markEmailSent(order.id);
         }
 
         return res.status(200).json({
           success: true,
-          status: 'success',
           message: 'Merchandise payment verified and order completed successfully!',
           data: {
             verified: true,
@@ -207,7 +150,7 @@ export const paymentController = {
         });
 
         if (attendee && !attendee.email_sent) {
-          const emailRes = await emailService.sendRegistrationConfirmation({
+          await emailService.sendRegistrationConfirmation({
             firstName: attendee.first_name,
             lastName: attendee.last_name,
             email: attendee.email,
@@ -219,14 +162,11 @@ export const paymentController = {
             amountPaid: attendee.amount_paid,
           });
 
-          if (emailRes.success) {
-            await attendeeService.markEmailSent(attendee.id);
-          }
+          await attendeeService.markEmailSent(attendee.id);
         }
 
         return res.status(200).json({
           success: true,
-          status: 'success',
           message: 'Payment verified and registration completed successfully!',
           data: {
             verified: true,
@@ -239,7 +179,6 @@ export const paymentController = {
       console.error('Payment Verification Error:', error);
       return res.status(500).json({
         success: false,
-        status: 'error',
         message: error.message || 'Payment verification failed.',
       });
     }

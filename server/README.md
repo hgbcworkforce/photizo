@@ -1,26 +1,28 @@
-# 🚀 BISUM Conference 2025 - Node.js API Backend
+# 🚀 Photizo 2026: EMERGE — Node.js API Backend
 
-Secure, production-ready REST API backend for **BISUM Conference 2025** built with **Express**, **TypeScript**, **Supabase** (PostgreSQL Database), **Paystack** (Payment Gateway & Webhook verification), and **Resend** (Transactional Email Notifications).
+Secure, production-ready REST API backend for **Photizo 2026: EMERGE** built with **Express**, **TypeScript**, **Supabase** (PostgreSQL Database & Auth), **Paystack** (Payment Gateway & Webhook verification), and **Resend** (Transactional Email Notifications).
 
 ---
 
 ## 🛠 Features & Capabilities
 
 - 🛡️ **Paystack Payment & Verification Engine**:
-  - Initializes payment checkout with attendee metadata.
+  - Initializes payment checkout with attendee & merchandise metadata.
   - Verifies incoming payments with HMAC-SHA512 cryptographic Webhook signature checking.
   - Server-side verification fallback for frontend redirection callbacks.
   - Idempotent processing (prevents double charges or duplicate confirmation emails).
 - 📧 **Resend Email Automation**:
-  - Sends high-conversion, responsive HTML confirmation passes with unique conference ID badges (`BISUM-2025-XXXXX`).
+  - Sends high-conversion, responsive HTML confirmation passes with unique conference ID badges (`PHOTIZO-2026-XXXX`).
   - Supports manual resend triggers from the admin dashboard.
+- 🛍️ **Merchandise Order Processing**:
+  - Handles item ordering, customization (color/size), automated tax/charge computations, and fulfillment tracking.
 - 🔐 **Supabase PostgreSQL & Admin Auth**:
-  - Full CRUD operations on Attendees and Payment transactions.
+  - Full CRUD operations on Attendees, Merchandise Orders, and Payment transactions.
   - Middleware-protected admin routes using Supabase JWT and RBAC checks (`admin_users` table).
   - Summary metrics and real-time dashboard analytics.
-- 📦 **Render Ready**:
+- 📦 **Render & Production Ready**:
   - Zero-downtime deployment with health check endpoint (`/api/health`).
-  - `render.yaml` Infrastructure-as-Code Blueprint included.
+  - Rate-limiting, CORS, Helmet security headers, and Morgan HTTP logging.
 
 ---
 
@@ -52,11 +54,13 @@ Server runs at `http://localhost:5000` (Health check: `http://localhost:5000/api
 
 ## 📡 API Endpoints Reference
 
-### 🎟 Public Registration & Payments
+### 🎟 Public Registration, Merchandise & Payments
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
-| `POST` | `/api/registration/initiate` | Initiates attendee registration and returns Paystack checkout URL (or completes free pass). |
+| `POST` | `/api/registration/initiate` | Initiates attendee registration and returns Paystack checkout URL. |
 | `GET` | `/api/registration/status/:reference` | Checks registration status by payment reference. |
+| `POST` | `/api/merchandise/order` | Creates a merchandise order and returns Paystack checkout details. |
+| `GET` | `/api/merchandise/order/:reference` | Checks merchandise order status by payment reference. |
 | `GET` | `/api/payments/verify/:reference` | Verifies Paystack transaction, confirms seat, and triggers confirmation email. |
 | `POST` | `/api/webhooks/paystack` | Secure HMAC-verified webhook endpoint for Paystack `charge.success` events. |
 | `GET` | `/api/health` | Service health status. |
@@ -64,13 +68,14 @@ Server runs at `http://localhost:5000` (Health check: `http://localhost:5000/api
 ### 🔒 Admin Protected Endpoints (Requires `Authorization: Bearer <Supabase_JWT>`)
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
-| `GET` | `/api/admin/metrics` | Summary stats (total revenue, paid passes, breakout session breakdowns). |
+| `GET` | `/api/admin/metrics` | Summary stats (total revenue, paid passes, merchandise sales, breakout session breakdowns). |
 | `GET` | `/api/admin/attendees` | Paginated attendee list with search (`?search=`), filtering (`?status=`, `?breakoutSession=`). |
 | `GET` | `/api/admin/attendees/:id` | Single attendee record. |
 | `PUT` | `/api/admin/attendees/:id` | Update attendee information. |
 | `DELETE` | `/api/admin/attendees/:id` | Delete attendee record. |
 | `POST` | `/api/admin/attendees/:id/resend-email` | Re-trigger Resend confirmation email to the attendee. |
 | `GET` | `/api/admin/attendees/export/csv` | Download full attendees list as CSV. |
+| `GET` | `/api/admin/merchandise` | Audit trail of all merchandise orders and fulfillment statuses. |
 | `GET` | `/api/admin/payments` | Audit trail of all Paystack payment transactions. |
 
 ---
@@ -79,9 +84,9 @@ Server runs at `http://localhost:5000` (Health check: `http://localhost:5000/api
 
 1. Push your changes to GitHub.
 2. Go to [Render Dashboard](https://dashboard.render.com).
-3. Click **New +** > **Blueprint** (or **Web Service**).
-4. Select your `bisum` repository.
-5. If using Web Service directly:
+3. Click **New +** > **Web Service**.
+4. Select your `photizo` repository.
+5. Set Web Service options:
    - **Root Directory**: `server`
    - **Environment**: `Node`
    - **Build Command**: `npm install && npm run build`
